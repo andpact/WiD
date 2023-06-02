@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">WiD</string>
+    <string name="bottom_navigation_label_1">등록</string>
+    <string name="bottom_navigation_label_2">조회</string>
+
+    <string name="title_1">STUDY</string>
+    <string name="title_2">WORK</string>
+    <string name="title_3">READING</string>
+    <string name="title_4">EXERCISE</string>
+    <string name="title_5">SLEEP</string>
+    <string name="title_6">TRAVEL</string>
+    <string name="title_7">HOBBY</string>
+    <string name="title_8">OTHER</string>
+
+    <string name="zero_duration">00:00:00</string>
+    <string name="start">start</string>
+    <string name="finish">finish</string>
+</resources>
