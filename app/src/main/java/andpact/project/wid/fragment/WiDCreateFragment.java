@@ -25,6 +25,7 @@ import java.util.TimerTask;
 import andpact.project.wid.R;
 import andpact.project.wid.Title;
 import andpact.project.wid.model.WiD;
+import andpact.project.wid.service.WiDService;
 import andpact.project.wid.util.WiDDatabaseHelper;
 
 public class WiDCreateFragment extends Fragment {
@@ -119,35 +120,19 @@ public class WiDCreateFragment extends Fragment {
         hobbyFinishButton.setOnClickListener(v -> finishWiD(hobbyDurationTextView, hobbyStartButton, hobbyFinishButton));
         otherFinishButton.setOnClickListener(v -> finishWiD(otherDurationTextView, otherStartButton, otherFinishButton));
 
-
         return view;
     }
 
     private void createWiD(Title title, TextView durationTextView, MaterialButton startButton, MaterialButton finishButton) {
 
         studyStartButton.setEnabled(false);
-//        studyStartButton.setBackgroundColor(Color.GRAY);
-
         workStartButton.setEnabled(false);
-//        workStartButton.setBackgroundColor(Color.GRAY);
-
         readingStartButton.setEnabled(false);
-//        readingStartButton.setBackgroundColor(Color.GRAY);
-
         exerciseStartButton.setEnabled(false);
-//        exerciseStartButton.setBackgroundColor(Color.GRAY);
-
         sleepStartButton.setEnabled(false);
-//        sleepStartButton.setBackgroundColor(Color.GRAY);
-
         travelStartButton.setEnabled(false);
-//        travelStartButton.setBackgroundColor(Color.GRAY);
-
         hobbyStartButton.setEnabled(false);
-//        hobbyStartButton.setBackgroundColor(Color.GRAY);
-
         otherStartButton.setEnabled(false);
-//        otherStartButton.setBackgroundColor(Color.GRAY);
 
         // Create a new WiD object with the provided title, current date, and start time
         currentWiD = new WiD();
@@ -175,7 +160,13 @@ public class WiDCreateFragment extends Fragment {
                 String formattedTime = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
                 stopwatch.setText(formattedTime);
 
-                handler.postDelayed(this, 1000); // Update every 1 second
+                // Check if the duration exceeds 12 hours
+                if (hours >= 12) {
+                    // Finish the WiD and register it in the database
+                    finishWiD(durationTextView, startButton, finishButton);
+                } else {
+                    handler.postDelayed(this, 1000); // Update every 1 second
+                }
             }
         });
     }
@@ -185,45 +176,56 @@ public class WiDCreateFragment extends Fragment {
             // Assign the finish time to the current WiD object
             currentWiD.setFinish(LocalTime.now());
 
-            // Calculate the duration
-            Duration duration = Duration.between(currentWiD.getStart(), currentWiD.getFinish());
-            currentWiD.setDuration(duration);
+            // Check if the start time is after the finish time
+            if (currentWiD.getStart().isAfter(currentWiD.getFinish())) {
+                // Calculate the duration for the first part of the WiD
+                Duration firstDuration = Duration.between(currentWiD.getStart(), LocalTime.MAX);
+                currentWiD.setDuration(firstDuration);
 
-            // Store the WiD object in the database
-            WiDDatabaseHelper databaseHelper = new WiDDatabaseHelper(getActivity());
-            SQLiteDatabase db = databaseHelper.getWritableDatabase();
-            ContentValues values = currentWiD.toContentValues();
-            db.insert("wid_table", null, values);
-            db.close();
+                // Store the first WiD object in the database
+                WiDDatabaseHelper databaseHelper = new WiDDatabaseHelper(getActivity());
+                SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                ContentValues values = currentWiD.toContentValues();
+                db.insert(WiDService.TABLE_WID, null, values);
+
+                // Create a new WiD object for the second part of the duration
+                WiD secondWiD = new WiD();
+                secondWiD.setTitle(currentWiD.getTitle());
+                secondWiD.setDate(currentWiD.getDate().plusDays(1)); // Add one day to the date
+                secondWiD.setStart(LocalTime.MIDNIGHT);
+                secondWiD.setFinish(currentWiD.getFinish());
+                Duration secondDuration = Duration.between(secondWiD.getStart(), secondWiD.getFinish());
+                secondWiD.setDuration(secondDuration);
+
+                // Store the second WiD object in the database
+                ContentValues secondValues = secondWiD.toContentValues();
+                db.insert(WiDService.TABLE_WID, null, secondValues);
+                db.close();
+            } else {
+                // Calculate the duration
+                Duration duration = Duration.between(currentWiD.getStart(), currentWiD.getFinish());
+                currentWiD.setDuration(duration);
+
+                // Store the WiD object in the database
+                WiDDatabaseHelper databaseHelper = new WiDDatabaseHelper(getActivity());
+                SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                ContentValues values = currentWiD.toContentValues();
+                db.insert(WiDService.TABLE_WID, null, values);
+                db.close();
+            }
 
             // Reset the current WiD object
             currentWiD = null;
 
             // Re-enable and restore the original color of other start buttons
             studyStartButton.setEnabled(true);
-//            studyStartButton.setBackgroundColor(getResources().getColor(R.color.original_start_button_color));
-
             workStartButton.setEnabled(true);
-//            workStartButton.setBackgroundColor(getResources().getColor(R.color.original_start_button_color));
-
             readingStartButton.setEnabled(true);
-//            readingStartButton.setBackgroundColor(getResources().getColor(R.color.original_start_button_color));
-
             exerciseStartButton.setEnabled(true);
-//            exerciseStartButton.setBackgroundColor(getResources().getColor(R.color.original_start_button_color));
-
             sleepStartButton.setEnabled(true);
-//            sleepStartButton.setBackgroundColor(getResources().getColor(R.color.original_start_button_color));
-
             travelStartButton.setEnabled(true);
-//            travelStartButton.setBackgroundColor(getResources().getColor(R.color.original_start_button_color));
-
             hobbyStartButton.setEnabled(true);
-//            hobbyStartButton.setBackgroundColor(getResources().getColor(R.color.original_start_button_color));
-
             otherStartButton.setEnabled(true);
-//            otherStartButton.setBackgroundColor(getResources().getColor(R.color.original_start_button_color));
-
 
             // Stop the stopwatch and set the durationTextView to "00:00:00" after 3 seconds
             handler.postDelayed(() -> {

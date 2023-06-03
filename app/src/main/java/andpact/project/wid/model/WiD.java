@@ -1,6 +1,13 @@
 package andpact.project.wid.model;
 
 
+import static andpact.project.wid.service.WiDService.COLUMN_DATE;
+import static andpact.project.wid.service.WiDService.COLUMN_DETAIL;
+import static andpact.project.wid.service.WiDService.COLUMN_DURATION;
+import static andpact.project.wid.service.WiDService.COLUMN_FINISH;
+import static andpact.project.wid.service.WiDService.COLUMN_START;
+import static andpact.project.wid.service.WiDService.COLUMN_TITLE;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 
@@ -8,13 +15,9 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import andpact.project.wid.service.WiDService;
+
 public class WiD {
-    public static final String COLUMN_TITLE = "title";
-    public static final String COLUMN_DETAIL = "detail";
-    public static final String COLUMN_DATE = "date";
-    public static final String COLUMN_START = "start";
-    public static final String COLUMN_FINISH = "finish";
-    public static final String COLUMN_DURATION = "duration";
     private String title;
     private String detail;
     private LocalDate date;
@@ -80,6 +83,18 @@ public class WiD {
 
     public void setDuration(Duration duration) {
         this.duration = duration;
+    }
+
+    @Override
+    public String toString() {
+        return "WiD{" +
+                "title='" + title + '\'' +
+                ", detail='" + detail + '\'' +
+                ", date=" + date +
+                ", start=" + start +
+                ", finish=" + finish +
+                ", duration=" + duration +
+                '}';
     }
 
     // Method to convert WiD object to ContentValues

@@ -11,6 +11,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import andpact.project.wid.R;
 import andpact.project.wid.fragment.WiDCreateFragment;
+import andpact.project.wid.fragment.WiDReadFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,13 +44,13 @@ public class MainActivity extends AppCompatActivity {
                         currentFragment = wiDCreateFragment;
                     }
                     break;
-//                case R.id.item_2:
-//                    if (!(currentFragment instanceof PostReadAllFragment)) {
-//                        PostReadAllFragment postReadAllFragment = new PostReadAllFragment();
-//                        fragmentTransaction1.replace(R.id.frame_container, postReadAllFragment);
-//                        currentFragment = postReadAllFragment;
-//                    }
-//                    break;
+                case R.id.item_2:
+                    if (!(currentFragment instanceof WiDReadFragment)) {
+                        WiDReadFragment wiDReadFragment = new WiDReadFragment();
+                        fragmentTransaction1.replace(R.id.frame_container, wiDReadFragment);
+                        currentFragment = wiDReadFragment;
+                    }
+                    break;
             }
 
             fragmentTransaction1.commit();
