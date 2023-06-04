@@ -186,7 +186,8 @@ public class WiDCreateFragment extends Fragment {
                 WiDDatabaseHelper databaseHelper = new WiDDatabaseHelper(getActivity());
                 SQLiteDatabase db = databaseHelper.getWritableDatabase();
                 ContentValues values = currentWiD.toContentValues();
-                db.insert(WiDService.TABLE_WID, null, values);
+//                db.insert(WiDDatabaseHelper.TABLE_WID, null, values);
+                db.insert(databaseHelper.getTableWID(), null, values);
 
                 // Create a new WiD object for the second part of the duration
                 WiD secondWiD = new WiD();
@@ -199,7 +200,7 @@ public class WiDCreateFragment extends Fragment {
 
                 // Store the second WiD object in the database
                 ContentValues secondValues = secondWiD.toContentValues();
-                db.insert(WiDService.TABLE_WID, null, secondValues);
+                db.insert(databaseHelper.getTableWID(), null, secondValues);
                 db.close();
             } else {
                 // Calculate the duration
@@ -210,7 +211,7 @@ public class WiDCreateFragment extends Fragment {
                 WiDDatabaseHelper databaseHelper = new WiDDatabaseHelper(getActivity());
                 SQLiteDatabase db = databaseHelper.getWritableDatabase();
                 ContentValues values = currentWiD.toContentValues();
-                db.insert(WiDService.TABLE_WID, null, values);
+                db.insert(databaseHelper.getTableWID(), null, values);
                 db.close();
             }
 

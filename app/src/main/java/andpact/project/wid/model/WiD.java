@@ -5,6 +5,7 @@ import static andpact.project.wid.service.WiDService.COLUMN_DATE;
 import static andpact.project.wid.service.WiDService.COLUMN_DETAIL;
 import static andpact.project.wid.service.WiDService.COLUMN_DURATION;
 import static andpact.project.wid.service.WiDService.COLUMN_FINISH;
+import static andpact.project.wid.service.WiDService.COLUMN_ID;
 import static andpact.project.wid.service.WiDService.COLUMN_START;
 import static andpact.project.wid.service.WiDService.COLUMN_TITLE;
 
@@ -15,9 +16,8 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import andpact.project.wid.service.WiDService;
-
 public class WiD {
+    private Long id;
     private String title;
     private String detail;
     private LocalDate date;
@@ -28,7 +28,8 @@ public class WiD {
     public WiD() {
     }
 
-    public WiD(String title, String detail, LocalDate date, LocalTime start, LocalTime finish, Duration duration) {
+    public WiD(Long id, String title, String detail, LocalDate date, LocalTime start, LocalTime finish, Duration duration) {
+        this.id = id;
         this.title = title;
         this.detail = detail;
         this.date = date;
@@ -37,6 +38,13 @@ public class WiD {
         this.duration = duration;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
     public String getTitle() {
         return title;
     }
@@ -88,7 +96,8 @@ public class WiD {
     @Override
     public String toString() {
         return "WiD{" +
-                "title='" + title + '\'' +
+                "id=" + id +
+                ", title='" + title + '\'' +
                 ", detail='" + detail + '\'' +
                 ", date=" + date +
                 ", start=" + start +
@@ -100,6 +109,7 @@ public class WiD {
     // Method to convert WiD object to ContentValues
     public ContentValues toContentValues() {
         ContentValues values = new ContentValues();
+        values.put(COLUMN_ID, id);
         values.put(COLUMN_TITLE, title);
         values.put(COLUMN_DETAIL, detail);
         values.put(COLUMN_DATE, date.toString());
@@ -111,13 +121,13 @@ public class WiD {
 
     // Static method to create a WiD object from a database cursor
     public static WiD fromCursor(Cursor cursor) {
-        WiD wid = new WiD();
-        wid.setTitle(cursor.getString(cursor.getColumnIndex(COLUMN_TITLE)));
-        wid.setDetail(cursor.getString(cursor.getColumnIndex(COLUMN_DETAIL)));
-        wid.setDate(LocalDate.parse(cursor.getString(cursor.getColumnIndex(COLUMN_DATE))));
-        wid.setStart(LocalTime.parse(cursor.getString(cursor.getColumnIndex(COLUMN_START))));
-        wid.setFinish(LocalTime.parse(cursor.getString(cursor.getColumnIndex(COLUMN_FINISH))));
-        wid.setDuration(Duration.parse(cursor.getString(cursor.getColumnIndex(COLUMN_DURATION))));
-        return wid;
+        Long id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID));
+        String title = cursor.getString(cursor.getColumnIndex(COLUMN_TITLE));
+        String detail = cursor.getString(cursor.getColumnIndex(COLUMN_DETAIL));
+        LocalDate date = LocalDate.parse(cursor.getString(cursor.getColumnIndex(COLUMN_DATE)));
+        LocalTime start = LocalTime.parse(cursor.getString(cursor.getColumnIndex(COLUMN_START)));
+        LocalTime finish = LocalTime.parse(cursor.getString(cursor.getColumnIndex(COLUMN_FINISH)));
+        Duration duration = Duration.parse(cursor.getString(cursor.getColumnIndex(COLUMN_DURATION)));
+        return new WiD(id, title, detail, date, start, finish, duration);
     }
 }

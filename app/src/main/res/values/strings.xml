@@ -13,6 +13,6 @@
     <string name="title_8">OTHER</string>
 
     <string name="zero_duration">00:00:00</string>
-    <string name="start">start</string>
-    <string name="finish">finish</string>
+    <string name="start">Start</string>
+    <string name="finish">Finish</string>
 </resources>
