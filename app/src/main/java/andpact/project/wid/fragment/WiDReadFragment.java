@@ -1,16 +1,14 @@
 package andpact.project.wid.fragment;
 
-import android.app.AlertDialog;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -20,17 +18,19 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 import andpact.project.wid.R;
 import andpact.project.wid.model.WiD;
-import andpact.project.wid.service.WiDService;
 import andpact.project.wid.util.WiDDatabaseHelper;
 
 public class WiDReadFragment extends Fragment {
@@ -159,17 +159,14 @@ public class WiDReadFragment extends Fragment {
                 TextView durationTextView = new TextView(getContext());
                 long hours = wiD.getDuration().toHours();
                 long minutes = (wiD.getDuration().toMinutes() % 60);
-                long seconds = (wiD.getDuration().getSeconds() % 60);
                 String durationText;
 
                 if (hours > 0 && minutes == 0) {
                     durationText = String.format("%d시간", hours);
                 } else if (hours > 0) {
                     durationText = String.format("%d시간 %d분", hours, minutes);
-                } else if (minutes > 0) {
-                    durationText = String.format("%d분", minutes);
                 } else {
-                    durationText = String.format("%d초", seconds);
+                    durationText = String.format("%d분", minutes);
                 }
 
                 durationTextView.setText(durationText);
@@ -180,7 +177,7 @@ public class WiDReadFragment extends Fragment {
 
                 // Create and add the image button
                 ImageButton imageButton = new ImageButton(getContext());
-                imageButton.setImageResource(R.drawable.baseline_more_horiz_24);
+                imageButton.setImageResource(R.drawable.baseline_edit_24);
                 imageButton.setBackground(null);
                 imageButton.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
                 itemLayout.addView(imageButton);
@@ -195,31 +192,79 @@ public class WiDReadFragment extends Fragment {
 
                     if (clickedWiD != null) {
                         // Create and configure the dialog
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        builder.setTitle("Update Detail");
+                        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
 
-                        // Add an input field for the "detail" field
+                        // Set the date as the dialog's title with center alignment and bold text
+                        TextView dialogTitle = new TextView(getContext());
+                        dialogTitle.setText(R.string.app_name);
+                        dialogTitle.setTextSize(20);
+                        dialogTitle.setGravity(Gravity.CENTER);
+                        dialogTitle.setTypeface(null, Typeface.BOLD);
+                        dialogTitle.setPadding(0, 16, 0, 8);
+                        builder.setCustomTitle(dialogTitle);
+
+                        // Create a custom layout for the dialog
+                        LinearLayout customLayout = new LinearLayout(getContext());
+                        customLayout.setOrientation(LinearLayout.VERTICAL);
+                        customLayout.setPadding(32, 16, 32, 16);
+
+                        long clickedWiDHours = clickedWiD.getDuration().toHours();
+                        long clickedWiDMinutes = (clickedWiD.getDuration().toMinutes() % 60);
+                        String clickedWiDDurationText;
+
+                        if (clickedWiDHours > 0 && clickedWiDMinutes == 0) {
+                            clickedWiDDurationText = String.format("%d시간", clickedWiDHours);
+                        } else if (clickedWiDHours > 0) {
+                            clickedWiDDurationText = String.format("%d시간 %d분", clickedWiDHours, clickedWiDMinutes);
+                        } else {
+                            clickedWiDDurationText = String.format("%d분", clickedWiDMinutes);
+                        }
+
+                        // Create and configure the TextView for displaying start, finish, title, and duration
+                        TextView infoTextView = new TextView(getContext());
+                        String start = clickedWiD.getStart().format(timeFormatter);
+                        String finish = clickedWiD.getFinish().format(timeFormatter);
+                        String title = clickedWiD.getTitle();
+                        String boldInfoText = String.format("<b><font size='20sp'>%s</font></b>부터<b><font size='20sp'>%s</font></b>까지<br><b><font size='20sp'>%s</font></b>동안<b><font size='20sp'>%s</font></b>을 했습니다.<br>아래에 더 자세히 기록해 보세요.", start, finish, clickedWiDDurationText, title);
+                        infoTextView.setText(Html.fromHtml(boldInfoText, Html.FROM_HTML_MODE_LEGACY));
+                        infoTextView.setGravity(Gravity.CENTER);
+                        customLayout.addView(infoTextView);
+
+                        // Create a TextView for displaying the detail
+                        TextView detailLabelTextView = new TextView(getContext());
+                        detailLabelTextView.setText("세부 사항");
+                        detailLabelTextView.setGravity(Gravity.CENTER);
+                        detailLabelTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                        customLayout.addView(detailLabelTextView);
+
+                        // Create a TextView for displaying the detail
+                        TextView detailTextView = new TextView(getContext());
+                        detailTextView.setText(clickedWiD.getDetail());
+                        customLayout.addView(detailTextView);
+
+                        // Create an EditText for editing the detail
                         EditText detailEditText = new EditText(getContext());
-                        detailEditText.setHint(clickedWiD.getDetail() == null ? "Enter detail" : clickedWiD.getDetail());
-                        builder.setView(detailEditText);
+                        detailEditText.setVisibility(View.GONE); // Initially hide the EditText
+                        customLayout.addView(detailEditText);
 
-                        // Display the fields of the clickedWiD object in the dialog
-                        builder.setMessage("Title: " + clickedWiD.getTitle() + "\n" +
-                                "Start: " + clickedWiD.getStart().format(timeFormatter) + "\n" +
-                                "Finish: " + clickedWiD.getFinish().format(timeFormatter) + "\n" +
-                                "Duration: " + clickedWiD.getDuration().toString());
+                        // Set the custom layout for the dialog
+                        builder.setView(customLayout);
+
+                        // Handle the detailTextView click to show the detailEditText
+                        detailTextView.setOnClickListener(view -> {
+                            detailTextView.setVisibility(View.GONE);
+                            detailEditText.setVisibility(View.VISIBLE);
+                            detailEditText.setText(clickedWiD.getDetail());
+                        });
 
                         builder.setPositiveButton("Update", (dialog, which) -> {
-                            // Retrieve the new detail value entered by the user
                             String newDetail = detailEditText.getText().toString();
+                            clickedWiD.setDetail(newDetail);
+                            detailTextView.setText(newDetail);
 
-                            // Call the updateWiDDetailById method from WiDDatabaseHelper to update the WiD object
+                            // Update the detail in the database
                             wiDDatabaseHelper.updateWiDDetailById(widId, newDetail);
 
-                            // Update the clickedWiD object's detail field
-                            clickedWiD.setDetail(newDetail);
-
-                            // Display a toast message to indicate successful update
                             Toast.makeText(getContext(), "Detail updated successfully", Toast.LENGTH_SHORT).show();
 
                             dialog.dismiss();
@@ -230,8 +275,13 @@ public class WiDReadFragment extends Fragment {
                         // Show the dialog
                         AlertDialog dialog = builder.create();
                         dialog.show();
-                    }
 
+                        // Adjust the dialog width (optional)
+                        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+                        layoutParams.copyFrom(dialog.getWindow().getAttributes());
+                        layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
+                        dialog.getWindow().setAttributes(layoutParams);
+                    }
                 });
 
                 // Create and add the image button

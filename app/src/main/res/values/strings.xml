@@ -2,6 +2,7 @@
     <string name="app_name">WiD</string>
     <string name="bottom_navigation_label_1">등록</string>
     <string name="bottom_navigation_label_2">조회</string>
+    <string name="bottom_navigation_label_3">검색</string>
 
     <string name="title_1">STUDY</string>
     <string name="title_2">WORK</string>

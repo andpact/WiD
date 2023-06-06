@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -186,7 +187,6 @@ public class WiDCreateFragment extends Fragment {
                 WiDDatabaseHelper databaseHelper = new WiDDatabaseHelper(getActivity());
                 SQLiteDatabase db = databaseHelper.getWritableDatabase();
                 ContentValues values = currentWiD.toContentValues();
-//                db.insert(WiDDatabaseHelper.TABLE_WID, null, values);
                 db.insert(databaseHelper.getTableWID(), null, values);
 
                 // Create a new WiD object for the second part of the duration
@@ -205,14 +205,22 @@ public class WiDCreateFragment extends Fragment {
             } else {
                 // Calculate the duration
                 Duration duration = Duration.between(currentWiD.getStart(), currentWiD.getFinish());
-                currentWiD.setDuration(duration);
 
-                // Store the WiD object in the database
-                WiDDatabaseHelper databaseHelper = new WiDDatabaseHelper(getActivity());
-                SQLiteDatabase db = databaseHelper.getWritableDatabase();
-                ContentValues values = currentWiD.toContentValues();
-                db.insert(databaseHelper.getTableWID(), null, values);
-                db.close();
+                // Check if the duration is at least 1 minute
+                if (duration.toMinutes() >= 1) {
+                    currentWiD.setDuration(duration);
+
+                    // Store the WiD object in the database
+                    WiDDatabaseHelper databaseHelper = new WiDDatabaseHelper(getActivity());
+                    SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                    ContentValues values = currentWiD.toContentValues();
+                    db.insert(databaseHelper.getTableWID(), null, values);
+                    db.close();
+                } else {
+                    // Handle the case where the duration is less than 1 minute
+                    Toast.makeText(getActivity(), "Duration should be at least 1 minute.", Toast.LENGTH_SHORT).show();
+                }
+
             }
 
             // Reset the current WiD object

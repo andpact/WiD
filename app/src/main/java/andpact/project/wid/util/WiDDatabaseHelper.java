@@ -171,6 +171,48 @@ public class WiDDatabaseHelper extends SQLiteOpenHelper {
         return wiDList;
     }
 
+    public List<WiD> getWiDListByDetail(String detail) {
+        List<WiD> wiDList = new ArrayList<>();
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        String[] projection = {
+                COLUMN_ID,
+                COLUMN_TITLE,
+                COLUMN_DETAIL,
+                COLUMN_DATE,
+                COLUMN_START,
+                COLUMN_FINISH,
+                COLUMN_DURATION
+        };
+
+        String selection = COLUMN_DETAIL + " LIKE ?";
+        String[] selectionArgs = {"%" + detail + "%"};
+
+        Cursor cursor = db.query(
+                TABLE_WID,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                WiD wid = WiD.fromCursor(cursor);
+                wiDList.add(wid);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+
+        db.close();
+
+        return wiDList;
+    }
+
+
 //    public List<WiD> getAllWiD() {
 //        List<WiD> wiDList = new ArrayList<>();
 //
