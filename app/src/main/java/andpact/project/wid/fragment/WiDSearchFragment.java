@@ -203,7 +203,7 @@ public class WiDSearchFragment extends Fragment {
                                     detailEditText.setText(clickedWiD.getDetail());
                                 });
 
-                                builder.setPositiveButton("Update", (dialog, which) -> {
+                                builder.setPositiveButton("수정", (dialog, which) -> {
                                     String newDetail = detailEditText.getText().toString();
                                     clickedWiD.setDetail(newDetail);
                                     detailTextView.setText(newDetail);
@@ -211,12 +211,12 @@ public class WiDSearchFragment extends Fragment {
                                     // Update the detail in the database
                                     wiDDatabaseHelper.updateWiDDetailById(widId, newDetail);
 
-                                    Toast.makeText(getContext(), "Detail updated successfully", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "세부 사항이 수정되었습니다.", Toast.LENGTH_SHORT).show();
 
                                     dialog.dismiss();
                                 });
 
-                                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+                                builder.setNegativeButton("취소", (dialog, which) -> dialog.dismiss());
 
                                 // Show the dialog
                                 AlertDialog dialog = builder.create();

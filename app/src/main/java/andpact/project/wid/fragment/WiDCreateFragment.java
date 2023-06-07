@@ -218,9 +218,8 @@ public class WiDCreateFragment extends Fragment {
                     db.close();
                 } else {
                     // Handle the case where the duration is less than 1 minute
-                    Toast.makeText(getActivity(), "Duration should be at least 1 minute.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "1분 미만의 시간은 기록되지 않습니다.", Toast.LENGTH_SHORT).show();
                 }
-
             }
 
             // Reset the current WiD object

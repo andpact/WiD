@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
@@ -7,4 +6,23 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="study_color">#FF800080</color>
+    <color name="work_color">#FFFFA500</color>
+    <color name="reading_color">#FF008000</color>
+    <color name="exercise_color">#FFFF0000</color>
+    <color name="sleep_color">#FF000080</color>
+    <color name="travel_color">#FF808000</color>
+    <color name="hobby_color">#FF00FFFF</color>
+    <color name="other_color">#FFA52A2A</color>
+
+<!--    <color name="study_color">#FFC0C0E0</color>-->
+<!--    <color name="work_color">#FFFFD7A0</color>-->
+<!--    <color name="reading_color">#FF80C080</color>-->
+<!--    <color name="exercise_color">#FFFF8080</color>-->
+<!--    <color name="sleep_color">#FF8080C0</color>-->
+<!--    <color name="travel_color">#FFC0C080</color>-->
+<!--    <color name="hobby_color">#FF80FFFF</color>-->
+<!--    <color name="other_color">#FFFF9999</color>-->
+
 </resources>

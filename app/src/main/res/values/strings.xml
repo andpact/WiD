@@ -1,19 +1,19 @@
 <resources>
     <string name="app_name">WiD</string>
     <string name="bottom_navigation_label_1">등록</string>
-    <string name="bottom_navigation_label_2">조회</string>
+    <string name="bottom_navigation_label_2">목록</string>
     <string name="bottom_navigation_label_3">검색</string>
 
-    <string name="title_1">STUDY</string>
-    <string name="title_2">WORK</string>
-    <string name="title_3">READING</string>
-    <string name="title_4">EXERCISE</string>
-    <string name="title_5">SLEEP</string>
-    <string name="title_6">TRAVEL</string>
-    <string name="title_7">HOBBY</string>
-    <string name="title_8">OTHER</string>
+    <string name="title_1">공부</string>
+    <string name="title_2">일</string>
+    <string name="title_3">독서</string>
+    <string name="title_4">운동</string>
+    <string name="title_5">잠</string>
+    <string name="title_6">이동</string>
+    <string name="title_7">취미</string>
+    <string name="title_8">기타</string>
 
     <string name="zero_duration">00:00:00</string>
-    <string name="start">Start</string>
-    <string name="finish">Finish</string>
+    <string name="start">시작</string>
+    <string name="finish">종료</string>
 </resources>
