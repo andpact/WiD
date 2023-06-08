@@ -28,6 +28,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ import andpact.project.wid.util.WiDDatabaseHelper;
 
 public class WiDReadFragment extends Fragment {
     private TextView dateTextView;
+    private TextView dayOfWeekTextView;
     private LinearLayout linearLayout;
     private WiDDatabaseHelper wiDDatabaseHelper;
     private LocalDate currentDate;
@@ -51,6 +53,7 @@ public class WiDReadFragment extends Fragment {
     private ImageButton rightTriangle;
 
     private PieChart pieChart;
+    private Map<DayOfWeek, String> dayOfWeekMap;
     private HashMap<String, Integer> colorMap;
     private Map<String, String> titleMap;
 
@@ -59,6 +62,7 @@ public class WiDReadFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wid_read, container, false);
         dateTextView = view.findViewById(R.id.dateTextView);
+        dayOfWeekTextView = view.findViewById(R.id.dayOfWeekTextView);
         linearLayout = view.findViewById(R.id.linearLayout);
 
         leftTriangle = view.findViewById(R.id.leftTriangle);
@@ -69,11 +73,41 @@ public class WiDReadFragment extends Fragment {
         pieChart.setDrawEntryLabels(false); // 엔트리 라벨 표시 X
         pieChart.getDescription().setEnabled(false); // 설명 비활성화
         pieChart.getLegend().setEnabled(false); // 각주(범례) 표시 X
+//        pieChart.setDrawHoleEnabled(false); // 가운데 원 표시
+
+        // 가운데 텍스트 설정
+        pieChart.setDrawCenterText(true);
+        pieChart.setCenterText("오후  오전");
+
+        // 텍스트 스타일 설정 (옵션)
+        pieChart.setCenterTextSize(15f);
+//        pieChart.setCenterTextTypeface(Typeface.DEFAULT_BOLD);
+        pieChart.setCenterTextColor(Color.BLACK);
+
+        dayOfWeekMap = new HashMap<>();
+        dayOfWeekMap.put(DayOfWeek.MONDAY, " 월");
+        dayOfWeekMap.put(DayOfWeek.TUESDAY, " 화");
+        dayOfWeekMap.put(DayOfWeek.WEDNESDAY, " 수");
+        dayOfWeekMap.put(DayOfWeek.THURSDAY, " 목");
+        dayOfWeekMap.put(DayOfWeek.FRIDAY, " 금");
+        dayOfWeekMap.put(DayOfWeek.SATURDAY, " 토");
+        dayOfWeekMap.put(DayOfWeek.SUNDAY, " 일");
 
         wiDDatabaseHelper = new WiDDatabaseHelper(getContext());
-        currentDate = LocalDate.now();
 
+        currentDate = LocalDate.now();
         dateTextView.setText(currentDate.toString());
+        String koreanDayOfWeek = dayOfWeekMap.get(currentDate.getDayOfWeek());
+        dayOfWeekTextView.setText(koreanDayOfWeek);
+
+        if (currentDate.getDayOfWeek() == DayOfWeek.SATURDAY) {
+            dayOfWeekTextView.setTextColor(Color.BLUE);
+        } else if (currentDate.getDayOfWeek() == DayOfWeek.SUNDAY) {
+            dayOfWeekTextView.setTextColor(Color.RED);
+        } else {
+            dayOfWeekTextView.setTextColor(Color.BLACK);
+        }
+
 
         leftTriangle.setOnClickListener(v -> decreaseDate());
         rightTriangle.setOnClickListener(v -> increaseDate());
@@ -105,13 +139,37 @@ public class WiDReadFragment extends Fragment {
 
     private void decreaseDate() {
         currentDate = currentDate.minusDays(1);
+
         dateTextView.setText(currentDate.toString());
+        String koreanDayOfWeek = dayOfWeekMap.get(currentDate.getDayOfWeek());
+        dayOfWeekTextView.setText(koreanDayOfWeek);
+
+        if (currentDate.getDayOfWeek() == DayOfWeek.SATURDAY) {
+            dayOfWeekTextView.setTextColor(Color.BLUE);
+        } else if (currentDate.getDayOfWeek() == DayOfWeek.SUNDAY) {
+            dayOfWeekTextView.setTextColor(Color.RED);
+        } else {
+            dayOfWeekTextView.setTextColor(Color.BLACK);
+        }
+
         updateWiDList();
     }
 
     private void increaseDate() {
         currentDate = currentDate.plusDays(1);
+
         dateTextView.setText(currentDate.toString());
+        String koreanDayOfWeek = dayOfWeekMap.get(currentDate.getDayOfWeek());
+        dayOfWeekTextView.setText(koreanDayOfWeek);
+
+        if (currentDate.getDayOfWeek() == DayOfWeek.SATURDAY) {
+            dayOfWeekTextView.setTextColor(Color.BLUE);
+        } else if (currentDate.getDayOfWeek() == DayOfWeek.SUNDAY) {
+            dayOfWeekTextView.setTextColor(Color.RED);
+        } else {
+            dayOfWeekTextView.setTextColor(Color.BLACK);
+        }
+
         updateWiDList();
     }
 
