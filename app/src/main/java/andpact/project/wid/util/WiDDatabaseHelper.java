@@ -171,6 +171,29 @@ public class WiDDatabaseHelper extends SQLiteOpenHelper {
         return wiDList;
     }
 
+//    public List<WiD> getWiDListByDate(String formattedDate) {
+//        List<WiD> wiDList = new ArrayList<>();
+//
+//        SQLiteDatabase db = getReadableDatabase();
+//
+//        // 해당 조건에 맞는 WiD 데이터를 조회하기 위한 SQL 쿼리를 작성합니다.
+//        String query = "SELECT * FROM " + TABLE_WID + " WHERE " + COLUMN_DATE + " LIKE '" + formattedDate + "%'";
+//
+//        Cursor cursor = db.rawQuery(query, null);
+//
+//        if (cursor != null && cursor.moveToFirst()) {
+//            do {
+//                WiD wid = WiD.fromCursor(cursor);
+//                wiDList.add(wid);
+//            } while (cursor.moveToNext());
+//            cursor.close();
+//        }
+//
+//        db.close();
+//
+//        return wiDList;
+//    }
+
     public List<WiD> getWiDListByDetail(String detail) {
         List<WiD> wiDList = new ArrayList<>();
 

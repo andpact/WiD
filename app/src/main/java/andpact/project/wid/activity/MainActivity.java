@@ -11,6 +11,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import andpact.project.wid.R;
 import andpact.project.wid.fragment.WiDCreateFragment;
+import andpact.project.wid.fragment.WiDReadAllFragment;
 import andpact.project.wid.fragment.WiDReadFragment;
 import andpact.project.wid.fragment.WiDSearchFragment;
 
@@ -46,13 +47,20 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
                 case R.id.item_2:
+                    if (!(currentFragment instanceof WiDReadAllFragment)) {
+                        WiDReadAllFragment wiDReadAllFragment = new WiDReadAllFragment();
+                        fragmentTransaction1.replace(R.id.frame_container, wiDReadAllFragment);
+                        currentFragment = wiDReadAllFragment;
+                    }
+                    break;
+                case R.id.item_3:
                     if (!(currentFragment instanceof WiDReadFragment)) {
                         WiDReadFragment wiDReadFragment = new WiDReadFragment();
                         fragmentTransaction1.replace(R.id.frame_container, wiDReadFragment);
                         currentFragment = wiDReadFragment;
                     }
                     break;
-                case R.id.item_3:
+                case R.id.item_4:
                     if (!(currentFragment instanceof WiDSearchFragment)) {
                         WiDSearchFragment wiDSearchFragment = new WiDSearchFragment();
                         fragmentTransaction1.replace(R.id.frame_container, wiDSearchFragment);
@@ -60,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
             }
-
 
             fragmentTransaction1.commit();
             return true;

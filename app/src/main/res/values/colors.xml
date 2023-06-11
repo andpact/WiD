@@ -7,22 +7,36 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="study_color">#FF800080</color>
-    <color name="work_color">#FFFFA500</color>
-    <color name="reading_color">#FF008000</color>
-    <color name="exercise_color">#FFFF0000</color>
-    <color name="sleep_color">#FF000080</color>
-    <color name="travel_color">#FF808000</color>
-    <color name="hobby_color">#FF00FFFF</color>
-    <color name="other_color">#FFA52A2A</color>
+    <color name="saturday_blue">#FF0000FF</color> <!-- Blue color for Saturday -->
+    <color name="sunday_red">#FFFF0000</color> <!-- Red color for Sunday -->
 
-<!--    <color name="study_color">#FFC0C0E0</color>-->
-<!--    <color name="work_color">#FFFFD7A0</color>-->
-<!--    <color name="reading_color">#FF80C080</color>-->
-<!--    <color name="exercise_color">#FFFF8080</color>-->
-<!--    <color name="sleep_color">#FF8080C0</color>-->
-<!--    <color name="travel_color">#FFC0C080</color>-->
-<!--    <color name="hobby_color">#FF80FFFF</color>-->
-<!--    <color name="other_color">#FFFF9999</color>-->
+    <!--    <color name="study_color">#FF0000</color> &lt;!&ndash; 빨간색 &ndash;&gt;-->
+<!--    <color name="work_color">#FF7F00</color> &lt;!&ndash; 주황색 &ndash;&gt;-->
+<!--    <color name="reading_color">#FFFF00</color> &lt;!&ndash; 노란색 &ndash;&gt;-->
+<!--    <color name="exercise_color">#00FF00</color> &lt;!&ndash; 초록색 &ndash;&gt;-->
+<!--    <color name="sleep_color">#0000FF</color> &lt;!&ndash; 파란색 &ndash;&gt;-->
+<!--    <color name="travel_color">#4B0082</color> &lt;!&ndash; 남색 &ndash;&gt;-->
+<!--    <color name="hobby_color">#8F00FF</color> &lt;!&ndash; 보라색 &ndash;&gt;-->
+<!--    <color name="other_color">#000000</color> &lt;!&ndash; 검은색 &ndash;&gt;-->
+
+    <color name="study_color">#FF6666</color> <!-- 빨간색 -->
+    <color name="work_color">#FF9933</color> <!-- 주황색 -->
+    <color name="reading_color">#FFFF66</color> <!-- 노란색 -->
+    <color name="exercise_color">#66FF66</color> <!-- 초록색 -->
+    <color name="sleep_color">#6666FF</color> <!-- 파란색 -->
+    <color name="travel_color">#9933FF</color> <!-- 남색 -->
+    <color name="hobby_color">#FF66FF</color> <!-- 보라색 -->
+    <color name="other_color">#333333</color> <!-- 회색 -->
+
+    <color name="no_color">#CCCCCC</color> <!-- 회색 -->
+
+<!--    <color name="study_color">#FF9999</color> &lt;!&ndash; 연한 빨간색 &ndash;&gt;-->
+<!--    <color name="work_color">#FFB266</color> &lt;!&ndash; 연한 주황색 &ndash;&gt;-->
+<!--    <color name="reading_color">#FFFF99</color> &lt;!&ndash; 연한 노란색 &ndash;&gt;-->
+<!--    <color name="exercise_color">#99FF99</color> &lt;!&ndash; 연한 초록색 &ndash;&gt;-->
+<!--    <color name="sleep_color">#9999FF</color> &lt;!&ndash; 연한 파란색 &ndash;&gt;-->
+<!--    <color name="travel_color">#B266FF</color> &lt;!&ndash; 연한 남색 &ndash;&gt;-->
+<!--    <color name="hobby_color">#FF99FF</color> &lt;!&ndash; 연한 보라색 &ndash;&gt;-->
+<!--    <color name="other_color">#666666</color> &lt;!&ndash; 연한 회색 &ndash;&gt;-->
 
 </resources>

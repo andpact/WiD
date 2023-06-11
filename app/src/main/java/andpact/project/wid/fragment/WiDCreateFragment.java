@@ -6,15 +6,19 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -33,36 +37,21 @@ public class WiDCreateFragment extends Fragment {
 
     // Fields referencing text views and buttons for each Title
     private TextView studyDurationTextView;
-    private MaterialButton studyStartButton;
-    private MaterialButton studyFinishButton;
-
+    private MaterialButton studyStartButton, studyFinishButton;
     private TextView workDurationTextView;
-    private MaterialButton workStartButton;
-    private MaterialButton workFinishButton;
-
+    private MaterialButton workStartButton, workFinishButton;
     private TextView readingDurationTextView;
-    private MaterialButton readingStartButton;
-    private MaterialButton readingFinishButton;
-
+    private MaterialButton readingStartButton, readingFinishButton;
     private TextView exerciseDurationTextView;
-    private MaterialButton exerciseStartButton;
-    private MaterialButton exerciseFinishButton;
-
+    private MaterialButton exerciseStartButton, exerciseFinishButton;
     private TextView sleepDurationTextView;
-    private MaterialButton sleepStartButton;
-    private MaterialButton sleepFinishButton;
-
+    private MaterialButton sleepStartButton, sleepFinishButton;
     private TextView travelDurationTextView;
-    private MaterialButton travelStartButton;
-    private MaterialButton travelFinishButton;
-
+    private MaterialButton travelStartButton, travelFinishButton;
     private TextView hobbyDurationTextView;
-    private MaterialButton hobbyStartButton;
-    private MaterialButton hobbyFinishButton;
-
+    private MaterialButton hobbyStartButton, hobbyFinishButton;
     private TextView otherDurationTextView;
-    private MaterialButton otherStartButton;
-    private MaterialButton otherFinishButton;
+    private MaterialButton otherStartButton, otherFinishButton;
     private WiD currentWiD;
     private Handler handler = new Handler();
 
@@ -216,9 +205,24 @@ public class WiDCreateFragment extends Fragment {
                     ContentValues values = currentWiD.toContentValues();
                     db.insert(databaseHelper.getTableWID(), null, values);
                     db.close();
+
+                    Snackbar snackbar = Snackbar.make(getActivity().findViewById(android.R.id.content), "WiD가 기록되었습니다.", Snackbar.LENGTH_SHORT);
+
+                    View snackbarView = snackbar.getView();
+                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackbarView.getLayoutParams();
+                    params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 16 * 20);
+                    snackbarView.setLayoutParams(params);
+
+                    snackbar.show();
                 } else {
-                    // Handle the case where the duration is less than 1 minute
-                    Toast.makeText(getActivity(), "1분 미만의 시간은 기록되지 않습니다.", Toast.LENGTH_SHORT).show();
+                    Snackbar snackbar = Snackbar.make(getActivity().findViewById(android.R.id.content), "1분 미만의 WiD는 기록되지 않아요.", Snackbar.LENGTH_SHORT);
+
+                    View snackbarView = snackbar.getView();
+                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackbarView.getLayoutParams();
+                    params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 16 * 20);
+                    snackbarView.setLayoutParams(params);
+
+                    snackbar.show();
                 }
             }
 
