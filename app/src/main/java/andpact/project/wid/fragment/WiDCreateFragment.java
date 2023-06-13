@@ -34,7 +34,6 @@ import andpact.project.wid.service.WiDService;
 import andpact.project.wid.util.WiDDatabaseHelper;
 
 public class WiDCreateFragment extends Fragment {
-
     // Fields referencing text views and buttons for each Title
     private TextView studyDurationTextView;
     private MaterialButton studyStartButton, studyFinishButton;
@@ -210,7 +209,7 @@ public class WiDCreateFragment extends Fragment {
 
                     View snackbarView = snackbar.getView();
                     FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackbarView.getLayoutParams();
-                    params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 16 * 20);
+                    params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 16 * 15);
                     snackbarView.setLayoutParams(params);
 
                     snackbar.show();
@@ -219,7 +218,7 @@ public class WiDCreateFragment extends Fragment {
 
                     View snackbarView = snackbar.getView();
                     FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackbarView.getLayoutParams();
-                    params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 16 * 20);
+                    params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 16 * 15);
                     snackbarView.setLayoutParams(params);
 
                     snackbar.show();

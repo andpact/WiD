@@ -1,9 +1,11 @@
 package andpact.project.wid.fragment;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,6 +23,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -239,21 +244,32 @@ public class WiDReadFragment extends Fragment {
             // 시작 시간 초기화
             int startMinutes = 0;
 
+            int count = 1; // Initialize the counter variable
+
             for (WiD wiD : wiDList) {
 
                 LinearLayout mainLayout = new LinearLayout(getContext());
                 mainLayout.setOrientation(LinearLayout.VERTICAL);
-                mainLayout.setBackgroundResource(R.drawable.rounded_background);
+                mainLayout.setTag(wiD.getId());
+//                mainLayout.setBackgroundResource(R.drawable.rounded_background);
 
                 LinearLayout itemLayout = new LinearLayout(getContext());
                 itemLayout.setOrientation(LinearLayout.HORIZONTAL);
                 itemLayout.setGravity(Gravity.CENTER_VERTICAL);
 
+                // Create and add the numberTextView
+                MaterialTextView numberTextView = new MaterialTextView(getContext());
+                numberTextView.setText(String.valueOf(count++)); // Set the current count as the text
+                numberTextView.setTypeface(null, Typeface.BOLD);
+                numberTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.5f));
+                numberTextView.setGravity(Gravity.CENTER);
+                itemLayout.addView(numberTextView);
+
                 // Create and add the title TextView
                 MaterialTextView titleTextView = new MaterialTextView(getContext());
                 titleTextView.setText(titleMap.get(wiD.getTitle()));
                 titleTextView.setTypeface(null, Typeface.BOLD);
-                titleTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+                titleTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.5f));
                 titleTextView.setGravity(Gravity.CENTER);
                 itemLayout.addView(titleTextView);
 
@@ -261,25 +277,15 @@ public class WiDReadFragment extends Fragment {
                 MaterialTextView startTimeTextView = new MaterialTextView(getContext());
                 startTimeTextView.setText(wiD.getStart().format(timeFormatter));
                 startTimeTextView.setTypeface(null, Typeface.BOLD);
-                startTimeTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+                startTimeTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.7f));
                 startTimeTextView.setGravity(Gravity.CENTER);
                 itemLayout.addView(startTimeTextView);
-
-                // Create and add the tilde TextView
-                MaterialTextView tildeTextView = new MaterialTextView(getContext());
-                tildeTextView.setText("~");
-                tildeTextView.setTypeface(null, Typeface.BOLD);
-                LinearLayout.LayoutParams tildeLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                tildeLayoutParams.weight = 0;
-                tildeTextView.setLayoutParams(tildeLayoutParams);
-                tildeTextView.setGravity(Gravity.CENTER);
-                itemLayout.addView(tildeTextView);
 
                 // Create and add the finish time TextView
                 MaterialTextView finishTimeTextView = new MaterialTextView(getContext());
                 finishTimeTextView.setText(wiD.getFinish().format(timeFormatter));
                 finishTimeTextView.setTypeface(null, Typeface.BOLD);
-                finishTimeTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+                finishTimeTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.7f));
                 finishTimeTextView.setGravity(Gravity.CENTER);
                 itemLayout.addView(finishTimeTextView);
 
@@ -299,93 +305,190 @@ public class WiDReadFragment extends Fragment {
 
                 durationTextView.setText(durationText);
                 durationTextView.setTypeface(null, Typeface.BOLD);
-                durationTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+                durationTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.8f));
                 durationTextView.setGravity(Gravity.CENTER);
                 itemLayout.addView(durationTextView);
 
-                ImageButton imageButton = new ImageButton(getContext());
-                imageButton.setImageResource(R.drawable.baseline_keyboard_arrow_right_24);
-                imageButton.setBackground(null);
-                imageButton.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
-                imageButton.setTag("arrow_right"); // Set a tag to track the state of the button
-                itemLayout.addView(imageButton);
+                ImageView arrowImageView = new ImageView(getContext());
+                arrowImageView.setImageResource(R.drawable.baseline_keyboard_arrow_right_24);
+                arrowImageView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.4f));
+                arrowImageView.setTag("arrow_right"); // Set a tag to track the state of the button
+                itemLayout.addView(arrowImageView);
 
                 LinearLayout itemLayout2 = new LinearLayout(getContext());
                 itemLayout2.setOrientation(LinearLayout.VERTICAL);
                 itemLayout2.setVisibility(View.GONE); // Initially set to invisible
 
-                // Create and add itemLayout3
-                LinearLayout itemLayout3 = new LinearLayout(getContext());
-                itemLayout3.setOrientation(LinearLayout.HORIZONTAL);
-                itemLayout3.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                itemLayout2.addView(itemLayout3);
-
-                // Create and add the "세부사항" TextView to itemLayout3
-                MaterialTextView fixedDetailTextView = new MaterialTextView(getContext());
-                fixedDetailTextView.setText("세부사항");
-                LinearLayout.LayoutParams fixedDetailLayoutParams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-                fixedDetailLayoutParams.gravity = Gravity.START;
-                fixedDetailTextView.setLayoutParams(fixedDetailLayoutParams);
-                itemLayout3.addView(fixedDetailTextView);
-
-                // Create and add the "수정" Button to itemLayout3
-                MaterialButton editButton = new MaterialButton(getContext());
-                editButton.setText("수정");
-                LinearLayout.LayoutParams editLayoutParams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-                editLayoutParams.gravity = Gravity.END;
-                editButton.setLayoutParams(editLayoutParams);
-                itemLayout3.addView(editButton);
+                ConstraintLayout constraintLayout = new ConstraintLayout(getContext());
+                // Set LayoutParams
+                ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
+                        ConstraintLayout.LayoutParams.MATCH_PARENT,
+                        ConstraintLayout.LayoutParams.WRAP_CONTENT
+                );
+                constraintLayout.setLayoutParams(layoutParams);
+                constraintLayout.setPadding(16, 0, 16, 0);
 
                 // Create and add the "세부사항 입력칸" TextView
                 MaterialTextView detailTextView = new MaterialTextView(getContext());
-                // detailTextView.setText("세부사항 입력칸");
-                detailTextView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                itemLayout2.addView(detailTextView);
+                detailTextView.setId(View.generateViewId());
+//                detailTextView.setTextSize(16);
+                detailTextView.setTypeface(null, Typeface.BOLD); // Set the text to bold
+                detailTextView.setGravity(Gravity.CENTER_VERTICAL);
+                detailTextView.setMaxLines(3); // 최대 3줄까지 표시
+                detailTextView.setEllipsize(TextUtils.TruncateAt.END); // 글자가 생략될 경우 "..."로 표시
 
-                // Create and add the detail EditText
-                TextInputLayout detailInputLayout = new TextInputLayout(getContext());
-                LinearLayout.LayoutParams detailLayoutParams = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
+                ConstraintLayout.LayoutParams detailParams = new ConstraintLayout.LayoutParams(
+                        ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                        ConstraintLayout.LayoutParams.WRAP_CONTENT
                 );
-                detailInputLayout.setLayoutParams(detailLayoutParams);
+                detailTextView.setLayoutParams(detailParams);
 
-                TextInputEditText detailEditText = new TextInputEditText(getContext());
-                detailEditText.setHint("세부 사항을 입력해 보세요");
-                detailEditText.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                ));
-                detailInputLayout.addView(detailEditText);
+                MaterialButton showMoreButton = new MaterialButton(getContext());
+                showMoreButton.setId(View.generateViewId());
+                showMoreButton.setText("..자세히");
+                showMoreButton.setTextColor(Color.BLUE); // 버튼 텍스트 색상을 파란색으로 설정
+                showMoreButton.setBackgroundColor(Color.TRANSPARENT); // 배경색을 투명으로 설정
+                showMoreButton.setPadding(0, 0, 0, 0);
 
-                if (wiD.getDetail() != null) {
-                    detailTextView.setText(wiD.getDetail());
-                    detailTextView.setVisibility(View.VISIBLE);
-                    detailInputLayout.setVisibility(View.GONE);
+                ConstraintLayout.LayoutParams buttonParams = new ConstraintLayout.LayoutParams(
+                        ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                        ConstraintLayout.LayoutParams.WRAP_CONTENT
+                );
+                buttonParams.setMargins(0, 0, 0, 0);
+
+                showMoreButton.setLayoutParams(buttonParams);
+                showMoreButton.setGravity(Gravity.END | Gravity.BOTTOM); // 버튼을 텍스트 뷰의 오른쪽 아래에 위치하도록 설정
+                showMoreButton.setOnClickListener(v -> {
+                    // "자세히 보기" 버튼 클릭 시 전체 디테일을 표시하는 기능 구현
+                    detailTextView.setMaxLines(Integer.MAX_VALUE); // 최대 줄 수 제한을 해제하여 전체 디테일 표시
+                    showMoreButton.setVisibility(View.GONE); // "자세히 보기" 버튼 감추기
+                });
+
+                constraintLayout.addView(detailTextView);
+                constraintLayout.addView(showMoreButton);
+
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(constraintLayout);
+                constraintSet.connect(detailTextView.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+//                constraintSet.connect(detailTextView.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+//                constraintSet.connect(detailTextView.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+//                constraintSet.connect(detailTextView.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+                constraintSet.connect(showMoreButton.getId(), ConstraintSet.END, detailTextView.getId(), ConstraintSet.END);
+                constraintSet.connect(showMoreButton.getId(), ConstraintSet.BOTTOM, detailTextView.getId(), ConstraintSet.BOTTOM);
+
+                constraintSet.applyTo(constraintLayout);
+
+                if (TextUtils.isEmpty(wiD.getDetail())) {
+                    detailTextView.setHint("세부 사항 입력...");
+                    showMoreButton.setVisibility(View.GONE);
                 } else {
-                    detailTextView.setVisibility(View.GONE);
-                    detailInputLayout.setVisibility(View.VISIBLE);
+                    detailTextView.setText(wiD.getDetail());
+                    showMoreButton.setVisibility(View.VISIBLE);
                 }
 
-                itemLayout2.addView(detailInputLayout);
+//                if (TextUtils.isEmpty(wiD.getDetail())) {
+//                    detailTextView.setHint("세부 사항 입력...");
+//                    showMoreButton.setVisibility(View.GONE);
+//                } else {
+//                    detailTextView.setText(wiD.getDetail());
+//                    if (detailTextView.getLineCount() > 3) {
+//                        showMoreButton.setVisibility(View.VISIBLE);
+//                    } else {
+//                        showMoreButton.setVisibility(View.GONE);
+//                    }
+//                }
 
+                itemLayout2.addView(constraintLayout);
+
+                // Set OnClickListener for the TextView
+                detailTextView.setOnClickListener(v -> {
+                    // Create and show the dialog
+                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
+                    MaterialTextView dialogTitle = new MaterialTextView(getContext());
+                    dialogTitle.setPadding(0, 64, 0, 64);
+                    dialogTitle.setText("세부 사항");
+                    dialogTitle.setTextSize(20);
+                    dialogTitle.setGravity(Gravity.CENTER);
+                    dialogTitle.setTypeface(null, Typeface.BOLD);
+                    builder.setCustomTitle(dialogTitle);
+
+                    // Create and add the Material TextInputLayout with EditText
+                    TextInputLayout textInputLayout = new TextInputLayout(getContext());
+                    textInputLayout.setPadding(64, 0, 64, 0);
+
+                    textInputLayout.setBoxBackgroundMode(TextInputLayout.BOX_BACKGROUND_OUTLINE); // 왜 설정이 안되냐;;;
+                    textInputLayout.setCounterEnabled(true);
+                    textInputLayout.setCounterMaxLength(200);
+
+                    TextInputEditText textInputEditText = new TextInputEditText(getContext());
+                    textInputEditText.setText(detailTextView.getText()); // Set the text from detailTextView to TextInputEditText
+                    textInputLayout.addView(textInputEditText);
+
+                    // Set minimum lines to 5
+                    textInputEditText.setMinLines(10);
+
+                    builder.setView(textInputLayout);
+
+                    // Set positive button action
+                    builder.setPositiveButton("확인", (dialog, which) -> {
+                        // Get the ID from the mainLayout's tag
+                        Long id = (Long) mainLayout.getTag();
+
+                        // Get the new detail from the TextInputEditText
+                        String newDetail = textInputEditText.getText().toString();
+
+                        // Call the updateWiDDetailById method with the retrieved values
+                        wiDDatabaseHelper.updateWiDDetailById(id, newDetail);
+                    });
+
+                    // Set negative button action
+                    builder.setNegativeButton("취소", (dialog, which) -> {
+                        // Dismiss the dialog
+                        dialog.dismiss();
+                    });
+
+                    // Show the dialog
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                });
 
                 // Create and add the "WiD 삭제" Button
                 MaterialButton deleteButton = new MaterialButton(getContext());
                 deleteButton.setText("WiD 삭제");
                 LinearLayout.LayoutParams deleteLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 deleteButton.setLayoutParams(deleteLayoutParams);
+
+                deleteButton.setOnClickListener(v -> {
+                    // Create and show the confirmation dialog
+                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
+                    builder.setMessage("삭제하시겠습니까?");
+                    builder.setPositiveButton("삭제", (dialog, which) -> {
+                                // Get the ID from the mainLayout's tag
+                                Long id = (Long) mainLayout.getTag();
+
+                                // Call the deleteWiDById method with the retrieved ID
+                                wiDDatabaseHelper.deleteWiDById(id);
+                    });
+                    builder.setNegativeButton("취소", (dialog, which) -> {
+                        // Dismiss the dialog
+                        dialog.dismiss();
+                    });
+                    // Show the dialog
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                });
+
                 itemLayout2.addView(deleteButton);
 
                 itemLayout.setOnClickListener(v -> {
                     if (itemLayout2.getVisibility() == View.GONE) {
                         itemLayout2.setVisibility(View.VISIBLE);
-                        imageButton.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
-                        imageButton.setTag("arrow_down");
+                        arrowImageView.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
+                        arrowImageView.setTag("arrow_down");
                     } else {
                         itemLayout2.setVisibility(View.GONE);
-                        imageButton.setImageResource(R.drawable.baseline_keyboard_arrow_right_24);
-                        imageButton.setTag("arrow_right");
+                        arrowImageView.setImageResource(R.drawable.baseline_keyboard_arrow_right_24);
+                        arrowImageView.setTag("arrow_right");
                     }
                 });
 
