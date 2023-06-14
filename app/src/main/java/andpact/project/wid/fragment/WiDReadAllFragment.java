@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
@@ -94,7 +95,6 @@ public class WiDReadAllFragment extends Fragment {
         int daysInMonth = currentDate.lengthOfMonth();
 
         for (int i = 0; i < startDay + daysInMonth; i++) { // 1일 부터 마지막 날까지 파이 차트를 그림. 반복 한 번이 하루를 의미함.
-
             ArrayList<PieEntry> entries;
             PieDataSet dataSet;
             PieData data;
@@ -105,6 +105,17 @@ public class WiDReadAllFragment extends Fragment {
             pieChart.getDescription().setEnabled(false); // 설명 비활성화
             pieChart.getLegend().setEnabled(false); // 각주(범례) 표시 X
             pieChart.setHoleRadius(70); // 가운데 원의 반지름은 큰 원의 70%
+//            pieChart.setPadding(0, 0, 0, 0);
+
+            GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
+            layoutParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+//            파이 차트 크기 키우기 왜 안됨;;
+//            layoutParams.setMargins(0, 0, 0, 0);
+//            layoutParams.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+//            layoutParams.width = 140;
+//            layoutParams.height = 140;
+
+            pieChart.setLayoutParams(layoutParams);
 
             if (i < startDay) { // 1일 이전의 빈 파이 차트를 표시
                 entries = new ArrayList<>(); // 빈 엔트리 셋 생성
@@ -116,11 +127,6 @@ public class WiDReadAllFragment extends Fragment {
                 pieChart.setData(data);
                 pieChart.invalidate();
 
-                GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
-                layoutParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-
-                pieChart.setLayoutParams(layoutParams);
-
                 gridLayout.addView(pieChart);
             } else { // 1일 부터의 파이 차트를 표시
                 pieChart.setDrawCenterText(true);
@@ -130,10 +136,12 @@ public class WiDReadAllFragment extends Fragment {
                 // Set the center text color based on the day of the week
                 if (i % 7 == 0) {
                     // Sunday (0th day of the week)
-                    pieChart.setCenterTextColor(R.color.sunday_red);
+//                    pieChart.setCenterTextColor(R.color.sunday_red); // 왜 안됨 이거
+                    pieChart.setCenterTextColor(Color.RED);
                 } else if (i % 7 == 6) {
                     // Saturday (6th day of the week)
-                    pieChart.setCenterTextColor(R.color.saturday_blue);
+//                    pieChart.setCenterTextColor(R.color.saturday_blue);
+                    pieChart.setCenterTextColor(Color.BLUE);
                 } else {
                     // Other days of the week
                     pieChart.setCenterTextColor(R.color.black);
@@ -194,11 +202,6 @@ public class WiDReadAllFragment extends Fragment {
                     pieChart.setData(data);
                     pieChart.invalidate(); // 차트 갱신
                 }
-
-                GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
-                layoutParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-
-                pieChart.setLayoutParams(layoutParams);
 
                 gridLayout.addView(pieChart);
 

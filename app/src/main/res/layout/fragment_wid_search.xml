@@ -4,12 +4,12 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<!--    material 서치 부로 변경하자-->
+<!--    material 서치 부로 변경하자?-->
     <SearchView
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:queryHint="Search"
+        android:queryHint="세부 사항으로 검색.."
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -18,12 +18,11 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/searchView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
-
-        <!-- Add your WiD object views here -->
 
     </LinearLayout>
 

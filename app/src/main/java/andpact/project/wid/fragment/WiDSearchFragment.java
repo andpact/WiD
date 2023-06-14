@@ -1,8 +1,10 @@
 package andpact.project.wid.fragment;
 
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -19,14 +22,25 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.textview.MaterialTextView;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import andpact.project.wid.R;
+import andpact.project.wid.Title;
 import andpact.project.wid.model.WiD;
 import andpact.project.wid.util.WiDDatabaseHelper;
 
@@ -34,7 +48,8 @@ public class WiDSearchFragment extends Fragment {
     private SearchView searchView;
     private LinearLayout linearLayout;
     private WiDDatabaseHelper wiDDatabaseHelper;
-
+    private Map<String, String> titleMap;
+    private Map<DayOfWeek, String> dayOfWeekMap;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -43,6 +58,33 @@ public class WiDSearchFragment extends Fragment {
         searchView = view.findViewById(R.id.searchView);
         linearLayout = view.findViewById(R.id.linearLayout);
         wiDDatabaseHelper = new WiDDatabaseHelper(getContext());
+
+        // "세부 사항으로 검색해 보세요." 텍스트 뷰 생성 및 설정
+        MaterialTextView noContextTextView = new MaterialTextView(getContext());
+        noContextTextView.setText("세부 사항으로 WiD를 검색해 보세요.");
+        noContextTextView.setGravity(Gravity.CENTER);
+
+        // 리니어 레이아웃에 텍스트 뷰 추가
+        linearLayout.addView(noContextTextView);
+
+        titleMap = new HashMap<>();
+        titleMap.put(Title.STUDY.toString(), getResources().getString(R.string.title_1));
+        titleMap.put(Title.WORK.toString(), getResources().getString(R.string.title_2));
+        titleMap.put(Title.READING.toString(), getResources().getString(R.string.title_3));
+        titleMap.put(Title.EXERCISE.toString(), getResources().getString(R.string.title_4));
+        titleMap.put(Title.SLEEP.toString(), getResources().getString(R.string.title_5));
+        titleMap.put(Title.TRAVEL.toString(), getResources().getString(R.string.title_6));
+        titleMap.put(Title.HOBBY.toString(), getResources().getString(R.string.title_7));
+        titleMap.put(Title.OTHER.toString(), getResources().getString(R.string.title_8));
+
+        dayOfWeekMap = new HashMap<>();
+        dayOfWeekMap.put(DayOfWeek.MONDAY, "월");
+        dayOfWeekMap.put(DayOfWeek.TUESDAY, "화");
+        dayOfWeekMap.put(DayOfWeek.WEDNESDAY, "수");
+        dayOfWeekMap.put(DayOfWeek.THURSDAY, "목");
+        dayOfWeekMap.put(DayOfWeek.FRIDAY, "금");
+        dayOfWeekMap.put(DayOfWeek.SATURDAY, "토");
+        dayOfWeekMap.put(DayOfWeek.SUNDAY, "일");
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -55,6 +97,9 @@ public class WiDSearchFragment extends Fragment {
                 if (newText.isEmpty()) {
                     // 검색어가 비어있을 때, 리니어 레이아웃 초기화
                     linearLayout.removeAllViews();
+
+                    // 리니어 레이아웃에 텍스트 뷰 추가
+                    linearLayout.addView(noContextTextView);
                 } else {
                     List<WiD> wiDList = wiDDatabaseHelper.getWiDListByDetail(newText);
 
@@ -62,47 +107,89 @@ public class WiDSearchFragment extends Fragment {
                     linearLayout.removeAllViews();
 
                     DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+                    LocalDate date = null; // LocalDate 변수 초기화
+
+                    int count = 1; // Initialize the counter variable
+
                     for (WiD wiD : wiDList) {
+                        if (date == null || !date.equals(wiD.getDate())) {
+                            LinearLayout dateLinearLayout = new LinearLayout(getContext());
+                            dateLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+                            dateLinearLayout.setPadding(0, 32, 0, 0);
+                            linearLayout.addView(dateLinearLayout);
+
+                            // 새로운 날짜인 경우에만 dateTextView를 생성하고 추가
+                            date = wiD.getDate();
+
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 (");
+                            String formattedDate = date.format(formatter);
+
+                            MaterialTextView dateTextView = new MaterialTextView(getContext());
+                            dateTextView.setText(formattedDate);
+                            dateLinearLayout.addView(dateTextView);
+
+                            MaterialTextView dayOfWeekTextView = new MaterialTextView(getContext());
+                            String koreanDayOfWeek = dayOfWeekMap.get(date.getDayOfWeek());
+                            dayOfWeekTextView.setText(koreanDayOfWeek);
+                            dateLinearLayout.addView(dayOfWeekTextView);
+
+                            if (date.getDayOfWeek() == DayOfWeek.SATURDAY) {
+                                dayOfWeekTextView.setTextColor(Color.BLUE);
+                            } else if (date.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                                dayOfWeekTextView.setTextColor(Color.RED);
+                            } else {
+                                dayOfWeekTextView.setTextColor(Color.BLACK);
+                            }
+
+                            MaterialTextView parenthesisTextView = new MaterialTextView(getContext());
+                            parenthesisTextView.setText(")");
+                            dateLinearLayout.addView(parenthesisTextView);
+                        };
+
+                        LinearLayout mainLayout = new LinearLayout(getContext());
+                        mainLayout.setOrientation(LinearLayout.VERTICAL);
+                        mainLayout.setTag(wiD.getId());
+
                         LinearLayout itemLayout = new LinearLayout(getContext());
+                        itemLayout.setPadding(0, 16, 0, 0);
                         itemLayout.setOrientation(LinearLayout.HORIZONTAL);
                         itemLayout.setGravity(Gravity.CENTER_VERTICAL);
 
+                        // Create and add the numberTextView
+                        MaterialTextView numberTextView = new MaterialTextView(getContext());
+                        numberTextView.setText(String.valueOf(count++)); // Set the current count as the text
+                        numberTextView.setTypeface(null, Typeface.BOLD);
+                        numberTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.5f));
+                        numberTextView.setGravity(Gravity.CENTER);
+                        itemLayout.addView(numberTextView);
+
                         // Create and add the title TextView
-                        TextView titleTextView = new TextView(getContext());
-                        titleTextView.setText(wiD.getTitle());
+                        MaterialTextView titleTextView = new MaterialTextView(getContext());
+                        titleTextView.setText(titleMap.get(wiD.getTitle()));
                         titleTextView.setTypeface(null, Typeface.BOLD);
-                        titleTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+                        titleTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.5f));
                         titleTextView.setGravity(Gravity.CENTER);
                         itemLayout.addView(titleTextView);
 
                         // Create and add the start time TextView
-                        TextView startTimeTextView = new TextView(getContext());
+                        MaterialTextView startTimeTextView = new MaterialTextView(getContext());
                         startTimeTextView.setText(wiD.getStart().format(timeFormatter));
                         startTimeTextView.setTypeface(null, Typeface.BOLD);
-                        startTimeTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+                        startTimeTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.7f));
                         startTimeTextView.setGravity(Gravity.CENTER);
                         itemLayout.addView(startTimeTextView);
 
-                        // Create and add the tilde TextView
-                        TextView tildeTextView = new TextView(getContext());
-                        tildeTextView.setText("~");
-                        tildeTextView.setTypeface(null, Typeface.BOLD);
-                        LinearLayout.LayoutParams tildeLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                        tildeLayoutParams.weight = 0;
-                        tildeTextView.setLayoutParams(tildeLayoutParams);
-                        tildeTextView.setGravity(Gravity.CENTER);
-                        itemLayout.addView(tildeTextView);
-
                         // Create and add the finish time TextView
-                        TextView finishTimeTextView = new TextView(getContext());
+                        MaterialTextView finishTimeTextView = new MaterialTextView(getContext());
                         finishTimeTextView.setText(wiD.getFinish().format(timeFormatter));
                         finishTimeTextView.setTypeface(null, Typeface.BOLD);
-                        finishTimeTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+                        finishTimeTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.7f));
                         finishTimeTextView.setGravity(Gravity.CENTER);
                         itemLayout.addView(finishTimeTextView);
 
                         // Create and add the duration TextView
-                        TextView durationTextView = new TextView(getContext());
+                        MaterialTextView durationTextView = new MaterialTextView(getContext());
                         long hours = wiD.getDuration().toHours();
                         long minutes = (wiD.getDuration().toMinutes() % 60);
                         String durationText;
@@ -117,146 +204,187 @@ public class WiDSearchFragment extends Fragment {
 
                         durationTextView.setText(durationText);
                         durationTextView.setTypeface(null, Typeface.BOLD);
-                        durationTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+                        durationTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.8f));
                         durationTextView.setGravity(Gravity.CENTER);
                         itemLayout.addView(durationTextView);
 
-                        // Create and add the image button
-                        ImageButton imageButton = new ImageButton(getContext());
-                        imageButton.setImageResource(R.drawable.baseline_edit_24);
-                        imageButton.setBackground(null);
-                        imageButton.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
-                        itemLayout.addView(imageButton);
-                        imageButton.setTag(wiD.getId());
+                        ImageView arrowImageView = new ImageView(getContext());
+                        arrowImageView.setImageResource(R.drawable.baseline_keyboard_arrow_right_24);
+                        arrowImageView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.4f));
+                        arrowImageView.setTag("arrow_right"); // Set a tag to track the state of the button
+                        itemLayout.addView(arrowImageView);
 
-                        imageButton.setOnClickListener(v -> {
-                            // Retrieve the WiD id from the image button's tag
-                            Long widId = (Long) v.getTag();
+                        LinearLayout itemLayout2 = new LinearLayout(getContext());
+                        itemLayout2.setOrientation(LinearLayout.VERTICAL);
+                        itemLayout2.setVisibility(View.GONE); // Initially set to invisible
 
-                            // Retrieve the WiD object by its ID
-                            WiD clickedWiD = wiDDatabaseHelper.getWiDById(widId);
+                        ConstraintLayout constraintLayout = new ConstraintLayout(getContext());
+                        constraintLayout.setPadding(32, 16, 32, 0);
 
-                            if (clickedWiD != null) {
-                                // Create and configure the dialog
-                                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
+                        // Create and add the "세부사항 입력칸" TextView
+                        MaterialTextView detailTextView = new MaterialTextView(getContext());
+                        detailTextView.setId(View.generateViewId());
+                        detailTextView.setTypeface(null, Typeface.BOLD); // Set the text to bold
+                        detailTextView.setGravity(Gravity.CENTER_VERTICAL);
+                        detailTextView.setMaxLines(3); // 최대 3줄까지 표시
+                        detailTextView.setEllipsize(TextUtils.TruncateAt.END); // 글자가 생략될 경우 "..."로 표시
 
-                                // Set the date as the dialog's title with center alignment and bold text
-                                TextView dialogTitle = new TextView(getContext());
-                                dialogTitle.setText(R.string.app_name);
-                                dialogTitle.setTextSize(20);
-                                dialogTitle.setGravity(Gravity.CENTER);
-                                dialogTitle.setTypeface(null, Typeface.BOLD);
-                                dialogTitle.setPadding(0, 16, 0, 8);
-                                builder.setCustomTitle(dialogTitle);
+                        ConstraintLayout.LayoutParams detailParams = new ConstraintLayout.LayoutParams(
+                                ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                                ConstraintLayout.LayoutParams.WRAP_CONTENT
+                        );
+                        detailTextView.setLayoutParams(detailParams);
 
-                                // Create a custom layout for the dialog
-                                LinearLayout customLayout = new LinearLayout(getContext());
-                                customLayout.setOrientation(LinearLayout.VERTICAL);
-                                customLayout.setPadding(32, 16, 32, 16);
+                        MaterialButton showMoreButton = new MaterialButton(getContext());
+                        showMoreButton.setId(View.generateViewId());
+                        showMoreButton.setText("..자세히");
+                        showMoreButton.setTextColor(Color.BLUE); // 버튼 텍스트 색상을 파란색으로 설정
+                        showMoreButton.setBackgroundColor(Color.TRANSPARENT); // 배경색을 투명으로 설정
+                        showMoreButton.setPadding(0, 0, 0, 0);
 
-                                long clickedWiDHours = clickedWiD.getDuration().toHours();
-                                long clickedWiDMinutes = (clickedWiD.getDuration().toMinutes() % 60);
-                                String clickedWiDDurationText;
+                        ConstraintLayout.LayoutParams buttonParams = new ConstraintLayout.LayoutParams(
+                                ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                                ConstraintLayout.LayoutParams.WRAP_CONTENT
+                        );
+                        buttonParams.setMargins(0, 0, 0, 0);
 
-                                if (clickedWiDHours > 0 && clickedWiDMinutes == 0) {
-                                    clickedWiDDurationText = String.format("%d시간", clickedWiDHours);
-                                } else if (clickedWiDHours > 0) {
-                                    clickedWiDDurationText = String.format("%d시간 %d분", clickedWiDHours, clickedWiDMinutes);
-                                } else {
-                                    clickedWiDDurationText = String.format("%d분", clickedWiDMinutes);
-                                }
+                        showMoreButton.setLayoutParams(buttonParams);
+                        showMoreButton.setGravity(Gravity.END | Gravity.BOTTOM); // 버튼을 텍스트 뷰의 오른쪽 아래에 위치하도록 설정
+                        showMoreButton.setOnClickListener(v -> {
+                            // "자세히 보기" 버튼 클릭 시 전체 디테일을 표시하는 기능 구현
+                            detailTextView.setMaxLines(Integer.MAX_VALUE); // 최대 줄 수 제한을 해제하여 전체 디테일 표시
+                            showMoreButton.setVisibility(View.GONE); // "자세히 보기" 버튼 감추기
+                        });
 
-                                // Create and configure the TextView for displaying start, finish, title, and duration
-                                TextView infoTextView = new TextView(getContext());
-                                String start = clickedWiD.getStart().format(timeFormatter);
-                                String finish = clickedWiD.getFinish().format(timeFormatter);
-                                String title = clickedWiD.getTitle();
-                                String boldInfoText = String.format("<b><font size='20sp'>%s</font></b>부터<b><font size='20sp'>%s</font></b>까지<br><b><font size='20sp'>%s</font></b>동안<b><font size='20sp'>%s</font></b>을 했습니다.<br>아래에 더 자세히 기록해 보세요.", start, finish, clickedWiDDurationText, title);
-                                infoTextView.setText(Html.fromHtml(boldInfoText, Html.FROM_HTML_MODE_LEGACY));
-                                infoTextView.setGravity(Gravity.CENTER);
-                                customLayout.addView(infoTextView);
+                        constraintLayout.addView(detailTextView);
+                        constraintLayout.addView(showMoreButton);
 
-                                // Create a TextView for displaying the detail
-                                TextView detailLabelTextView = new TextView(getContext());
-                                detailLabelTextView.setText("세부 사항");
-                                detailLabelTextView.setGravity(Gravity.CENTER);
-                                detailLabelTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                                customLayout.addView(detailLabelTextView);
+                        ConstraintSet constraintSet = new ConstraintSet();
+                        constraintSet.clone(constraintLayout);
+                        constraintSet.connect(detailTextView.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+                        constraintSet.connect(showMoreButton.getId(), ConstraintSet.END, detailTextView.getId(), ConstraintSet.END);
+                        constraintSet.connect(showMoreButton.getId(), ConstraintSet.BOTTOM, detailTextView.getId(), ConstraintSet.BOTTOM);
 
-                                // Create a TextView for displaying the detail
-                                TextView detailTextView = new TextView(getContext());
-                                detailTextView.setText(clickedWiD.getDetail());
-                                customLayout.addView(detailTextView);
+                        constraintSet.applyTo(constraintLayout);
 
-                                // Create an EditText for editing the detail
-                                EditText detailEditText = new EditText(getContext());
-                                detailEditText.setVisibility(View.GONE); // Initially hide the EditText
-                                customLayout.addView(detailEditText);
+                        if (TextUtils.isEmpty(wiD.getDetail())) {
+                            detailTextView.setHint("세부 사항 입력...");
+                            showMoreButton.setVisibility(View.GONE);
+                        } else {
+                            detailTextView.setText(wiD.getDetail());
+                            showMoreButton.setVisibility(View.VISIBLE);
+                        }
 
-                                // Set the custom layout for the dialog
-                                builder.setView(customLayout);
+                        itemLayout2.addView(constraintLayout);
 
-                                // Handle the detailTextView click to show the detailEditText
-                                detailTextView.setOnClickListener(view -> {
-                                    detailTextView.setVisibility(View.GONE);
-                                    detailEditText.setVisibility(View.VISIBLE);
-                                    detailEditText.setText(clickedWiD.getDetail());
-                                });
+                        // Set OnClickListener for the TextView
+                        detailTextView.setOnClickListener(v -> {
+                            // Create and show the dialog
+                            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
+                            MaterialTextView dialogTitle = new MaterialTextView(getContext());
+                            dialogTitle.setPadding(0, 64, 0, 64);
+                            dialogTitle.setText("세부 사항");
+                            dialogTitle.setTextSize(20);
+                            dialogTitle.setGravity(Gravity.CENTER);
+                            dialogTitle.setTypeface(null, Typeface.BOLD);
+                            builder.setCustomTitle(dialogTitle);
 
-                                builder.setPositiveButton("수정", (dialog, which) -> {
-                                    String newDetail = detailEditText.getText().toString();
-                                    clickedWiD.setDetail(newDetail);
-                                    detailTextView.setText(newDetail);
+                            // Create and add the Material TextInputLayout with EditText
+                            TextInputLayout textInputLayout = new TextInputLayout(getContext());
+                            textInputLayout.setPadding(64, 0, 64, 0);
 
-                                    // Update the detail in the database
-                                    wiDDatabaseHelper.updateWiDDetailById(widId, newDetail);
+                            textInputLayout.setBoxBackgroundMode(TextInputLayout.BOX_BACKGROUND_OUTLINE); // 왜 설정이 안되냐;;;
+                            textInputLayout.setCounterEnabled(true);
+                            textInputLayout.setCounterMaxLength(200);
 
-                                    Toast.makeText(getContext(), "세부 사항이 수정되었습니다.", Toast.LENGTH_SHORT).show();
+                            TextInputEditText textInputEditText = new TextInputEditText(getContext());
+                            textInputEditText.setText(detailTextView.getText()); // Set the text from detailTextView to TextInputEditText
+                            textInputLayout.addView(textInputEditText);
 
-                                    dialog.dismiss();
-                                });
+                            // Set minimum lines to 5
+                            textInputEditText.setMinLines(10);
 
-                                builder.setNegativeButton("취소", (dialog, which) -> dialog.dismiss());
+                            builder.setView(textInputLayout);
 
-                                // Show the dialog
-                                AlertDialog dialog = builder.create();
-                                dialog.show();
+                            // Set positive button action
+                            builder.setPositiveButton("확인", (dialog, which) -> {
+                                // Get the ID from the mainLayout's tag
+                                Long id = (Long) mainLayout.getTag();
 
-                                // Adjust the dialog width (optional)
-                                WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-                                layoutParams.copyFrom(dialog.getWindow().getAttributes());
-                                layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
-                                dialog.getWindow().setAttributes(layoutParams);
+                                // Get the new detail from the TextInputEditText
+                                String newDetail = textInputEditText.getText().toString();
+
+                                // Call the updateWiDDetailById method with the retrieved values
+                                wiDDatabaseHelper.updateWiDDetailById(id, newDetail);
+
+                                // 새 디테일 적용
+                                detailTextView.setText(newDetail);
+                            });
+
+                            // Set negative button action
+                            builder.setNegativeButton("취소", (dialog, which) -> {
+                                // Dismiss the dialog
+                                dialog.dismiss();
+                            });
+
+                            // Show the dialog
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+                        });
+
+                        // Create and add the "WiD 삭제" Button
+                        MaterialButton deleteButton = new MaterialButton(getContext());
+                        deleteButton.setText("WiD 삭제");
+                        deleteButton.setBackgroundColor(Color.RED);
+                        deleteButton.setCornerRadius(15);
+                        LinearLayout.LayoutParams deleteLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        deleteLayoutParams.setMargins(32, 16, 32, 0);
+                        deleteButton.setLayoutParams(deleteLayoutParams);
+
+                        deleteButton.setOnClickListener(v -> {
+                            // Create and show the confirmation dialog
+                            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
+                            builder.setMessage("삭제하시겠습니까?");
+                            builder.setPositiveButton("삭제", (dialog, which) -> {
+                                // Get the ID from the mainLayout's tag
+                                Long id = (Long) mainLayout.getTag();
+
+                                // Call the deleteWiDById method with the retrieved ID
+                                wiDDatabaseHelper.deleteWiDById(id);
+                            });
+                            builder.setNegativeButton("취소", (dialog, which) -> {
+                                // Dismiss the dialog
+                                dialog.dismiss();
+                            });
+                            // Show the dialog
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+                        });
+
+                        itemLayout2.addView(deleteButton);
+
+                        itemLayout.setOnClickListener(v -> {
+                            if (itemLayout2.getVisibility() == View.GONE) {
+                                itemLayout2.setVisibility(View.VISIBLE);
+                                arrowImageView.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
+                                arrowImageView.setTag("arrow_down");
+                            } else {
+                                itemLayout2.setVisibility(View.GONE);
+                                arrowImageView.setImageResource(R.drawable.baseline_keyboard_arrow_right_24);
+                                arrowImageView.setTag("arrow_right");
                             }
                         });
 
-                        // Create and add the image button
-                        ImageButton imageButton2 = new ImageButton(getContext());
-                        imageButton2.setImageResource(R.drawable.baseline_cancel_24);
-                        imageButton2.setBackground(null);
-                        imageButton2.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
-                        itemLayout.addView(imageButton2);
-                        imageButton2.setTag(wiD.getId());
+                        // Add itemLayout and itemLayout2 to mainLayout
+                        mainLayout.addView(itemLayout);
+                        mainLayout.addView(itemLayout2);
 
-                        imageButton2.setOnClickListener(v -> {
-                            // Retrieve the WiD id from the image button's tag
-                            Long widId = (Long) v.getTag();
-                            // Call the deleteWiDById method from WiDDatabaseHelper to delete the WiD object
-                            wiDDatabaseHelper.deleteWiDById(widId);
-                            // Remove the corresponding item layout from the parent LinearLayout
-                            linearLayout.removeView((View) v.getParent());
-                        });
-
-                        linearLayout.addView(itemLayout);
+                        linearLayout.addView(mainLayout);
                     }
-
                 }
-
                 return false;
             }
         });
-
-
         return view;
     }
 }

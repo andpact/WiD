@@ -92,18 +92,18 @@ public class WiDReadFragment extends Fragment {
         pieChart.setCenterTextColor(Color.BLACK);
 
         dayOfWeekMap = new HashMap<>();
-        dayOfWeekMap.put(DayOfWeek.MONDAY, " 월");
-        dayOfWeekMap.put(DayOfWeek.TUESDAY, " 화");
-        dayOfWeekMap.put(DayOfWeek.WEDNESDAY, " 수");
-        dayOfWeekMap.put(DayOfWeek.THURSDAY, " 목");
-        dayOfWeekMap.put(DayOfWeek.FRIDAY, " 금");
-        dayOfWeekMap.put(DayOfWeek.SATURDAY, " 토");
-        dayOfWeekMap.put(DayOfWeek.SUNDAY, " 일");
+        dayOfWeekMap.put(DayOfWeek.MONDAY, "월");
+        dayOfWeekMap.put(DayOfWeek.TUESDAY, "화");
+        dayOfWeekMap.put(DayOfWeek.WEDNESDAY, "수");
+        dayOfWeekMap.put(DayOfWeek.THURSDAY, "목");
+        dayOfWeekMap.put(DayOfWeek.FRIDAY, "금");
+        dayOfWeekMap.put(DayOfWeek.SATURDAY, "토");
+        dayOfWeekMap.put(DayOfWeek.SUNDAY, "일");
 
         wiDDatabaseHelper = new WiDDatabaseHelper(getContext());
 
         currentDate = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 (");
         String formattedDate = currentDate.format(formatter);
         dateTextView.setText(formattedDate);
         String koreanDayOfWeek = dayOfWeekMap.get(currentDate.getDayOfWeek());
@@ -148,7 +148,7 @@ public class WiDReadFragment extends Fragment {
     private void decreaseDate() {
         currentDate = currentDate.minusDays(1);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 (");
         String formattedDate = currentDate.format(formatter);
         dateTextView.setText(formattedDate);
 
@@ -169,7 +169,7 @@ public class WiDReadFragment extends Fragment {
     private void increaseDate() {
         currentDate = currentDate.plusDays(1);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 (");
         String formattedDate = currentDate.format(formatter);
         dateTextView.setText(formattedDate);
 
@@ -205,36 +205,14 @@ public class WiDReadFragment extends Fragment {
             pieChart.setData(data);
             pieChart.invalidate();
 
-            // Create a LinearLayout for the empty state
-            LinearLayout emptyLayout = new LinearLayout(getContext());
-            emptyLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-            emptyLayout.setGravity(Gravity.CENTER);
-            emptyLayout.setOrientation(LinearLayout.VERTICAL);
+            // "세부 사항으로 검색해 보세요." 텍스트 뷰 생성 및 설정
+            MaterialTextView noContextTextView = new MaterialTextView(getContext());
+            noContextTextView.setText("표시할 WiD가 없어요.");
+            noContextTextView.setGravity(Gravity.CENTER);
 
-            // Create and add the image view
-            ImageView imageView = new ImageView(getContext());
-            imageView.setImageResource(R.drawable.baseline_event_busy_96);
-            imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-            emptyLayout.addView(imageView);
+            // 리니어 레이아웃에 텍스트 뷰 추가
+            linearLayout.addView(noContextTextView);
 
-            // Create and add the text view
-            MaterialTextView textView = new MaterialTextView(getContext());
-            textView.setText("표시할 정보가 없어요!");
-            textView.setTypeface(null, Typeface.BOLD);
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
-            textView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-            emptyLayout.addView(textView);
-
-            // Create and add the text view
-            MaterialTextView textView2 = new MaterialTextView(getContext());
-            textView2.setText("지금 등록해보세요.");
-            textView2.setTypeface(null, Typeface.BOLD);
-            textView2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
-            textView2.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-            emptyLayout.addView(textView2);
-
-            // Add the empty state layout to the main linear layout
-            linearLayout.addView(emptyLayout);
         } else {
             // WiD 리스트를 텍스트 뷰에 표현하기
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -251,9 +229,9 @@ public class WiDReadFragment extends Fragment {
                 LinearLayout mainLayout = new LinearLayout(getContext());
                 mainLayout.setOrientation(LinearLayout.VERTICAL);
                 mainLayout.setTag(wiD.getId());
-//                mainLayout.setBackgroundResource(R.drawable.rounded_background);
 
                 LinearLayout itemLayout = new LinearLayout(getContext());
+                itemLayout.setPadding(0, 32, 0, 0);
                 itemLayout.setOrientation(LinearLayout.HORIZONTAL);
                 itemLayout.setGravity(Gravity.CENTER_VERTICAL);
 
@@ -320,13 +298,13 @@ public class WiDReadFragment extends Fragment {
                 itemLayout2.setVisibility(View.GONE); // Initially set to invisible
 
                 ConstraintLayout constraintLayout = new ConstraintLayout(getContext());
+                constraintLayout.setPadding(32, 16, 32, 0);
                 // Set LayoutParams
-                ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.MATCH_PARENT,
-                        ConstraintLayout.LayoutParams.WRAP_CONTENT
-                );
-                constraintLayout.setLayoutParams(layoutParams);
-                constraintLayout.setPadding(16, 0, 16, 0);
+//                ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
+//                        ConstraintLayout.LayoutParams.MATCH_PARENT,
+//                        ConstraintLayout.LayoutParams.WRAP_CONTENT
+//                );
+//                constraintLayout.setLayoutParams(layoutParams);
 
                 // Create and add the "세부사항 입력칸" TextView
                 MaterialTextView detailTextView = new MaterialTextView(getContext());
@@ -439,6 +417,9 @@ public class WiDReadFragment extends Fragment {
 
                         // Call the updateWiDDetailById method with the retrieved values
                         wiDDatabaseHelper.updateWiDDetailById(id, newDetail);
+
+                        // 새 디테일 적용
+                        detailTextView.setText(newDetail);
                     });
 
                     // Set negative button action
@@ -455,7 +436,10 @@ public class WiDReadFragment extends Fragment {
                 // Create and add the "WiD 삭제" Button
                 MaterialButton deleteButton = new MaterialButton(getContext());
                 deleteButton.setText("WiD 삭제");
+                deleteButton.setBackgroundColor(Color.RED);
+                deleteButton.setCornerRadius(15);
                 LinearLayout.LayoutParams deleteLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                deleteLayoutParams.setMargins(32, 16, 32, 0);
                 deleteButton.setLayoutParams(deleteLayoutParams);
 
                 deleteButton.setOnClickListener(v -> {
@@ -463,11 +447,14 @@ public class WiDReadFragment extends Fragment {
                     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
                     builder.setMessage("삭제하시겠습니까?");
                     builder.setPositiveButton("삭제", (dialog, which) -> {
-                                // Get the ID from the mainLayout's tag
-                                Long id = (Long) mainLayout.getTag();
+                        // Get the ID from the mainLayout's tag
+                        Long id = (Long) mainLayout.getTag();
 
-                                // Call the deleteWiDById method with the retrieved ID
-                                wiDDatabaseHelper.deleteWiDById(id);
+                        // Call the deleteWiDById method with the retrieved ID
+                        wiDDatabaseHelper.deleteWiDById(id);
+
+                        // 화면 업데이트
+                        updateWiDList();
                     });
                     builder.setNegativeButton("취소", (dialog, which) -> {
                         // Dismiss the dialog
