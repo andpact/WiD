@@ -125,7 +125,7 @@ public class WiDCreateFragment extends Fragment {
 
         // Create a new WiD object with the provided title, current date, and start time
         currentWiD = new WiD();
-        currentWiD.setTitle(title.name());
+        currentWiD.setTitle(title.toString());
         currentWiD.setDate(LocalDate.now());
         currentWiD.setStart(LocalTime.now());
 

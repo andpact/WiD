@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,6 +29,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textview.MaterialTextView;
@@ -319,6 +321,15 @@ public class WiDSearchFragment extends Fragment {
 
                                 // 새 디테일 적용
                                 detailTextView.setText(newDetail);
+
+                                Snackbar snackbar = Snackbar.make(getActivity().findViewById(android.R.id.content), "WiD의 세부 사항이 수정되었어요.", Snackbar.LENGTH_SHORT);
+
+                                View snackbarView = snackbar.getView();
+                                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackbarView.getLayoutParams();
+                                params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 16 * 15);
+                                snackbarView.setLayoutParams(params);
+
+                                snackbar.show();
                             });
 
                             // Set negative button action
@@ -344,13 +355,22 @@ public class WiDSearchFragment extends Fragment {
                         deleteButton.setOnClickListener(v -> {
                             // Create and show the confirmation dialog
                             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
-                            builder.setMessage("삭제하시겠습니까?");
+                            builder.setMessage("해당 WiD를 삭제하시겠습니까?");
                             builder.setPositiveButton("삭제", (dialog, which) -> {
                                 // Get the ID from the mainLayout's tag
                                 Long id = (Long) mainLayout.getTag();
 
                                 // Call the deleteWiDById method with the retrieved ID
                                 wiDDatabaseHelper.deleteWiDById(id);
+
+                                Snackbar snackbar = Snackbar.make(getActivity().findViewById(android.R.id.content), "WiD가 삭제되었어요.", Snackbar.LENGTH_SHORT);
+
+                                View snackbarView = snackbar.getView();
+                                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackbarView.getLayoutParams();
+                                params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 16 * 15);
+                                snackbarView.setLayoutParams(params);
+
+                                snackbar.show();
                             });
                             builder.setNegativeButton("취소", (dialog, which) -> {
                                 // Dismiss the dialog

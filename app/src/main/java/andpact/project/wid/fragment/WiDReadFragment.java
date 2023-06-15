@@ -33,6 +33,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textview.MaterialTextView;
@@ -121,7 +122,7 @@ public class WiDReadFragment extends Fragment {
         rightTriangle.setOnClickListener(v -> increaseDate());
 
         colorMap = new HashMap<>();
-        colorMap.put(Title.STUDY.toString(), getContext().getColor(R.color.study_color));
+        colorMap.put(Title.STUDY.toString(), getContext().  getColor(R.color.study_color));
         colorMap.put(Title.WORK.toString(), getContext().getColor(R.color.work_color));
         colorMap.put(Title.READING.toString(), getContext().getColor(R.color.reading_color));
         colorMap.put(Title.EXERCISE.toString(), getContext().getColor(R.color.exercise_color));
@@ -131,14 +132,14 @@ public class WiDReadFragment extends Fragment {
         colorMap.put(Title.OTHER.toString(), getContext().getColor(R.color.other_color));
 
         titleMap = new HashMap<>();
-        titleMap.put(Title.STUDY.toString(), getResources().getString(R.string.title_1));
-        titleMap.put(Title.WORK.toString(), getResources().getString(R.string.title_2));
-        titleMap.put(Title.READING.toString(), getResources().getString(R.string.title_3));
-        titleMap.put(Title.EXERCISE.toString(), getResources().getString(R.string.title_4));
-        titleMap.put(Title.SLEEP.toString(), getResources().getString(R.string.title_5));
-        titleMap.put(Title.TRAVEL.toString(), getResources().getString(R.string.title_6));
-        titleMap.put(Title.HOBBY.toString(), getResources().getString(R.string.title_7));
-        titleMap.put(Title.OTHER.toString(), getResources().getString(R.string.title_8));
+        titleMap.put(Title.STUDY.toString(), getString(R.string.title_1));
+        titleMap.put(Title.WORK.toString(), getString(R.string.title_2));
+        titleMap.put(Title.READING.toString(), getString(R.string.title_3));
+        titleMap.put(Title.EXERCISE.toString(), getString(R.string.title_4));
+        titleMap.put(Title.SLEEP.toString(), getString(R.string.title_5));
+        titleMap.put(Title.TRAVEL.toString(), getString(R.string.title_6));
+        titleMap.put(Title.HOBBY.toString(), getString(R.string.title_7));
+        titleMap.put(Title.OTHER.toString(), getString(R.string.title_8));
 
         updateWiDList();
 
@@ -231,7 +232,7 @@ public class WiDReadFragment extends Fragment {
                 mainLayout.setTag(wiD.getId());
 
                 LinearLayout itemLayout = new LinearLayout(getContext());
-                itemLayout.setPadding(0, 32, 0, 0);
+                itemLayout.setPadding(0, 16, 0, 0);
                 itemLayout.setOrientation(LinearLayout.HORIZONTAL);
                 itemLayout.setGravity(Gravity.CENTER_VERTICAL);
 
@@ -420,6 +421,15 @@ public class WiDReadFragment extends Fragment {
 
                         // 새 디테일 적용
                         detailTextView.setText(newDetail);
+
+                        Snackbar snackbar = Snackbar.make(getActivity().findViewById(android.R.id.content), "WiD의 세부 사항이 수정되었어요.", Snackbar.LENGTH_SHORT);
+
+                        View snackbarView = snackbar.getView();
+                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackbarView.getLayoutParams();
+                        params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 16 * 15);
+                        snackbarView.setLayoutParams(params);
+
+                        snackbar.show();
                     });
 
                     // Set negative button action
@@ -455,6 +465,15 @@ public class WiDReadFragment extends Fragment {
 
                         // 화면 업데이트
                         updateWiDList();
+
+                        Snackbar snackbar = Snackbar.make(getActivity().findViewById(android.R.id.content), "WiD가 삭제되었어요.", Snackbar.LENGTH_SHORT);
+
+                        View snackbarView = snackbar.getView();
+                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackbarView.getLayoutParams();
+                        params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 16 * 15);
+                        snackbarView.setLayoutParams(params);
+
+                        snackbar.show();
                     });
                     builder.setNegativeButton("취소", (dialog, which) -> {
                         // Dismiss the dialog
