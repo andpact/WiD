@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import andpact.project.wid.fragment.WiDCreateFragment;
+import andpact.project.wid.fragment.WiDCreateFragment2;
 import andpact.project.wid.fragment.WiDReadAllFragment;
 import andpact.project.wid.fragment.WiDReadFragment;
 import andpact.project.wid.fragment.WiDSearchFragment;
@@ -22,7 +22,7 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                return new WiDCreateFragment();
+                return new WiDCreateFragment2();
             case 1:
                 return new WiDReadAllFragment();
             case 2:

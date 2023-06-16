@@ -39,6 +39,13 @@ public class MainActivity extends AppCompatActivity {
             FragmentTransaction fragmentTransaction1 = fragmentManager1.beginTransaction();
 
             switch (menuItem.getItemId()) {
+//                case R.id.item_1:
+//                    if (!(currentFragment instanceof WiDCreateFragment2)) {
+//                        WiDCreateFragment2 wiDCreateFragment2 = new WiDCreateFragment2();
+//                        fragmentTransaction1.replace(R.id.frame_container, wiDCreateFragment2);
+//                        currentFragment = wiDCreateFragment2;
+//                    }
+//                    break;
                 case R.id.item_1:
                     if (!(currentFragment instanceof WiDCreateFragment)) {
                         WiDCreateFragment wiDCreateFragment = new WiDCreateFragment();

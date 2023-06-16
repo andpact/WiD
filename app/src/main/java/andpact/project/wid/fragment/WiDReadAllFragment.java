@@ -196,7 +196,7 @@ public class WiDReadAllFragment extends Fragment {
                     pieChart.setData(data);
                     pieChart.invalidate();
                 } else {
-                    hasData = !hasData;
+                    hasData = true;
 
                     entries = new ArrayList<>();
 

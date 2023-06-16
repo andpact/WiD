@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- 첫 번째 카드 뷰 -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:cardElevation="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp">
+
+            <!-- 카드 뷰 내용 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/studyTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_1"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/design_default_color_primary_variant"
+                    android:layout_gravity="center" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/studyDurationTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/zero_duration"
+                    android:textSize="20sp"
+                    android:textColor="@color/design_default_color_secondary_variant"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginTop="8dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/studyStartButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:icon="@drawable/baseline_play_arrow_24"
+                        android:text="@string/start"
+                        android:textColor="@color/design_default_color_on_primary"
+                        android:backgroundTint="@color/design_default_color_primary"
+                        android:visibility="visible" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/studyFinishButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:icon="@drawable/baseline_stop_24"
+                        android:text="@string/finish"
+                        android:textColor="@color/design_default_color_on_primary"
+                        android:backgroundTint="@color/design_default_color_primary"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 두 번째 카드 뷰 -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:cardElevation="4dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="16dp">
+
+            <!-- 카드 뷰 내용 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/workTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_2"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/design_default_color_primary_variant"
+                    android:layout_gravity="center" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/workDurationTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/zero_duration"
+                    android:textSize="20sp"
+                    android:textColor="@color/design_default_color_secondary_variant"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginTop="8dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/workStartButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:icon="@drawable/baseline_play_arrow_24"
+                        android:text="@string/start"
+                        android:textColor="@color/design_default_color_on_primary"
+                        android:backgroundTint="@color/design_default_color_primary"
+                        android:visibility="visible" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/workFinishButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:icon="@drawable/baseline_stop_24"
+                        android:text="@string/finish"
+                        android:textColor="@color/design_default_color_on_primary"
+                        android:backgroundTint="@color/design_default_color_primary"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- 세 번째 카드 뷰 -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:cardElevation="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp">
+
+            <!-- 카드 뷰 내용 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/readingTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_3"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/design_default_color_primary_variant"
+                    android:layout_gravity="center" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/readingDurationTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/zero_duration"
+                    android:textSize="20sp"
+                    android:textColor="@color/design_default_color_secondary_variant"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginTop="8dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/readingStartButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:icon="@drawable/baseline_play_arrow_24"
+                        android:text="@string/start"
+                        android:textColor="@color/design_default_color_on_primary"
+                        android:backgroundTint="@color/design_default_color_primary"
+                        android:visibility="visible" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/readingFinishButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:icon="@drawable/baseline_stop_24"
+                        android:text="@string/finish"
+                        android:textColor="@color/design_default_color_on_primary"
+                        android:backgroundTint="@color/design_default_color_primary"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 네 번째 카드 뷰 -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:cardElevation="4dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="16dp">
+
+            <!-- 카드 뷰 내용 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/exerciseTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_4"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/design_default_color_primary_variant"
+                    android:layout_gravity="center" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/exerciseDurationTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/zero_duration"
+                    android:textSize="20sp"
+                    android:textColor="@color/design_default_color_secondary_variant"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginTop="8dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/exerciseStartButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:icon="@drawable/baseline_play_arrow_24"
+                        android:text="@string/start"
+                        android:textColor="@color/design_default_color_on_primary"
+                        android:backgroundTint="@color/design_default_color_primary"
+                        android:visibility="visible" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/exerciseFinishButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:icon="@drawable/baseline_stop_24"
+                        android:text="@string/finish"
+                        android:textColor="@color/design_default_color_on_primary"
+                        android:backgroundTint="@color/design_default_color_primary"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- 다섯 번째 카드 뷰 -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:cardElevation="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp">
+
+            <!-- 카드 뷰 내용 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/sleepTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_5"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/design_default_color_primary_variant"
+                    android:layout_gravity="center" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/sleepDurationTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/zero_duration"
+                    android:textSize="20sp"
+                    android:textColor="@color/design_default_color_secondary_variant"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginTop="8dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/sleepStartButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:icon="@drawable/baseline_play_arrow_24"
+                        android:text="@string/start"
+                        android:textColor="@color/design_default_color_on_primary"
+                        android:backgroundTint="@color/design_default_color_primary"
+                        android:visibility="visible" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/sleepFinishButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:icon="@drawable/baseline_stop_24"
+                        android:text="@string/finish"
+                        android:textColor="@color/design_default_color_on_primary"
+                        android:backgroundTint="@color/design_default_color_primary"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 여섯 번째 카드 뷰 -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:cardElevation="4dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="16dp">
+
+            <!-- 카드 뷰 내용 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/travelTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_6"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/design_default_color_primary_variant"
+                    android:layout_gravity="center" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/travelDurationTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/zero_duration"
+                    android:textSize="20sp"
+                    android:textColor="@color/design_default_color_secondary_variant"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginTop="8dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/travelStartButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:icon="@drawable/baseline_play_arrow_24"
+                        android:text="@string/start"
+                        android:textColor="@color/design_default_color_on_primary"
+                        android:backgroundTint="@color/design_default_color_primary"
+                        android:visibility="visible" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/travelFinishButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:icon="@drawable/baseline_stop_24"
+                        android:text="@string/finish"
+                        android:textColor="@color/design_default_color_on_primary"
+                        android:backgroundTint="@color/design_default_color_primary"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- 일곱 번째 카드 뷰 -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:cardElevation="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp">
+
+            <!-- 카드 뷰 내용 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/hobbyTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_7"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/design_default_color_primary_variant"
+                    android:layout_gravity="center" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/hobbyDurationTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/zero_duration"
+                    android:textSize="20sp"
+                    android:textColor="@color/design_default_color_secondary_variant"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginTop="8dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/hobbyStartButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:icon="@drawable/baseline_play_arrow_24"
+                        android:text="@string/start"
+                        android:textColor="@color/design_default_color_on_primary"
+                        android:backgroundTint="@color/design_default_color_primary"
+                        android:visibility="visible" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/hobbyFinishButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:icon="@drawable/baseline_stop_24"
+                        android:text="@string/finish"
+                        android:textColor="@color/design_default_color_on_primary"
+                        android:backgroundTint="@color/design_default_color_primary"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 여덟 번째 카드 뷰 -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:cardElevation="4dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="16dp">
+
+            <!-- 카드 뷰 내용 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/otherTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_8"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/design_default_color_primary_variant"
+                    android:layout_gravity="center" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/otherDurationTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/zero_duration"
+                    android:textSize="20sp"
+                    android:textColor="@color/design_default_color_secondary_variant"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginTop="8dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/otherStartButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:icon="@drawable/baseline_play_arrow_24"
+                        android:text="@string/start"
+                        android:textColor="@color/design_default_color_on_primary"
+                        android:backgroundTint="@color/design_default_color_primary"
+                        android:visibility="visible" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/otherFinishButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:icon="@drawable/baseline_stop_24"
+                        android:text="@string/finish"
+                        android:textColor="@color/design_default_color_on_primary"
+                        android:backgroundTint="@color/design_default_color_primary"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+</LinearLayout>
