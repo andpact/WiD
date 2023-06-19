@@ -5,37 +5,31 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import andpact.project.wid.fragment.WiDCreateFragment2;
+import andpact.project.wid.fragment.TitleTextViewFragment;
+import andpact.project.wid.fragment.WiDCreateFragment;
 import andpact.project.wid.fragment.WiDReadAllFragment;
 import andpact.project.wid.fragment.WiDReadFragment;
 import andpact.project.wid.fragment.WiDSearchFragment;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
-    private static final int NUM_FRAGMENTS = 4;
-
+    private static final int NUM_PAGES = 8;
     public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
-    }
 
+    }
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        switch (position) {
-            case 0:
-                return new WiDCreateFragment2();
-            case 1:
-                return new WiDReadAllFragment();
-            case 2:
-                return new WiDReadFragment();
-            case 3:
-                return new WiDSearchFragment();
-            default:
-                throw new IllegalArgumentException("Invalid position: " + position);
-        }
+        // 각각의 텍스트 뷰에 해당하는 Fragment를 생성합니다.
+        return TitleTextViewFragment.newInstance(position);
+    }
+    @Override
+    public int getItemCount() {
+        return NUM_PAGES;
     }
 
     @Override
-    public int getItemCount() {
-        return NUM_FRAGMENTS;
+    public long getItemId(int position) {
+        return super.getItemId(position);
     }
 }
