@@ -80,7 +80,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <andpact.project.wid.CircleView
+    <andpact.project.wid.util.CircleView
         android:id="@+id/circleView"
         android:layout_width="350dp"
         android:layout_height="350dp"
@@ -101,6 +101,5 @@
         app:layout_constraintEnd_toEndOf="parent">
 
     </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,8 +25,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import andpact.project.wid.R;
-import andpact.project.wid.Title;
+import andpact.project.wid.util.Title;
 import andpact.project.wid.model.WiD;
+import andpact.project.wid.util.DataMaps;
 import andpact.project.wid.util.WiDDatabaseHelper;
 
 import android.widget.ImageButton;
@@ -46,8 +47,6 @@ public class WiDReadAllFragment extends Fragment {
     private LinearLayout statisticsTabLinearLayout;
     private LinearLayout statisticsLinearLayout;
     private WiDDatabaseHelper wiDDatabaseHelper;
-    private Map<String, Integer> colorMap;
-    private Map<String, String> titleMap;
     private Map<String, Duration> totalDurationMap;
     private Map<String, Integer> bestDayMap;
     private Map<String, Duration> bestDurationMap;
@@ -71,26 +70,6 @@ public class WiDReadAllFragment extends Fragment {
 
         // Get the current date
         currentDate = LocalDate.now();
-
-        colorMap = new HashMap<>();
-        colorMap.put(Title.STUDY.toString(), getContext().getColor(R.color.study_color));
-        colorMap.put(Title.WORK.toString(), getContext().getColor(R.color.work_color));
-        colorMap.put(Title.READING.toString(), getContext().getColor(R.color.reading_color));
-        colorMap.put(Title.EXERCISE.toString(), getContext().getColor(R.color.exercise_color));
-        colorMap.put(Title.SLEEP.toString(), getContext().getColor(R.color.sleep_color));
-        colorMap.put(Title.TRAVEL.toString(), getContext().getColor(R.color.travel_color));
-        colorMap.put(Title.HOBBY.toString(), getContext().getColor(R.color.hobby_color));
-        colorMap.put(Title.OTHER.toString(), getContext().getColor(R.color.other_color));
-
-        titleMap = new HashMap<>();
-        titleMap.put(Title.STUDY.toString(), getString(R.string.title_1));
-        titleMap.put(Title.WORK.toString(), getString(R.string.title_2));
-        titleMap.put(Title.READING.toString(), getString(R.string.title_3));
-        titleMap.put(Title.EXERCISE.toString(), getString(R.string.title_4));
-        titleMap.put(Title.SLEEP.toString(), getString(R.string.title_5));
-        titleMap.put(Title.TRAVEL.toString(), getString(R.string.title_6));
-        titleMap.put(Title.HOBBY.toString(), getString(R.string.title_7));
-        titleMap.put(Title.OTHER.toString(), getString(R.string.title_8));
 
         // Set the formatted date to the TextView
         updateDateTextView();
@@ -245,7 +224,7 @@ public class WiDReadAllFragment extends Fragment {
                     // 파이 데이터셋 생성
                     dataSet = new PieDataSet(entries, "");
                     dataSet.setColors(entries.stream()
-                            .map(entry -> colorMap.getOrDefault(entry.getLabel(), Color.LTGRAY))
+                            .map(entry -> DataMaps.getColorMap(getContext()).getOrDefault(entry.getLabel(), Color.LTGRAY))
                             .collect(Collectors.toList()));
 
                     // 파이 데이터셋 생성
@@ -310,7 +289,7 @@ public class WiDReadAllFragment extends Fragment {
                         0,
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                         0.5f));
-                titleTextView.setText(titleMap.get(key.toString()));
+                titleTextView.setText(DataMaps.getTitleMap(getContext()).get(key.toString()));
                 titleTextView.setTypeface(null, Typeface.BOLD);
                 titleTextView.setGravity(Gravity.CENTER);
 

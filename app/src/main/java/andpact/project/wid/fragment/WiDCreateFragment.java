@@ -3,7 +3,6 @@ package andpact.project.wid.fragment;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -11,10 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -27,13 +23,12 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 
 import andpact.project.wid.R;
-import andpact.project.wid.Title;
+import andpact.project.wid.util.Title;
 import andpact.project.wid.model.WiD;
 import andpact.project.wid.util.CustomPageTransformer;
+import andpact.project.wid.util.DataMaps;
 import andpact.project.wid.util.ViewPagerAdapter;
 import andpact.project.wid.util.WiDDatabaseHelper;
 
@@ -43,11 +38,9 @@ public class WiDCreateFragment extends Fragment {
     private ImageButton titleLeftButton, titleRightButton;
     private ViewPager2 viewPager2;
     private MaterialButton startButton, finishButton, resetButton;
-    private Map<DayOfWeek, String> dayOfWeekMap;
-    private Map<String, String> titleMap;
     private String clickedTitle;
     private WiD wiD;
-    private LocalDate currentDate = LocalDate.now();
+    private LocalDate currentDate;
     private LocalTime currentTime;
     private Handler startHandler, finishHandler;
     private Runnable startTimeRunnable, finishTimeRunnable;
@@ -63,6 +56,8 @@ public class WiDCreateFragment extends Fragment {
         finishTimeTextView.setTextColor(Color.LTGRAY); // 시작 전 회색으로
         underOneMinuteTextView = view.findViewById(R.id.underOneMinuteTextView);
         durationTextView = view.findViewById(R.id.durationTextView);
+
+        currentDate = LocalDate.now();
 
         titleLeftButton = view.findViewById(R.id.titleLeftButton);
         titleRightButton = view.findViewById(R.id.titleRightButton);
@@ -99,29 +94,10 @@ public class WiDCreateFragment extends Fragment {
             }
         });
 
-        dayOfWeekMap = new HashMap<>();
-        dayOfWeekMap.put(DayOfWeek.MONDAY, "월");
-        dayOfWeekMap.put(DayOfWeek.TUESDAY, "화");
-        dayOfWeekMap.put(DayOfWeek.WEDNESDAY, "수");
-        dayOfWeekMap.put(DayOfWeek.THURSDAY, "목");
-        dayOfWeekMap.put(DayOfWeek.FRIDAY, "금");
-        dayOfWeekMap.put(DayOfWeek.SATURDAY, "토");
-        dayOfWeekMap.put(DayOfWeek.SUNDAY, "일");
-
-        titleMap = new HashMap<>();
-        titleMap.put(Title.STUDY.toString(), getString(R.string.title_1));
-        titleMap.put(Title.WORK.toString(), getString(R.string.title_2));
-        titleMap.put(Title.READING.toString(), getString(R.string.title_3));
-        titleMap.put(Title.EXERCISE.toString(), getString(R.string.title_4));
-        titleMap.put(Title.SLEEP.toString(), getString(R.string.title_5));
-        titleMap.put(Title.TRAVEL.toString(), getString(R.string.title_6));
-        titleMap.put(Title.HOBBY.toString(), getString(R.string.title_7));
-        titleMap.put(Title.OTHER.toString(), getString(R.string.title_8));
-
         // 현재 날짜를 표시
         String formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 ("));
         dateTextView.setText(formattedDate);
-        String koreanDayOfWeek = dayOfWeekMap.get(currentDate.getDayOfWeek());
+        String koreanDayOfWeek = DataMaps.getDayOfWeekMap().get(currentDate.getDayOfWeek());
         dayOfWeekTextView.setText(koreanDayOfWeek);
 
         if (currentDate.getDayOfWeek() == DayOfWeek.SATURDAY) {

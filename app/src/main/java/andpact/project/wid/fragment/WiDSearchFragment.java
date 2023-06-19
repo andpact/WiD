@@ -3,22 +3,15 @@ package andpact.project.wid.fragment;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,21 +30,17 @@ import com.google.android.material.textview.MaterialTextView;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import andpact.project.wid.R;
-import andpact.project.wid.Title;
 import andpact.project.wid.model.WiD;
+import andpact.project.wid.util.DataMaps;
 import andpact.project.wid.util.WiDDatabaseHelper;
 
 public class WiDSearchFragment extends Fragment {
     private SearchView searchView;
     private LinearLayout linearLayout;
     private WiDDatabaseHelper wiDDatabaseHelper;
-    private Map<String, String> titleMap;
-    private Map<DayOfWeek, String> dayOfWeekMap;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -68,25 +57,6 @@ public class WiDSearchFragment extends Fragment {
 
         // 리니어 레이아웃에 텍스트 뷰 추가
         linearLayout.addView(noContextTextView);
-
-        titleMap = new HashMap<>();
-        titleMap.put(Title.STUDY.toString(), getResources().getString(R.string.title_1));
-        titleMap.put(Title.WORK.toString(), getResources().getString(R.string.title_2));
-        titleMap.put(Title.READING.toString(), getResources().getString(R.string.title_3));
-        titleMap.put(Title.EXERCISE.toString(), getResources().getString(R.string.title_4));
-        titleMap.put(Title.SLEEP.toString(), getResources().getString(R.string.title_5));
-        titleMap.put(Title.TRAVEL.toString(), getResources().getString(R.string.title_6));
-        titleMap.put(Title.HOBBY.toString(), getResources().getString(R.string.title_7));
-        titleMap.put(Title.OTHER.toString(), getResources().getString(R.string.title_8));
-
-        dayOfWeekMap = new HashMap<>();
-        dayOfWeekMap.put(DayOfWeek.MONDAY, "월");
-        dayOfWeekMap.put(DayOfWeek.TUESDAY, "화");
-        dayOfWeekMap.put(DayOfWeek.WEDNESDAY, "수");
-        dayOfWeekMap.put(DayOfWeek.THURSDAY, "목");
-        dayOfWeekMap.put(DayOfWeek.FRIDAY, "금");
-        dayOfWeekMap.put(DayOfWeek.SATURDAY, "토");
-        dayOfWeekMap.put(DayOfWeek.SUNDAY, "일");
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -124,30 +94,41 @@ public class WiDSearchFragment extends Fragment {
                             // 새로운 날짜인 경우에만 dateTextView를 생성하고 추가
                             date = wiD.getDate();
 
-                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 (");
-                            String formattedDate = date.format(formatter);
+                            LocalDate yesterday = LocalDate.now().minusDays(1);
+                            LocalDate today = LocalDate.now();
 
                             MaterialTextView dateTextView = new MaterialTextView(getContext());
-                            dateTextView.setText(formattedDate);
-                            dateLinearLayout.addView(dateTextView);
-
-                            MaterialTextView dayOfWeekTextView = new MaterialTextView(getContext());
-                            String koreanDayOfWeek = dayOfWeekMap.get(date.getDayOfWeek());
-                            dayOfWeekTextView.setText(koreanDayOfWeek);
-                            dateLinearLayout.addView(dayOfWeekTextView);
-
-                            if (date.getDayOfWeek() == DayOfWeek.SATURDAY) {
-                                dayOfWeekTextView.setTextColor(Color.BLUE);
-                            } else if (date.getDayOfWeek() == DayOfWeek.SUNDAY) {
-                                dayOfWeekTextView.setTextColor(Color.RED);
+                            if (date.equals(yesterday)) {
+                                dateTextView.setText("어제");
+                                dateLinearLayout.addView(dateTextView);
+                            } else if (date.equals(today)) {
+                                dateTextView.setText("오늘");
+                                dateLinearLayout.addView(dateTextView);
                             } else {
-                                dayOfWeekTextView.setTextColor(Color.BLACK);
-                            }
+                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 (");
+                                String formattedDate = date.format(formatter);
 
-                            MaterialTextView parenthesisTextView = new MaterialTextView(getContext());
-                            parenthesisTextView.setText(")");
-                            dateLinearLayout.addView(parenthesisTextView);
-                        };
+                                dateTextView.setText(formattedDate);
+                                dateLinearLayout.addView(dateTextView);
+
+                                MaterialTextView dayOfWeekTextView = new MaterialTextView(getContext());
+                                String koreanDayOfWeek = DataMaps.getDayOfWeekMap().get(date.getDayOfWeek());
+                                dayOfWeekTextView.setText(koreanDayOfWeek);
+                                dateLinearLayout.addView(dayOfWeekTextView);
+
+                                if (date.getDayOfWeek() == DayOfWeek.SATURDAY) {
+                                    dayOfWeekTextView.setTextColor(Color.BLUE);
+                                } else if (date.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                                    dayOfWeekTextView.setTextColor(Color.RED);
+                                } else {
+                                    dayOfWeekTextView.setTextColor(Color.BLACK);
+                                }
+
+                                MaterialTextView parenthesisTextView = new MaterialTextView(getContext());
+                                parenthesisTextView.setText(")");
+                                dateLinearLayout.addView(parenthesisTextView);
+                            }
+                        }
 
                         LinearLayout mainLayout = new LinearLayout(getContext());
                         mainLayout.setOrientation(LinearLayout.VERTICAL);
@@ -168,7 +149,7 @@ public class WiDSearchFragment extends Fragment {
 
                         // Create and add the title TextView
                         MaterialTextView titleTextView = new MaterialTextView(getContext());
-                        titleTextView.setText(titleMap.get(wiD.getTitle()));
+                        titleTextView.setText(DataMaps.getTitleMap(getContext()).get(wiD.getTitle()));
                         titleTextView.setTypeface(null, Typeface.BOLD);
                         titleTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.5f));
                         titleTextView.setGravity(Gravity.CENTER);
@@ -322,14 +303,7 @@ public class WiDSearchFragment extends Fragment {
                                 // 새 디테일 적용
                                 detailTextView.setText(newDetail);
 
-                                Snackbar snackbar = Snackbar.make(getActivity().findViewById(android.R.id.content), "WiD의 세부 사항이 수정되었어요.", Snackbar.LENGTH_SHORT);
-
-                                View snackbarView = snackbar.getView();
-                                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackbarView.getLayoutParams();
-                                params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 16 * 15);
-                                snackbarView.setLayoutParams(params);
-
-                                snackbar.show();
+                                showSnackbar("WiD의 세부 사항이 수정되었어요.");
                             });
 
                             // Set negative button action
@@ -363,14 +337,7 @@ public class WiDSearchFragment extends Fragment {
                                 // Call the deleteWiDById method with the retrieved ID
                                 wiDDatabaseHelper.deleteWiDById(id);
 
-                                Snackbar snackbar = Snackbar.make(getActivity().findViewById(android.R.id.content), "WiD가 삭제되었어요.", Snackbar.LENGTH_SHORT);
-
-                                View snackbarView = snackbar.getView();
-                                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackbarView.getLayoutParams();
-                                params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 16 * 15);
-                                snackbarView.setLayoutParams(params);
-
-                                snackbar.show();
+                                showSnackbar("WiD가 삭제되었어요.");
                             });
                             builder.setNegativeButton("취소", (dialog, which) -> {
                                 // Dismiss the dialog
@@ -406,5 +373,15 @@ public class WiDSearchFragment extends Fragment {
             }
         });
         return view;
+    }
+    private void showSnackbar(String message) {
+        Snackbar snackbar = Snackbar.make(getActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT);
+
+        View snackbarView = snackbar.getView();
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackbarView.getLayoutParams();
+        params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 16 * 15);
+        snackbarView.setLayoutParams(params);
+
+        snackbar.show();
     }
 }

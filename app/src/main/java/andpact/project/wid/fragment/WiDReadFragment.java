@@ -1,24 +1,17 @@
 package andpact.project.wid.fragment;
 
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,14 +35,12 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import andpact.project.wid.R;
-import andpact.project.wid.Title;
 import andpact.project.wid.model.WiD;
+import andpact.project.wid.util.DataMaps;
 import andpact.project.wid.util.WiDDatabaseHelper;
 
 public class WiDReadFragment extends Fragment {
@@ -59,10 +50,6 @@ public class WiDReadFragment extends Fragment {
     private LocalDate currentDate;
     private ImageButton leftTriangle, rightTriangle;
     private PieChart pieChart;
-    private Map<DayOfWeek, String> dayOfWeekMap;
-    private HashMap<String, Integer> colorMap;
-    private Map<String, String> titleMap;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -92,22 +79,13 @@ public class WiDReadFragment extends Fragment {
         pieChart.setCenterTextTypeface(Typeface.DEFAULT_BOLD);
         pieChart.setCenterTextColor(Color.BLACK);
 
-        dayOfWeekMap = new HashMap<>();
-        dayOfWeekMap.put(DayOfWeek.MONDAY, "월");
-        dayOfWeekMap.put(DayOfWeek.TUESDAY, "화");
-        dayOfWeekMap.put(DayOfWeek.WEDNESDAY, "수");
-        dayOfWeekMap.put(DayOfWeek.THURSDAY, "목");
-        dayOfWeekMap.put(DayOfWeek.FRIDAY, "금");
-        dayOfWeekMap.put(DayOfWeek.SATURDAY, "토");
-        dayOfWeekMap.put(DayOfWeek.SUNDAY, "일");
-
         wiDDatabaseHelper = new WiDDatabaseHelper(getContext());
 
         currentDate = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 (");
         String formattedDate = currentDate.format(formatter);
         dateTextView.setText(formattedDate);
-        String koreanDayOfWeek = dayOfWeekMap.get(currentDate.getDayOfWeek());
+        String koreanDayOfWeek = DataMaps.getDayOfWeekMap().get(currentDate.getDayOfWeek());
         dayOfWeekTextView.setText(koreanDayOfWeek);
 
         if (currentDate.getDayOfWeek() == DayOfWeek.SATURDAY) {
@@ -121,26 +99,6 @@ public class WiDReadFragment extends Fragment {
         leftTriangle.setOnClickListener(v -> decreaseDate());
         rightTriangle.setOnClickListener(v -> increaseDate());
 
-        colorMap = new HashMap<>();
-        colorMap.put(Title.STUDY.toString(), getContext().  getColor(R.color.study_color));
-        colorMap.put(Title.WORK.toString(), getContext().getColor(R.color.work_color));
-        colorMap.put(Title.READING.toString(), getContext().getColor(R.color.reading_color));
-        colorMap.put(Title.EXERCISE.toString(), getContext().getColor(R.color.exercise_color));
-        colorMap.put(Title.SLEEP.toString(), getContext().getColor(R.color.sleep_color));
-        colorMap.put(Title.TRAVEL.toString(), getContext().getColor(R.color.travel_color));
-        colorMap.put(Title.HOBBY.toString(), getContext().getColor(R.color.hobby_color));
-        colorMap.put(Title.OTHER.toString(), getContext().getColor(R.color.other_color));
-
-        titleMap = new HashMap<>();
-        titleMap.put(Title.STUDY.toString(), getString(R.string.title_1));
-        titleMap.put(Title.WORK.toString(), getString(R.string.title_2));
-        titleMap.put(Title.READING.toString(), getString(R.string.title_3));
-        titleMap.put(Title.EXERCISE.toString(), getString(R.string.title_4));
-        titleMap.put(Title.SLEEP.toString(), getString(R.string.title_5));
-        titleMap.put(Title.TRAVEL.toString(), getString(R.string.title_6));
-        titleMap.put(Title.HOBBY.toString(), getString(R.string.title_7));
-        titleMap.put(Title.OTHER.toString(), getString(R.string.title_8));
-
         updateWiDList();
 
         return view;
@@ -153,7 +111,7 @@ public class WiDReadFragment extends Fragment {
         String formattedDate = currentDate.format(formatter);
         dateTextView.setText(formattedDate);
 
-        String koreanDayOfWeek = dayOfWeekMap.get(currentDate.getDayOfWeek());
+        String koreanDayOfWeek = DataMaps.getDayOfWeekMap().get(currentDate.getDayOfWeek());
         dayOfWeekTextView.setText(koreanDayOfWeek);
 
         if (currentDate.getDayOfWeek() == DayOfWeek.SATURDAY) {
@@ -174,7 +132,7 @@ public class WiDReadFragment extends Fragment {
         String formattedDate = currentDate.format(formatter);
         dateTextView.setText(formattedDate);
 
-        String koreanDayOfWeek = dayOfWeekMap.get(currentDate.getDayOfWeek());
+        String koreanDayOfWeek = DataMaps.getDayOfWeekMap().get(currentDate.getDayOfWeek());
         dayOfWeekTextView.setText(koreanDayOfWeek);
 
         if (currentDate.getDayOfWeek() == DayOfWeek.SATURDAY) {
@@ -246,7 +204,8 @@ public class WiDReadFragment extends Fragment {
 
                 // Create and add the title TextView
                 MaterialTextView titleTextView = new MaterialTextView(getContext());
-                titleTextView.setText(titleMap.get(wiD.getTitle()));
+//                titleTextView.setText(titleMap.get(wiD.getTitle()));
+                titleTextView.setText(DataMaps.getTitleMap(getContext()).get(wiD.getTitle()));
                 titleTextView.setTypeface(null, Typeface.BOLD);
                 titleTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.5f));
                 titleTextView.setGravity(Gravity.CENTER);
@@ -422,14 +381,7 @@ public class WiDReadFragment extends Fragment {
                         // 새 디테일 적용
                         detailTextView.setText(newDetail);
 
-                        Snackbar snackbar = Snackbar.make(getActivity().findViewById(android.R.id.content), "WiD의 세부 사항이 수정되었어요.", Snackbar.LENGTH_SHORT);
-
-                        View snackbarView = snackbar.getView();
-                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackbarView.getLayoutParams();
-                        params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 16 * 15);
-                        snackbarView.setLayoutParams(params);
-
-                        snackbar.show();
+                        showSnackbar("WiD의 세부 사항이 수정되었어요.");
                     });
 
                     // Set negative button action
@@ -466,14 +418,7 @@ public class WiDReadFragment extends Fragment {
                         // 화면 업데이트
                         updateWiDList();
 
-                        Snackbar snackbar = Snackbar.make(getActivity().findViewById(android.R.id.content), "WiD가 삭제되었어요.", Snackbar.LENGTH_SHORT);
-
-                        View snackbarView = snackbar.getView();
-                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackbarView.getLayoutParams();
-                        params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 16 * 15);
-                        snackbarView.setLayoutParams(params);
-
-                        snackbar.show();
+                        showSnackbar("WiD가 삭제되었어요.");
                     });
                     builder.setNegativeButton("취소", (dialog, which) -> {
                         // Dismiss the dialog
@@ -532,7 +477,7 @@ public class WiDReadFragment extends Fragment {
             // 파이 데이터셋 생성
             dataSet = new PieDataSet(entries, "");
             dataSet.setColors(entries.stream()
-                    .map(entry -> colorMap.getOrDefault(entry.getLabel(), Color.LTGRAY))
+                    .map(entry -> DataMaps.getColorMap(getContext()).getOrDefault(entry.getLabel(), Color.LTGRAY))
                     .collect(Collectors.toList()));
 
             // 파이 데이터셋 생성
@@ -543,5 +488,15 @@ public class WiDReadFragment extends Fragment {
             pieChart.setData(data);
             pieChart.invalidate(); // 차트 갱신
         }
+    }
+    private void showSnackbar(String message) {
+        Snackbar snackbar = Snackbar.make(getActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT);
+
+        View snackbarView = snackbar.getView();
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackbarView.getLayoutParams();
+        params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 16 * 15);
+        snackbarView.setLayoutParams(params);
+
+        snackbar.show();
     }
 }

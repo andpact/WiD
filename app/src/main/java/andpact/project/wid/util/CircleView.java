@@ -1,4 +1,4 @@
-package andpact.project.wid;
+package andpact.project.wid.util;
 
 import android.content.Context;
 import android.graphics.Canvas;
