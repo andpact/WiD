@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -79,5 +80,12 @@ public class MainActivity extends AppCompatActivity {
             fragmentTransaction1.commit();
             return true;
         });
+    }
+
+    public void disableBottomNavigation() {
+        bottomNavigationView.setVisibility(View.GONE);
+    }
+    public void enableBottomNavigation() {
+        bottomNavigationView.setVisibility(View.VISIBLE);
     }
 }

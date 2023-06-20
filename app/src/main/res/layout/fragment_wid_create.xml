@@ -5,10 +5,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
-        android:id="@+id/parentLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="60dp"
+        android:layout_marginHorizontal="50dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -16,10 +15,10 @@
         android:orientation="vertical">
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/Widget.Material3.CardView.Elevated"
+            android:elevation="@dimen/cardview_default_elevation"
             >
 
             <LinearLayout
@@ -44,7 +43,7 @@
                     android:orientation="vertical">
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
                         android:text="@string/title" />
@@ -88,7 +87,7 @@
                     android:orientation="vertical">
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:textSize="18sp"
@@ -133,7 +132,7 @@
                     android:orientation="vertical">
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:textSize="18sp"
@@ -157,7 +156,7 @@
                     android:orientation="vertical">
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:textSize="18sp"
@@ -181,7 +180,7 @@
                     android:orientation="vertical">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:orientation="horizontal">
@@ -215,6 +214,48 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/detailLinearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:textSize="18sp"
+                        android:text="세부사항" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/detailTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:textStyle="bold"
+                        android:textSize="14sp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/detailTextInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="200"
+                        app:errorEnabled="true">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/detailInputEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minLines="3"
+                            />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
@@ -238,15 +279,73 @@
             android:visibility="gone"
             android:text="@string/finish"/>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/resetButton"
+        <LinearLayout
+            android:id="@+id/otherButtonLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/black"
-            app:cornerRadius="5dp"
             android:layout_marginTop="5dp"
             android:visibility="gone"
-            android:text="초기화"/>
+            android:orientation="horizontal">
+
+            <!--            <com.google.android.material.button.MaterialButton-->
+            <!--                android:layout_width="0dp"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_weight="1"-->
+            <!--                android:backgroundTint="@color/black"-->
+            <!--                app:cornerRadius="5dp"-->
+            <!--                android:text="갤러리 저장" />-->
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/resetButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="5dp"
+                android:backgroundTint="@color/black"
+                app:cornerRadius="5dp"
+                android:text="초기화" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/showDetailInputTextButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="5dp"
+                android:backgroundTint="@color/black"
+                app:cornerRadius="5dp"
+                android:text="세부사항" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/detailAddCancelButtonLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/addDetailButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="5dp"
+                android:backgroundTint="@color/black"
+                app:cornerRadius="5dp"
+                android:text="저장" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/cancelDetailButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="5dp"
+                android:backgroundTint="@color/black"
+                app:cornerRadius="5dp"
+                android:text="취소" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
