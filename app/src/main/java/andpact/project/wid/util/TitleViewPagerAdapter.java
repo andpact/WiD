@@ -6,14 +6,10 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import andpact.project.wid.fragment.TitleTextViewFragment;
-import andpact.project.wid.fragment.WiDCreateFragment;
-import andpact.project.wid.fragment.WiDReadAllFragment;
-import andpact.project.wid.fragment.WiDReadFragment;
-import andpact.project.wid.fragment.WiDSearchFragment;
 
-public class ViewPagerAdapter extends FragmentStateAdapter {
+public class TitleViewPagerAdapter extends FragmentStateAdapter {
     private static final int NUM_PAGES = 8;
-    public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+    public TitleViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
 
     }

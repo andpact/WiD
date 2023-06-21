@@ -1,9 +1,8 @@
 <resources>
     <string name="app_name">WiD</string>
     <string name="bottom_navigation_label_1">등록</string>
-    <string name="bottom_navigation_label_2">전체</string>
-    <string name="bottom_navigation_label_3">하루</string>
-    <string name="bottom_navigation_label_4">검색</string>
+    <string name="bottom_navigation_label_2">목록</string>
+    <string name="bottom_navigation_label_3">검색</string>
 
     <string name="title_1">공부</string>
     <string name="title_2">일</string>

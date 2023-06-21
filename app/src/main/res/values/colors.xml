@@ -7,8 +7,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="saturday_blue">#FF0000FF</color> <!-- Blue color for Saturday -->
-    <color name="sunday_red">#FFFF0000</color> <!-- Red color for Sunday -->
+    <color name="saturday_blue">#FF0000FF</color>
+    <color name="sunday_red">#FFFF0000</color>
 
     <!--    <color name="study_color">#FF0000</color> &lt;!&ndash; 빨간색 &ndash;&gt;-->
 <!--    <color name="work_color">#FF7F00</color> &lt;!&ndash; 주황색 &ndash;&gt;-->

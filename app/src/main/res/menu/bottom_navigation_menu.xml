@@ -1,16 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<menu xmlns:android="http://schemas.android.com/apk/res/android">-->
-<!--    <item-->
-<!--        android:id="@+id/item_1"-->
-<!--        android:enabled="true"-->
-<!--        android:icon="@drawable/baseline_post_add_24"-->
-<!--        android:title="@string/bottom_navigation_label_1"/>-->
-<!--    <item-->
-<!--        android:id="@+id/item_2"-->
-<!--        android:enabled="true"-->
-<!--        android:icon="@drawable/baseline_format_list_bulleted_24"-->
-<!--        android:title="@string/bottom_navigation_label_2"/>-->
-<!--</menu>-->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/item_1"
@@ -25,11 +13,6 @@
     <item
         android:id="@+id/item_3"
         android:enabled="true"
-        android:icon="@drawable/baseline_format_list_bulleted_24"
-        android:title="@string/bottom_navigation_label_3"/>
-    <item
-        android:id="@+id/item_4"
-        android:enabled="true"
         android:icon="@drawable/baseline_search_24"
-        android:title="@string/bottom_navigation_label_4"/>
+        android:title="@string/bottom_navigation_label_3"/>
 </menu>

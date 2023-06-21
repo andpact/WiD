@@ -26,7 +26,6 @@ public class DataMaps {
         }
         return dayOfWeekMap;
     }
-
     public static Map<String, Integer> getColorMap(Context context) {
         if (colorMap == null) {
             colorMap = new HashMap<>();
@@ -41,7 +40,6 @@ public class DataMaps {
         }
         return colorMap;
     }
-
     public static Map<String, String> getTitleMap(Context context) {
         if (titleMap == null) {
             titleMap = new HashMap<>();

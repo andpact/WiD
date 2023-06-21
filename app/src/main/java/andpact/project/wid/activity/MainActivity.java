@@ -1,6 +1,7 @@
 package andpact.project.wid.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -12,8 +13,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import andpact.project.wid.R;
 import andpact.project.wid.fragment.WiDCreateFragment;
-import andpact.project.wid.fragment.WiDReadAllFragment;
-import andpact.project.wid.fragment.WiDReadFragment;
+import andpact.project.wid.fragment.WiDReadHolderFragment;
+import andpact.project.wid.fragment.WiDReadMonthFragment;
+import andpact.project.wid.fragment.WiDReadDayFragment;
 import andpact.project.wid.fragment.WiDSearchFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,6 +27,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES); // 다크 모드 활성화
+//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO); // 다크 모드 비활성화
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
@@ -40,13 +45,6 @@ public class MainActivity extends AppCompatActivity {
             FragmentTransaction fragmentTransaction1 = fragmentManager1.beginTransaction();
 
             switch (menuItem.getItemId()) {
-//                case R.id.item_1:
-//                    if (!(currentFragment instanceof WiDCreateFragment2)) {
-//                        WiDCreateFragment2 wiDCreateFragment2 = new WiDCreateFragment2();
-//                        fragmentTransaction1.replace(R.id.frame_container, wiDCreateFragment2);
-//                        currentFragment = wiDCreateFragment2;
-//                    }
-//                    break;
                 case R.id.item_1:
                     if (!(currentFragment instanceof WiDCreateFragment)) {
                         WiDCreateFragment wiDCreateFragment = new WiDCreateFragment();
@@ -55,20 +53,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
                 case R.id.item_2:
-                    if (!(currentFragment instanceof WiDReadAllFragment)) {
-                        WiDReadAllFragment wiDReadAllFragment = new WiDReadAllFragment();
-                        fragmentTransaction1.replace(R.id.frame_container, wiDReadAllFragment);
-                        currentFragment = wiDReadAllFragment;
+                    if (!(currentFragment instanceof WiDReadHolderFragment)) {
+                        WiDReadHolderFragment wiDReadHolderFragment = new WiDReadHolderFragment();
+                        fragmentTransaction1.replace(R.id.frame_container, wiDReadHolderFragment);
+                        currentFragment = wiDReadHolderFragment;
                     }
                     break;
                 case R.id.item_3:
-                    if (!(currentFragment instanceof WiDReadFragment)) {
-                        WiDReadFragment wiDReadFragment = new WiDReadFragment();
-                        fragmentTransaction1.replace(R.id.frame_container, wiDReadFragment);
-                        currentFragment = wiDReadFragment;
-                    }
-                    break;
-                case R.id.item_4:
                     if (!(currentFragment instanceof WiDSearchFragment)) {
                         WiDSearchFragment wiDSearchFragment = new WiDSearchFragment();
                         fragmentTransaction1.replace(R.id.frame_container, wiDSearchFragment);
@@ -76,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
             }
-
             fragmentTransaction1.commit();
             return true;
         });

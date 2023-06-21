@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -35,7 +34,7 @@ import andpact.project.wid.util.Title;
 import andpact.project.wid.model.WiD;
 import andpact.project.wid.util.CustomPageTransformer;
 import andpact.project.wid.util.DataMaps;
-import andpact.project.wid.util.ViewPagerAdapter;
+import andpact.project.wid.util.TitleViewPagerAdapter;
 import andpact.project.wid.util.WiDDatabaseHelper;
 
 public class WiDCreateFragment extends Fragment {
@@ -92,7 +91,7 @@ public class WiDCreateFragment extends Fragment {
         titleRightButton = view.findViewById(R.id.titleRightButton);
 
         viewPager2 = view.findViewById(R.id.viewPager2);
-        viewPager2.setAdapter(new ViewPagerAdapter(getActivity()));
+        viewPager2.setAdapter(new TitleViewPagerAdapter(getActivity()));
         viewPager2.setPageTransformer(new CustomPageTransformer());
 
         wiDDatabaseHelper = new WiDDatabaseHelper(getContext());
@@ -151,7 +150,7 @@ public class WiDCreateFragment extends Fragment {
             @Override
             public void run() {
                 currentTime = LocalTime.now(); // 시간이 1초 단위로 계속 현재 시간으로 할당됨.
-                String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("HH시 mm분 ss초"));
+                String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
                 startTimeTextView.setText(formattedTime);
                 finishTimeTextView.setText(startTimeTextView.getText()); // 시작시간의 텍스트만 가져옴. 러너블 없이
 
@@ -265,7 +264,7 @@ public class WiDCreateFragment extends Fragment {
                 currentTime = LocalTime.now();
                 Duration elapsedDuration = Duration.between(wiD.getStart(), currentTime);
 
-                String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("HH시 mm분 ss초"));
+                String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
                 finishTimeTextView.setText(formattedTime);
 
                 // Format the elapsed time

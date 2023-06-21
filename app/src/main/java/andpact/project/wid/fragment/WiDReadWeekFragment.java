@@ -8,14 +8,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.google.android.material.textview.MaterialTextView;
+
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,80 +34,62 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import andpact.project.wid.R;
-import andpact.project.wid.util.Title;
 import andpact.project.wid.model.WiD;
 import andpact.project.wid.util.DataMaps;
+import andpact.project.wid.util.Title;
 import andpact.project.wid.util.WiDDatabaseHelper;
 
-import android.widget.ImageButton;
-
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.google.android.material.textview.MaterialTextView;
-
-public class WiDReadAllFragment extends Fragment {
+public class WiDReadWeekFragment extends Fragment {
     private TextView dateTextView;
     private ImageButton leftTriangle, rightTriangle;
-    private LocalDate currentDate, firstOfMonth;
-    private DateTimeFormatter formatter;
+    private LocalDate currentDate;
     private GridLayout gridLayout;
-    private LinearLayout statisticsTabLinearLayout;
-    private LinearLayout statisticsLinearLayout;
+    private DateTimeFormatter formatter;
+    private LinearLayout statisticsTabLinearLayout, statisticsLinearLayout;
     private WiDDatabaseHelper wiDDatabaseHelper;
     private Map<String, Duration> totalDurationMap;
     private Map<String, Integer> bestDayMap;
     private Map<String, Duration> bestDurationMap;
     private Map<String, Duration> totalDurationForDayMap;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_wid_read_all, container, false);
+        View view = inflater.inflate(R.layout.fragment_wid_read_week, container, false);
 
         dateTextView = view.findViewById(R.id.dateTextView);
         leftTriangle = view.findViewById(R.id.leftTriangle);
         rightTriangle = view.findViewById(R.id.rightTriangle);
+
+        currentDate = LocalDate.now();
+
+        formatter = DateTimeFormatter.ofPattern("yyyy년 M월 W번째 '주'");
 
         gridLayout = view.findViewById(R.id.gridLayout);
         statisticsTabLinearLayout = view.findViewById(R.id.statisticsTabLinearLayout);
         statisticsLinearLayout = view.findViewById(R.id.statisticsLinearLayout);
         wiDDatabaseHelper = new WiDDatabaseHelper(getContext());
 
-        // Initialize the date formatter
-        formatter = DateTimeFormatter.ofPattern("yyyy년 M월");
-
-        // Get the current date
-        currentDate = LocalDate.now();
-
-        // Set the formatted date to the TextView
-        updateDateTextView();
-
         // Set click listeners for the left and right arrows
-        leftTriangle.setOnClickListener(v -> decreaseMonth());
-        rightTriangle.setOnClickListener(v -> increaseMonth());
+        leftTriangle.setOnClickListener(v -> decreaseWeek());
+        rightTriangle.setOnClickListener(v -> increaseWeek());
+
+        updateDateTextView();
 
         return view;
     }
-
-    private void decreaseMonth() {
-        currentDate = currentDate.minusMonths(1);
+    private void decreaseWeek() {
+        currentDate = currentDate.minusDays(7);
         updateDateTextView();
     }
 
-    private void increaseMonth() {
-        currentDate = currentDate.plusMonths(1);
+    private void increaseWeek() {
+        currentDate = currentDate.plusDays(7);
         updateDateTextView();
     }
-
     private void updateDateTextView() {
         boolean hasData = false;
 
         gridLayout.removeAllViews();
         statisticsLinearLayout.removeAllViews();
-        firstOfMonth = currentDate.withDayOfMonth(1);
-        int startDay = firstOfMonth.getDayOfWeek().getValue() % 7; // 0 to 6, Sun to Mon
-        int daysInMonth = currentDate.lengthOfMonth();
 
         totalDurationMap = new HashMap<>();
         bestDayMap = new HashMap<>();
@@ -110,7 +101,12 @@ public class WiDReadAllFragment extends Fragment {
             bestDurationMap.put(title.toString(), Duration.ZERO);
         }
 
-        for (int i = 0; i < startDay + daysInMonth; i++) { // 1일 부터 마지막 날까지 파이 차트를 그림. 반복 한 번이 하루를 의미함.
+        LocalDate firstDayOfWeek = currentDate;
+        while (firstDayOfWeek.getDayOfWeek() != DayOfWeek.MONDAY) {
+            firstDayOfWeek = firstDayOfWeek.minusDays(1);
+        }
+
+        for (int i = 0; i < 7; i++) { // 일주일 파이 차트 그리기
             ArrayList<PieEntry> entries;
             PieDataSet dataSet;
             PieData data;
@@ -121,142 +117,115 @@ public class WiDReadAllFragment extends Fragment {
             pieChart.getDescription().setEnabled(false); // 설명 비활성화
             pieChart.getLegend().setEnabled(false); // 각주(범례) 표시 X
             pieChart.setHoleRadius(70); // 가운데 원의 반지름은 큰 원의 70%
-//            pieChart.setPadding(0, 0, 0, 0);
 
             GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
             layoutParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-//            파이 차트 크기 키우기 왜 안됨;;
-//            layoutParams.setMargins(0, 0, 0, 0);
-//            layoutParams.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-//            layoutParams.width = 140;
-//            layoutParams.height = 140;
 
             pieChart.setLayoutParams(layoutParams);
 
-            if (i < startDay) { // 1일 이전의 빈 파이 차트를 표시
+            pieChart.setDrawCenterText(true);
+            pieChart.setCenterText(firstDayOfWeek.getDayOfMonth() + "");
+            pieChart.setCenterTextTypeface(Typeface.DEFAULT_BOLD);
+
+            if (firstDayOfWeek.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+                pieChart.setCenterTextColor(Color.RED);
+            } else if (firstDayOfWeek.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
+                pieChart.setCenterTextColor(Color.BLUE);
+            } else {
+                pieChart.setCenterTextColor(R.color.black);
+            }
+
+            List<WiD> wiDList = wiDDatabaseHelper.getWiDByDate(firstDayOfWeek.toString());
+
+            if (wiDList.isEmpty()) { // 해당 날짜에 WiD가 없을 때 빈 파이 차트를 그림.
                 entries = new ArrayList<>(); // 빈 엔트리 셋 생성
                 entries.add(new PieEntry(1, ""));
                 dataSet = new PieDataSet(entries, "");
-                dataSet.setColor(Color.TRANSPARENT);
+                dataSet.setColor(Color.LTGRAY);
                 data = new PieData(dataSet);
                 data.setDrawValues(false); // 엔트리 값 표시 X
                 pieChart.setData(data);
                 pieChart.invalidate();
+            } else {
+                hasData = true;
 
-                gridLayout.addView(pieChart);
-            } else { // 1일 부터의 파이 차트를 표시
-                pieChart.setDrawCenterText(true);
-                pieChart.setCenterText(i - startDay + 1 + "");
-                pieChart.setCenterTextTypeface(Typeface.DEFAULT_BOLD);
+                entries = new ArrayList<>();
 
-                // Set the center text color based on the day of the week
-                if (i % 7 == 0) {
-                    // Sunday (0th day of the week)
-//                    pieChart.setCenterTextColor(R.color.sunday_red); // 왜 안됨 이거
-                    pieChart.setCenterTextColor(Color.RED);
-                } else if (i % 7 == 6) {
-                    // Saturday (6th day of the week)
-//                    pieChart.setCenterTextColor(R.color.saturday_blue);
-                    pieChart.setCenterTextColor(Color.BLUE);
-                } else {
-                    // Other days of the week
-                    pieChart.setCenterTextColor(R.color.black);
+                // 시작 시간 초기화
+                int startMinutes = 0;
+
+                totalDurationForDayMap = new HashMap<>();
+
+                for (Title title : Title.values()) { // "STUDY"
+                    totalDurationForDayMap.put(title.toString(), Duration.ZERO);
                 }
 
-                List<WiD> wiDList = wiDDatabaseHelper.getWiDByDate(firstOfMonth.toString());
+                for (WiD wiD : wiDList) {
+                    int finishMinutes = wiD.getFinish().getHour() * 60 + wiD.getFinish().getMinute();
 
-                if (wiDList.isEmpty()) { // 해당 날짜에 WiD가 없을 때 빈 파이 차트를 그림.
-                    entries = new ArrayList<>(); // 빈 엔트리 셋 생성
-                    entries.add(new PieEntry(1, ""));
-                    dataSet = new PieDataSet(entries, "");
-                    dataSet.setColor(Color.LTGRAY);
-                    data = new PieData(dataSet);
-                    data.setDrawValues(false); // 엔트리 값 표시 X
-                    pieChart.setData(data);
-                    pieChart.invalidate();
-                } else {
-                    hasData = true;
-
-                    entries = new ArrayList<>();
-
-                    // 시작 시간 초기화
-                    int startMinutes = 0;
-
-                    totalDurationForDayMap = new HashMap<>();
-
-                    for (Title title : Title.values()) { // "STUDY"
-                        totalDurationForDayMap.put(title.toString(), Duration.ZERO);
-                    }
-
-                    for (WiD wiD : wiDList) {
-                        int finishMinutes = wiD.getFinish().getHour() * 60 + wiD.getFinish().getMinute();
-
-                        // 비어 있는 시간대의 엔트리 추가
-                        if (wiD.getStart().getHour() * 60 + wiD.getStart().getMinute() > startMinutes) {
-                            int emptyMinutes = wiD.getStart().getHour() * 60 + wiD.getStart().getMinute() - startMinutes;
-                            entries.add(new PieEntry(emptyMinutes, ""));
-                        }
-
-                        // 시작 시간 업데이트
-                        startMinutes = wiD.getStart().getHour() * 60 + wiD.getStart().getMinute();
-
-                        // 엔트리 셋에 해당 WiD 객체의 시간대를 추가
-                        entries.add(new PieEntry(finishMinutes - startMinutes, wiD.getTitle()));
-
-                        // 시작 시간 업데이트
-                        startMinutes = wiD.getFinish().getHour() * 60 + wiD.getFinish().getMinute();
-
-                        // totalDurationMap에 값을 할당
-                        String title = wiD.getTitle(); // "STUDY"
-                        Duration durationForTotal = totalDurationMap.get(title).plus(wiD.getDuration());
-                        totalDurationMap.put(title, durationForTotal);
-
-                        // totalDurationForDayMap에 오늘 duration을 할당.
-                        Duration durationForDay = totalDurationForDayMap.get(title).plus(wiD.getDuration());
-                        totalDurationForDayMap.put(title, durationForDay);
-                    }
-                    // 마지막 WiD 객체 이후의 비어 있는 시간대의 엔트리 추가
-                    if (startMinutes < 24 * 60) {
-                        int emptyMinutes = 24 * 60 - startMinutes;
+                    // 비어 있는 시간대의 엔트리 추가
+                    if (wiD.getStart().getHour() * 60 + wiD.getStart().getMinute() > startMinutes) {
+                        int emptyMinutes = wiD.getStart().getHour() * 60 + wiD.getStart().getMinute() - startMinutes;
                         entries.add(new PieEntry(emptyMinutes, ""));
                     }
 
-                    // 파이 데이터셋 생성
-                    dataSet = new PieDataSet(entries, "");
-                    dataSet.setColors(entries.stream()
-                            .map(entry -> DataMaps.getColorMap(getContext()).getOrDefault(entry.getLabel(), Color.LTGRAY))
-                            .collect(Collectors.toList()));
+                    // 시작 시간 업데이트
+                    startMinutes = wiD.getStart().getHour() * 60 + wiD.getStart().getMinute();
 
-                    // 파이 데이터셋 생성
-                    data = new PieData(dataSet);
-                    data.setDrawValues(false); // 엔트리 값 표시 X
+                    // 엔트리 셋에 해당 WiD 객체의 시간대를 추가
+                    entries.add(new PieEntry(finishMinutes - startMinutes, wiD.getTitle()));
 
-                    // 파이 차트에 데이터 설정
-                    pieChart.setData(data);
-                    pieChart.invalidate(); // 차트 갱신
+                    // 시작 시간 업데이트
+                    startMinutes = wiD.getFinish().getHour() * 60 + wiD.getFinish().getMinute();
 
-                    for (Title title : Title.values()) {
-                        Duration totalDurationForDay = totalDurationForDayMap.get(title.toString());
-                        Duration bestDuration = bestDurationMap.get(title.toString());
+                    // totalDurationMap에 값을 할당
+                    String title = wiD.getTitle(); // "STUDY"
+                    Duration durationForTotal = totalDurationMap.get(title).plus(wiD.getDuration());
+                    totalDurationMap.put(title, durationForTotal);
 
-                        if (totalDurationForDay != Duration.ZERO && 0 < totalDurationForDay.compareTo(bestDuration)) {
-                            bestDurationMap.put(title.toString(), totalDurationForDay);
-                            bestDayMap.put(title.toString(), i - startDay + 1);
-                        }
+                    // totalDurationForDayMap에 오늘 duration을 할당.
+                    Duration durationForDay = totalDurationForDayMap.get(title).plus(wiD.getDuration());
+                    totalDurationForDayMap.put(title, durationForDay);
+                }
+                // 마지막 WiD 객체 이후의 비어 있는 시간대의 엔트리 추가
+                if (startMinutes < 24 * 60) {
+                    int emptyMinutes = 24 * 60 - startMinutes;
+                    entries.add(new PieEntry(emptyMinutes, ""));
+                }
+
+                // 파이 데이터셋 생성
+                dataSet = new PieDataSet(entries, "");
+                dataSet.setColors(entries.stream()
+                        .map(entry -> DataMaps.getColorMap(getContext()).getOrDefault(entry.getLabel(), Color.LTGRAY))
+                        .collect(Collectors.toList()));
+
+                // 파이 데이터셋 생성
+                data = new PieData(dataSet);
+                data.setDrawValues(false); // 엔트리 값 표시 X
+
+                // 파이 차트에 데이터 설정
+                pieChart.setData(data);
+                pieChart.invalidate(); // 차트 갱신
+
+                for (Title title : Title.values()) {
+                    Duration totalDurationForDay = totalDurationForDayMap.get(title.toString());
+                    Duration bestDuration = bestDurationMap.get(title.toString());
+
+                    if (totalDurationForDay != Duration.ZERO && 0 < totalDurationForDay.compareTo(bestDuration)) {
+                        bestDurationMap.put(title.toString(), totalDurationForDay);
+                        bestDayMap.put(title.toString(), firstDayOfWeek.getDayOfMonth());
                     }
                 }
-                gridLayout.addView(pieChart);
-
-                firstOfMonth = firstOfMonth.plusDays(1);
             }
+            gridLayout.addView(pieChart);
+            firstDayOfWeek = firstDayOfWeek.plusDays(1);
         }
-
         String formattedDate = currentDate.format(formatter);
         dateTextView.setText(formattedDate);
-
         if (hasData) {
             // Create a list to store the Title values and their corresponding totalDurations
             List<Title> sortedTitles = new ArrayList<>(Arrays.asList(Title.values()));
+            statisticsTabLinearLayout.setVisibility(View.VISIBLE);
 
             // Sort the titles based on totalDuration in descending order
             Collections.sort(sortedTitles, (t1, t2) -> {

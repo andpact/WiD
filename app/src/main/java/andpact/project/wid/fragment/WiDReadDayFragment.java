@@ -16,8 +16,6 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -43,7 +41,7 @@ import andpact.project.wid.model.WiD;
 import andpact.project.wid.util.DataMaps;
 import andpact.project.wid.util.WiDDatabaseHelper;
 
-public class WiDReadFragment extends Fragment {
+public class WiDReadDayFragment extends Fragment {
     private MaterialTextView dateTextView, dayOfWeekTextView;
     private LinearLayout headerLinearLayout, linearLayout;
     private WiDDatabaseHelper wiDDatabaseHelper;
@@ -63,7 +61,7 @@ public class WiDReadFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_wid_read, container, false);
+        View view = inflater.inflate(R.layout.fragment_wid_read_day, container, false);
         dateTextView = view.findViewById(R.id.dateTextView);
         dayOfWeekTextView = view.findViewById(R.id.dayOfWeekTextView);
         headerLinearLayout = view.findViewById(R.id.headerLinearLayout);
@@ -355,6 +353,11 @@ public class WiDReadFragment extends Fragment {
                 itemLayout.addView(durationTextView);
 
                 ImageView arrowImageView = new ImageView(getContext());
+//                if (wiD.getDetail().isEmpty()) {
+//
+//                } else {
+//
+//                }
                 arrowImageView.setImageResource(R.drawable.baseline_keyboard_arrow_right_24);
                 arrowImageView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.4f));
                 itemLayout.addView(arrowImageView);
