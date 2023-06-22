@@ -44,6 +44,7 @@ import andpact.project.wid.util.WiDDatabaseHelper;
 
 public class WiDReadDayFragment extends Fragment {
     private MaterialTextView dateTextView, dayOfWeekTextView;
+    private DateTimeFormatter dateFormatter, timeFormatter, timeFormatter2;
     private LinearLayout headerLinearLayout, linearLayout;
     private WiDDatabaseHelper wiDDatabaseHelper;
     private LocalDate currentDate;
@@ -53,7 +54,7 @@ public class WiDReadDayFragment extends Fragment {
 
     private LinearLayout wiDLinearLayout, wiDTitleLinearLayout, wiDDateLinearLayout, wiDStartTimeLinearLayout,
             wiDFinishTimeLinearLayout, wiDDurationLinearLayout, wiDDetailLinearLayout, showDetailLinearLayout, editDetailLinearLayout;
-    private MaterialTextView wiDTitleTextView, wiDDateTextView, wiDDayOfWeekTextView, wiDParenthesisTextView, wiDStartTimeTextView,
+    private MaterialTextView wiDTitleTextView, wiDDateTextView, wiDDayOfWeekTextView, wiDStartTimeTextView,
             wiDFinishTimeTextView, wiDDurationTextView, wiDDetailTextView;
     private ImageView showDetailLinearLayoutImageView;
     private MaterialTextView showEditDetailButton;
@@ -96,8 +97,11 @@ public class WiDReadDayFragment extends Fragment {
         wiDDatabaseHelper = new WiDDatabaseHelper(getContext());
 
         currentDate = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 (");
-        String formattedDate = currentDate.format(formatter);
+        dateFormatter = DateTimeFormatter.ofPattern("yyyy.M.d ");
+        timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        timeFormatter2 = DateTimeFormatter.ofPattern("HH:mm");
+
+        String formattedDate = currentDate.format(dateFormatter);
         dateTextView.setText(formattedDate);
         String koreanDayOfWeek = DataMaps.getDayOfWeekMap().get(currentDate.getDayOfWeek());
         dayOfWeekTextView.setText(koreanDayOfWeek);
@@ -124,7 +128,6 @@ public class WiDReadDayFragment extends Fragment {
         wiDTitleTextView = view.findViewById(R.id.wiDTitleTextView);
         wiDDateTextView = view.findViewById(R.id.wiDDateTextView);
         wiDDayOfWeekTextView = view.findViewById(R.id.wiDDayOfWeekTextView);
-        wiDParenthesisTextView = view.findViewById(R.id.wiDParenthesisTextView);
         wiDStartTimeTextView = view.findViewById(R.id.wiDStartTimeTextView);
         wiDFinishTimeTextView = view.findViewById(R.id.wiDFinishTimeTextView);
         wiDDurationTextView = view.findViewById(R.id.wiDDurationTextView);
@@ -256,8 +259,7 @@ public class WiDReadDayFragment extends Fragment {
     private void decreaseDate() {
         currentDate = currentDate.minusDays(1);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 (");
-        String formattedDate = currentDate.format(formatter);
+        String formattedDate = currentDate.format(dateFormatter);
         dateTextView.setText(formattedDate);
 
         String koreanDayOfWeek = DataMaps.getDayOfWeekMap().get(currentDate.getDayOfWeek());
@@ -275,8 +277,7 @@ public class WiDReadDayFragment extends Fragment {
     private void increaseDate() {
         currentDate = currentDate.plusDays(1);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 (");
-        String formattedDate = currentDate.format(formatter);
+        String formattedDate = currentDate.format(dateFormatter);
         dateTextView.setText(formattedDate);
 
         String koreanDayOfWeek = DataMaps.getDayOfWeekMap().get(currentDate.getDayOfWeek());
@@ -319,9 +320,6 @@ public class WiDReadDayFragment extends Fragment {
             linearLayout.addView(noContextTextView);
 
         } else {
-            // WiD 리스트를 텍스트 뷰에 표현하기
-            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-
             entries = new ArrayList<>();
 
             // 시작 시간 초기화
@@ -355,7 +353,7 @@ public class WiDReadDayFragment extends Fragment {
 
                 // Create and add the start time TextView
                 MaterialTextView startTimeTextView = new MaterialTextView(getContext());
-                startTimeTextView.setText(wiD.getStart().format(timeFormatter));
+                startTimeTextView.setText(wiD.getStart().format(timeFormatter2));
                 startTimeTextView.setTypeface(null, Typeface.BOLD);
                 startTimeTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.7f));
                 startTimeTextView.setGravity(Gravity.CENTER);
@@ -363,7 +361,7 @@ public class WiDReadDayFragment extends Fragment {
 
                 // Create and add the finish time TextView
                 MaterialTextView finishTimeTextView = new MaterialTextView(getContext());
-                finishTimeTextView.setText(wiD.getFinish().format(timeFormatter));
+                finishTimeTextView.setText(wiD.getFinish().format(timeFormatter2));
                 finishTimeTextView.setTypeface(null, Typeface.BOLD);
                 finishTimeTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.7f));
                 finishTimeTextView.setGravity(Gravity.CENTER);
@@ -415,7 +413,7 @@ public class WiDReadDayFragment extends Fragment {
                     clickedWiD = wiDDatabaseHelper.getWiDById(clickedWiDId);
 
                     wiDTitleTextView.setText(DataMaps.getTitleMap(getContext()).get(clickedWiD.getTitle()));
-                    wiDDateTextView.setText(clickedWiD.getDate().format(DateTimeFormatter.ofPattern("yyyy년 M월 d일 (")));
+                    wiDDateTextView.setText(clickedWiD.getDate().format(dateFormatter));
 
                     String wiDKoreanDayOfWeek = DataMaps.getDayOfWeekMap().get(clickedWiD.getDate().getDayOfWeek());
                     wiDDayOfWeekTextView.setText(wiDKoreanDayOfWeek);
@@ -428,20 +426,28 @@ public class WiDReadDayFragment extends Fragment {
                         wiDDayOfWeekTextView.setTextColor(Color.BLACK);
                     }
 
-                    wiDParenthesisTextView.setText(")");
-                    wiDStartTimeTextView.setText(clickedWiD.getStart().format(DateTimeFormatter.ofPattern("HH시 mm분 ss초")));
-                    wiDFinishTimeTextView.setText(clickedWiD.getFinish().format(DateTimeFormatter.ofPattern("HH시 mm분 ss초")));
+                    wiDStartTimeTextView.setText(clickedWiD.getStart().format(timeFormatter));
+                    wiDFinishTimeTextView.setText(clickedWiD.getFinish().format(timeFormatter));
 
                     long clickedWiDHours = clickedWiD.getDuration().toHours();
                     long clickedWiDMinutes = (clickedWiD.getDuration().toMinutes() % 60);
+                    long clickedWiDSeconds = (clickedWiD.getDuration().getSeconds() % 60);
                     String clickedWiDDurationText;
 
-                    if (clickedWiDHours > 0 && clickedWiDMinutes == 0) {
+                    if (clickedWiDHours > 0 && clickedWiDMinutes == 0 && clickedWiDSeconds == 0) {
                         clickedWiDDurationText = String.format("%d시간", clickedWiDHours);
-                    } else if (clickedWiDHours > 0) {
+                    } else if (clickedWiDHours > 0 && clickedWiDMinutes > 0 && clickedWiDSeconds == 0) {
                         clickedWiDDurationText = String.format("%d시간 %d분", clickedWiDHours, clickedWiDMinutes);
-                    } else {
+                    } else if (clickedWiDHours > 0 && clickedWiDMinutes == 0 && clickedWiDSeconds > 0) {
+                        clickedWiDDurationText = String.format("%d시간 %d초", clickedWiDHours, clickedWiDSeconds);
+                    } else if (clickedWiDHours > 0) {
+                        clickedWiDDurationText = String.format("%d시간 %d분 %d초", clickedWiDHours, clickedWiDMinutes, clickedWiDSeconds);
+                    } else if (clickedWiDMinutes > 0 && clickedWiDSeconds == 0) {
                         clickedWiDDurationText = String.format("%d분", clickedWiDMinutes);
+                    } else if (clickedWiDMinutes > 0) {
+                        clickedWiDDurationText = String.format("%d분 %d초", clickedWiDMinutes, clickedWiDSeconds);
+                    } else {
+                        clickedWiDDurationText = String.format("%d초", clickedWiDSeconds);
                     }
 
                     wiDDurationTextView.setText(clickedWiDDurationText);

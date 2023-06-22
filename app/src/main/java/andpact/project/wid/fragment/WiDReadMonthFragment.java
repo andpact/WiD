@@ -65,7 +65,7 @@ public class WiDReadMonthFragment extends Fragment {
         wiDDatabaseHelper = new WiDDatabaseHelper(getContext());
 
         // Initialize the date formatter
-        formatter = DateTimeFormatter.ofPattern("yyyy년 M월");
+        formatter = DateTimeFormatter.ofPattern("yyyy.M");
 
         // Get the current date
         currentDate = LocalDate.now();

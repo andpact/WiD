@@ -39,8 +39,9 @@ import andpact.project.wid.util.WiDDatabaseHelper;
 
 public class WiDCreateFragment extends Fragment {
     private LinearLayout titleLinearLayout, dateLinearLayout, startTimeLinearLayout, finishTimeLinearLayout, durationLinearLayout;
-    private MaterialTextView dateTextView, dayOfWeekTextView, parenthesisTextView,
-            startTimeTextView, finishTimeTextView, durationTextView, underOneMinuteTextView;
+    private MaterialTextView dateTextView, dayOfWeekTextView, startTimeTextView, finishTimeTextView, durationTextView, underOneMinuteTextView;
+
+    private DateTimeFormatter dateFormatter, timeFormatter;
     private ImageButton titleLeftButton, titleRightButton;
     private ViewPager2 viewPager2;
     private MaterialButton startButton, finishButton, resetButton;
@@ -60,9 +61,11 @@ public class WiDCreateFragment extends Fragment {
         finishTimeLinearLayout = view.findViewById(R.id.finishTimeLinearLayout);
         durationLinearLayout = view.findViewById(R.id.durationLinearLayout);
 
+        dateFormatter = DateTimeFormatter.ofPattern("yyyy.M.d ");
+        timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+
         dateTextView = view.findViewById(R.id.dateTextView);
         dayOfWeekTextView = view.findViewById(R.id.dayOfWeekTextView);
-        parenthesisTextView = view.findViewById(R.id.parenthesisTextView);
         startTimeTextView = view.findViewById(R.id.startTimeTextView);
         finishTimeTextView = view.findViewById(R.id.finishTimeTextView);
         finishTimeTextView.setTextColor(Color.LTGRAY); // 시작 전 회색으로
@@ -107,7 +110,7 @@ public class WiDCreateFragment extends Fragment {
         });
 
         // 현재 날짜를 표시
-        String formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 ("));
+        String formattedDate = currentDate.format(dateFormatter);
         dateTextView.setText(formattedDate);
         String koreanDayOfWeek = DataMaps.getDayOfWeekMap().get(currentDate.getDayOfWeek());
         dayOfWeekTextView.setText(koreanDayOfWeek);
@@ -120,15 +123,13 @@ public class WiDCreateFragment extends Fragment {
             dayOfWeekTextView.setTextColor(Color.BLACK);
         }
 
-        parenthesisTextView.setText(")");
-
         // 현재 시간을 표시하고 시간이 흐르는 것을 업데이트
         startHandler = new Handler();
         startTimeRunnable = new Runnable() {
             @Override
             public void run() {
                 currentTime = LocalTime.now(); // 시간이 1초 단위로 계속 현재 시간으로 할당됨.
-                String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+                String formattedTime = currentTime.format(timeFormatter);
                 startTimeTextView.setText(formattedTime);
                 finishTimeTextView.setText(startTimeTextView.getText()); // 시작시간의 텍스트만 가져옴. 러너블 없이
 
@@ -187,7 +188,7 @@ public class WiDCreateFragment extends Fragment {
                 currentTime = LocalTime.now();
                 Duration elapsedDuration = Duration.between(wiD.getStart(), currentTime);
 
-                String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+                String formattedTime = currentTime.format(timeFormatter);
                 finishTimeTextView.setText(formattedTime);
 
                 // Format the elapsed time

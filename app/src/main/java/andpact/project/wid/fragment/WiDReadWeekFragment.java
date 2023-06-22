@@ -40,7 +40,7 @@ import andpact.project.wid.util.Title;
 import andpact.project.wid.util.WiDDatabaseHelper;
 
 public class WiDReadWeekFragment extends Fragment {
-    private TextView dateTextView;
+    private TextView dateTextView, weekOfYearTextView;
     private ImageButton leftTriangle, rightTriangle;
     private LocalDate currentDate;
     private GridLayout gridLayout;
@@ -56,12 +56,13 @@ public class WiDReadWeekFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_wid_read_week, container, false);
 
         dateTextView = view.findViewById(R.id.dateTextView);
+        weekOfYearTextView = view.findViewById(R.id.weekOfYearTextView);
         leftTriangle = view.findViewById(R.id.leftTriangle);
         rightTriangle = view.findViewById(R.id.rightTriangle);
 
         currentDate = LocalDate.now();
 
-        formatter = DateTimeFormatter.ofPattern("yyyy년 M월 W번째 '주'");
+        formatter = DateTimeFormatter.ofPattern("yyyy.M W번째 '주'");
 
         gridLayout = view.findViewById(R.id.gridLayout);
         statisticsTabLinearLayout = view.findViewById(R.id.statisticsTabLinearLayout);
@@ -222,6 +223,10 @@ public class WiDReadWeekFragment extends Fragment {
         }
         String formattedDate = currentDate.format(formatter);
         dateTextView.setText(formattedDate);
+
+        int weekOfYear = currentDate.get(WeekFields.ISO.weekOfWeekBasedYear());
+        weekOfYearTextView.setText(" " + weekOfYear + "/52");
+
         if (hasData) {
             // Create a list to store the Title values and their corresponding totalDurations
             List<Title> sortedTitles = new ArrayList<>(Arrays.asList(Title.values()));
