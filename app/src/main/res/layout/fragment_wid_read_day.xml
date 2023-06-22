@@ -117,6 +117,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/wid_bg"
             android:padding="10dp"
             android:orientation="vertical">
 
@@ -132,12 +133,14 @@
             <LinearLayout
                 android:id="@+id/wiDTitleLinearLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
                     android:textSize="18sp"
                     android:text="@string/title" />
 
@@ -145,7 +148,10 @@
                     android:id="@+id/wiDTitleTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/wid_field_bg"
                     android:gravity="center"
+                    android:textStyle="bold"
                     android:textSize="25sp" />
 
             </LinearLayout>
@@ -158,8 +164,9 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="10dp"
+                    android:gravity="center"
                     android:textSize="18sp"
                     android:text="날짜" />
 
@@ -167,6 +174,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:background="@drawable/wid_field_bg"
                     android:gravity="center"
                     android:orientation="horizontal">
 
@@ -203,8 +211,9 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="10dp"
+                    android:gravity="center"
                     android:textSize="18sp"
                     android:text="시작 시간" />
 
@@ -213,6 +222,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:background="@drawable/wid_field_bg"
                     android:gravity="center"
                     android:textSize="25sp"
                     android:textStyle="bold" />
@@ -227,8 +237,9 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="10dp"
+                    android:gravity="center"
                     android:textSize="18sp"
                     android:text="종료 시간" />
 
@@ -237,6 +248,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:background="@drawable/wid_field_bg"
                     android:gravity="center"
                     android:textSize="25sp"
                     android:textStyle="bold" />
@@ -251,7 +263,9 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
                     android:textSize="18sp"
                     android:text="진행 시간" />
 
@@ -260,6 +274,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:background="@drawable/wid_field_bg"
                     android:gravity="center"
                     android:textSize="25sp"
                     android:textStyle="bold" />
@@ -273,68 +288,76 @@
                 android:visibility="gone"
                 android:orientation="vertical">
 
-                <com.google.android.material.textview.MaterialTextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:textSize="18sp"
-                    android:text="세부사항" />
+                    android:orientation="horizontal"
+                    >
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="18sp"
+                        android:text="세부사항" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/showEditDetailButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:textSize="18sp"
+                        android:textColor="@color/saturday_blue"
+                        android:text="수정" />
+
+                </LinearLayout>
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/wiDDetailTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:textStyle="bold"
-                    android:textSize="14sp" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/wiDDetailTextInputLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:visibility="gone"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="200"
-                    app:errorEnabled="true">
+                    android:padding="10dp"
+                    android:background="@drawable/wid_field_bg"
+                    android:minLines="5"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:hint="세부 사항 입력.."/>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/wiDDetailInputEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:minLines="3"
-                        />
+            </LinearLayout>
 
-                </com.google.android.material.textfield.TextInputLayout>
+            <LinearLayout
+                android:id="@+id/showDetailLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/showDetailLinearLayoutImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/baseline_keyboard_arrow_down_24"/>
 
             </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/wiDOtherButtonLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
-<!--            <com.google.android.material.button.MaterialButton-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="1"-->
-<!--                android:backgroundTint="@color/black"-->
-<!--                app:cornerRadius="5dp"-->
-<!--                android:text="갤러리 저장" />-->
-
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/wiDShowDetailInputTextButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="5dp"
                 android:backgroundTint="@color/black"
                 app:cornerRadius="5dp"
-                android:text="세부사항" />
+                android:text="갤러리 저장" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/wiDDeleteButton"
@@ -347,44 +370,83 @@
                 android:text="WiD 삭제" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/wiDBackButton"
+                android:id="@+id/wiDCloseButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="5dp"
                 android:backgroundTint="@color/black"
                 app:cornerRadius="5dp"
-                android:text="뒤로 가기" />
+                android:text="닫기" />
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/wiDDetailAddCancelButtonLinearLayout"
-            android:layout_width="match_parent"
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/editDetailLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center"
+        android:layout_marginHorizontal="50dp"
+        android:background="@drawable/wid_bg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:visibility="gone"
+            android:textStyle="bold"
+            android:textSize="25sp"
+            android:text="@string/detail"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="5dp"
+            app:counterEnabled="true"
+            app:counterMaxLength="200"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/detailInputEditText"
+                android:minLines="5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="5dp"
+            android:layout_marginHorizontal="15dp"
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/wiDAddDetailButton"
+                android:id="@+id/editDetailButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginEnd="5dp"
                 android:backgroundTint="@color/black"
                 app:cornerRadius="5dp"
-                android:text="저장" />
+                android:text="완료"/>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/wiDCancelDetailButton"
+                android:id="@+id/cancelEditDetailButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="5dp"
                 android:backgroundTint="@color/black"
                 app:cornerRadius="5dp"
-                android:text="취소" />
+                android:text="취소"/>
 
         </LinearLayout>
 

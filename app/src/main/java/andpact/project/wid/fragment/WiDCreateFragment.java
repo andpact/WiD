@@ -38,23 +38,18 @@ import andpact.project.wid.util.TitleViewPagerAdapter;
 import andpact.project.wid.util.WiDDatabaseHelper;
 
 public class WiDCreateFragment extends Fragment {
-    private LinearLayout titleLinearLayout, dateLinearLayout, startTimeLinearLayout, finishTimeLinearLayout, durationLinearLayout,
-            detailLinearLayout, otherButtonLinearLayout, detailAddCancelButtonLinearLayout;
+    private LinearLayout titleLinearLayout, dateLinearLayout, startTimeLinearLayout, finishTimeLinearLayout, durationLinearLayout;
     private MaterialTextView dateTextView, dayOfWeekTextView, parenthesisTextView,
-            startTimeTextView, finishTimeTextView, durationTextView, underOneMinuteTextView, detailTextView;
+            startTimeTextView, finishTimeTextView, durationTextView, underOneMinuteTextView;
     private ImageButton titleLeftButton, titleRightButton;
     private ViewPager2 viewPager2;
-    private TextInputLayout detailTextInputLayout;
-    private TextInputEditText detailInputEditText;
-    private MaterialButton startButton, finishButton, resetButton, showDetailInputTextButton, addDetailButton, cancelDetailButton;
+    private MaterialButton startButton, finishButton, resetButton;
     private String clickedTitle;
     private WiD wiD;
     private LocalDate currentDate;
     private LocalTime currentTime;
     private Handler startHandler, finishHandler;
     private Runnable startTimeRunnable, finishTimeRunnable;
-    private WiDDatabaseHelper wiDDatabaseHelper;
-    private long lastSavedWiDId;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wid_create, container, false);
@@ -64,9 +59,6 @@ public class WiDCreateFragment extends Fragment {
         startTimeLinearLayout = view.findViewById(R.id.startTimeLinearLayout);
         finishTimeLinearLayout = view.findViewById(R.id.finishTimeLinearLayout);
         durationLinearLayout = view.findViewById(R.id.durationLinearLayout);
-        detailLinearLayout = view.findViewById(R.id.detailLinearLayout);
-        otherButtonLinearLayout = view.findViewById(R.id.otherButtonLinearLayout);
-        detailAddCancelButtonLinearLayout = view.findViewById(R.id.detailAddCancelButtonLinearLayout);
 
         dateTextView = view.findViewById(R.id.dateTextView);
         dayOfWeekTextView = view.findViewById(R.id.dayOfWeekTextView);
@@ -76,14 +68,6 @@ public class WiDCreateFragment extends Fragment {
         finishTimeTextView.setTextColor(Color.LTGRAY); // 시작 전 회색으로
         durationTextView = view.findViewById(R.id.durationTextView);
         underOneMinuteTextView = view.findViewById(R.id.underOneMinuteTextView);
-        detailTextView = view.findViewById(R.id.detailTextView);
-
-        detailTextView.setOnClickListener(v -> {
-            detailTextView.setVisibility(View.GONE);
-            detailInputEditText.setText(detailTextView.getText());
-            detailInputEditText.setVisibility(View.VISIBLE);
-            detailTextInputLayout.setVisibility(View.VISIBLE);
-        });
 
         currentDate = LocalDate.now();
 
@@ -93,12 +77,6 @@ public class WiDCreateFragment extends Fragment {
         viewPager2 = view.findViewById(R.id.viewPager2);
         viewPager2.setAdapter(new TitleViewPagerAdapter(getActivity()));
         viewPager2.setPageTransformer(new CustomPageTransformer());
-
-        wiDDatabaseHelper = new WiDDatabaseHelper(getContext());
-
-        detailTextInputLayout = view.findViewById(R.id.detailTextInputLayout);
-
-        detailInputEditText = view.findViewById(R.id.detailInputEditText);
 
         titleLeftButton.setOnClickListener(v -> {
             int currentPosition = viewPager2.getCurrentItem();
@@ -162,61 +140,6 @@ public class WiDCreateFragment extends Fragment {
         startButton = view.findViewById(R.id.startButton);
         finishButton = view.findViewById(R.id.finishButton);
         resetButton = view.findViewById(R.id.resetButton);
-        showDetailInputTextButton = view.findViewById(R.id.showDetailInputTextButton);
-
-        addDetailButton = view.findViewById(R.id.addDetailButton);
-
-        addDetailButton.setOnClickListener(v -> {
-            long id = lastSavedWiDId; // 저장된 WiD의 ID
-            String newDetail = detailInputEditText.getText().toString(); // 입력된 세부사항
-
-            wiDDatabaseHelper.updateWiDDetailById(id, newDetail);
-
-            detailTextView.setText(newDetail);
-            detailLinearLayout.setVisibility(View.GONE);
-            otherButtonLinearLayout.setVisibility(View.VISIBLE);
-            detailAddCancelButtonLinearLayout.setVisibility(View.GONE);
-
-            titleLinearLayout.setOrientation(LinearLayout.VERTICAL);
-            dateLinearLayout.setOrientation(LinearLayout.VERTICAL);
-            startTimeLinearLayout.setOrientation(LinearLayout.VERTICAL);
-            finishTimeLinearLayout.setOrientation(LinearLayout.VERTICAL);
-            durationLinearLayout.setOrientation(LinearLayout.VERTICAL);
-
-            showSnackbar("WiD의 세부 사항이 수정되었습니다.");
-        });
-
-        cancelDetailButton = view.findViewById(R.id.cancelDetailButton);
-
-        showDetailInputTextButton.setOnClickListener(v -> {
-            detailLinearLayout.setVisibility(View.VISIBLE);
-            if (TextUtils.isEmpty(detailTextView.getText())) {
-                detailInputEditText.setVisibility(View.VISIBLE);
-            } else {
-                detailInputEditText.setVisibility(View.GONE);
-                detailTextView.setVisibility(View.VISIBLE);
-            }
-            otherButtonLinearLayout.setVisibility(View.GONE);
-            detailAddCancelButtonLinearLayout.setVisibility(View.VISIBLE);
-
-            titleLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-            dateLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-            startTimeLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-            finishTimeLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-            durationLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        });
-
-        cancelDetailButton.setOnClickListener(v -> {
-            detailLinearLayout.setVisibility(View.GONE);
-            otherButtonLinearLayout.setVisibility(View.VISIBLE);
-            detailAddCancelButtonLinearLayout.setVisibility(View.GONE);
-
-            titleLinearLayout.setOrientation(LinearLayout.VERTICAL);
-            dateLinearLayout.setOrientation(LinearLayout.VERTICAL);
-            startTimeLinearLayout.setOrientation(LinearLayout.VERTICAL);
-            finishTimeLinearLayout.setOrientation(LinearLayout.VERTICAL);
-            durationLinearLayout.setOrientation(LinearLayout.VERTICAL);
-        });
 
         startButton.setOnClickListener(v -> startWiD());
         finishButton.setOnClickListener(v -> finishWiD());
@@ -312,6 +235,8 @@ public class WiDCreateFragment extends Fragment {
         finishHandler.postDelayed(finishTimeRunnable, 0);
     }
     private void finishWiD() {
+        resetButton.setVisibility(View.VISIBLE);
+
         MainActivity mainActivity = (MainActivity) getActivity();
         if (mainActivity != null) {
             mainActivity.enableBottomNavigation();
@@ -325,7 +250,6 @@ public class WiDCreateFragment extends Fragment {
 
             finishHandler.removeCallbacks(finishTimeRunnable);
             finishButton.setVisibility(View.GONE);
-            otherButtonLinearLayout.setVisibility(View.VISIBLE);
 
             if (wiD.getStart().isAfter(wiD.getFinish())) { // 이틀에 걸친 WiD
                 // Calculate the duration for the first part of the WiD
@@ -339,7 +263,6 @@ public class WiDCreateFragment extends Fragment {
 
                 // Check if the duration is at least 1 minute
                 if (totalDuration.toMinutes() < 1) {
-                    showDetailInputTextButton.setVisibility(View.GONE);
                     showSnackbar("1분 이상의 WiD를 기록해 주세요.");
                     return;
                 }
@@ -366,7 +289,7 @@ public class WiDCreateFragment extends Fragment {
 
                 // Store the second WiD object in the database
                 ContentValues secondValues = secondWiD.toContentValues();
-                lastSavedWiDId = db.insert(databaseHelper.getTableWID(), null, secondValues);
+                db.insert(databaseHelper.getTableWID(), null, secondValues);
                 db.close();
 
             } else { // 하루 내의 WiD
@@ -374,7 +297,6 @@ public class WiDCreateFragment extends Fragment {
 
                 // Check if the duration is at least 1 minute
                 if (duration.toMinutes() < 1) {
-                    showDetailInputTextButton.setVisibility(View.GONE);
                     showSnackbar("1분 이상의 WiD를 기록해 주세요.");
                     return;
                 }
@@ -385,7 +307,7 @@ public class WiDCreateFragment extends Fragment {
                 WiDDatabaseHelper databaseHelper = new WiDDatabaseHelper(getActivity());
                 SQLiteDatabase db = databaseHelper.getWritableDatabase();
                 ContentValues values = wiD.toContentValues();
-                lastSavedWiDId = db.insert(databaseHelper.getTableWID(), null, values);
+                db.insert(databaseHelper.getTableWID(), null, values);
                 db.close();
             }
 
@@ -397,21 +319,18 @@ public class WiDCreateFragment extends Fragment {
     private void resetWiD() {
         startButton.setVisibility(View.VISIBLE);
         startButton.setTextColor(Color.WHITE);
-        otherButtonLinearLayout.setVisibility(View.GONE);
         startHandler.postDelayed(startTimeRunnable, 0);
         startTimeTextView.setTextColor(Color.BLACK);
         durationTextView.setText("0초");
         underOneMinuteTextView.setVisibility(View.VISIBLE);
 
-        showDetailInputTextButton.setVisibility(View.VISIBLE);
+        resetButton.setVisibility(View.GONE);
 
         titleRightButton.setVisibility(View.VISIBLE);
         titleRightButton.setEnabled(true);
         viewPager2.setUserInputEnabled(true);
         titleLeftButton.setVisibility(View.VISIBLE);
         titleLeftButton.setEnabled(true);
-
-        lastSavedWiDId = 0;
 
         showSnackbar("초기화가 완료되었습니다.");
     }

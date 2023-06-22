@@ -86,7 +86,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:textSize="18sp"
-                    android:text="날짜" />
+                    android:text="@string/date" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -132,7 +132,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:textSize="18sp"
-                    android:text="시작 시간" />
+                    android:text="@string/start_time" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/startTimeTextView"
@@ -157,7 +157,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:textSize="18sp"
-                    android:text="종료 시간" />
+                    android:text="@string/finish_time" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/finishTimeTextView"
@@ -187,7 +187,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
-                        android:text="진행 시간" />
+                        android:text="@string/duration" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/underOneMinuteTextView"
@@ -213,48 +213,6 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/detailLinearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:orientation="vertical">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:textSize="18sp"
-                    android:text="세부사항" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/detailTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:textStyle="bold"
-                    android:textSize="14sp" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/detailTextInputLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="200"
-                    app:errorEnabled="true">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/detailInputEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:minLines="3"
-                        />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
@@ -270,79 +228,21 @@
             android:id="@+id/finishButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:backgroundTint="@color/saturday_blue"
             app:cornerRadius="5dp"
-            android:layout_marginTop="5dp"
             android:visibility="gone"
             android:text="@string/finish"/>
 
-        <LinearLayout
-            android:id="@+id/otherButtonLinearLayout"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/resetButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
+            android:backgroundTint="@color/black"
+            app:cornerRadius="5dp"
             android:visibility="gone"
-            android:orientation="horizontal">
-
-            <!--            <com.google.android.material.button.MaterialButton-->
-            <!--                android:layout_width="0dp"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_weight="1"-->
-            <!--                android:backgroundTint="@color/black"-->
-            <!--                app:cornerRadius="5dp"-->
-            <!--                android:text="갤러리 저장" />-->
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/resetButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="5dp"
-                android:backgroundTint="@color/black"
-                app:cornerRadius="5dp"
-                android:text="초기화" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/showDetailInputTextButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="5dp"
-                android:backgroundTint="@color/black"
-                app:cornerRadius="5dp"
-                android:text="세부사항" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/detailAddCancelButtonLinearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:visibility="gone"
-            android:orientation="horizontal">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/addDetailButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="5dp"
-                android:backgroundTint="@color/black"
-                app:cornerRadius="5dp"
-                android:text="저장" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/cancelDetailButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="5dp"
-                android:backgroundTint="@color/black"
-                app:cornerRadius="5dp"
-                android:text="취소" />
-
-        </LinearLayout>
+            android:text="@string/reset" />
 
     </LinearLayout>
 
