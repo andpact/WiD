@@ -187,6 +187,8 @@ public class WiDReadDayFragment extends Fragment {
 
             wiDLinearLayout.setVisibility(View.VISIBLE);
 
+            updateWiDList();
+
             showSnackbar("세부 사항이 수정되었습니다.");
         });
 
@@ -434,17 +436,17 @@ public class WiDReadDayFragment extends Fragment {
                     long clickedWiDSeconds = (clickedWiD.getDuration().getSeconds() % 60);
                     String clickedWiDDurationText;
 
-                    if (clickedWiDHours > 0 && clickedWiDMinutes == 0 && clickedWiDSeconds == 0) {
+                    if (0 < clickedWiDHours && 0 == clickedWiDMinutes && 0 == clickedWiDSeconds) {
                         clickedWiDDurationText = String.format("%d시간", clickedWiDHours);
-                    } else if (clickedWiDHours > 0 && clickedWiDMinutes > 0 && clickedWiDSeconds == 0) {
+                    } else if (0 < clickedWiDHours && 0 < clickedWiDMinutes && 0 == clickedWiDSeconds) {
                         clickedWiDDurationText = String.format("%d시간 %d분", clickedWiDHours, clickedWiDMinutes);
-                    } else if (clickedWiDHours > 0 && clickedWiDMinutes == 0 && clickedWiDSeconds > 0) {
+                    } else if (0 < clickedWiDHours && 0 == clickedWiDMinutes && 0 < clickedWiDSeconds) {
                         clickedWiDDurationText = String.format("%d시간 %d초", clickedWiDHours, clickedWiDSeconds);
-                    } else if (clickedWiDHours > 0) {
+                    } else if (0 < clickedWiDHours) {
                         clickedWiDDurationText = String.format("%d시간 %d분 %d초", clickedWiDHours, clickedWiDMinutes, clickedWiDSeconds);
-                    } else if (clickedWiDMinutes > 0 && clickedWiDSeconds == 0) {
+                    } else if (0 < clickedWiDMinutes && 0 == clickedWiDSeconds) {
                         clickedWiDDurationText = String.format("%d분", clickedWiDMinutes);
-                    } else if (clickedWiDMinutes > 0) {
+                    } else if (0 < clickedWiDMinutes) {
                         clickedWiDDurationText = String.format("%d분 %d초", clickedWiDMinutes, clickedWiDSeconds);
                     } else {
                         clickedWiDDurationText = String.format("%d초", clickedWiDSeconds);

@@ -44,7 +44,7 @@ public class WiDCreateFragment extends Fragment {
     private DateTimeFormatter dateFormatter, timeFormatter;
     private ImageButton titleLeftButton, titleRightButton;
     private ViewPager2 viewPager2;
-    private MaterialButton startButton, finishButton, resetButton;
+    private ImageButton startButton, finishButton, resetButton;
     private String clickedTitle;
     private WiD wiD;
     private LocalDate currentDate;
@@ -142,6 +142,15 @@ public class WiDCreateFragment extends Fragment {
         finishButton = view.findViewById(R.id.finishButton);
         resetButton = view.findViewById(R.id.resetButton);
 
+        startButton.setBackgroundColor(Color.TRANSPARENT);
+        finishButton.setBackgroundColor(Color.TRANSPARENT);
+        resetButton.setBackgroundColor(Color.TRANSPARENT);
+
+        finishButton.setEnabled(false);
+        finishButton.setColorFilter(Color.LTGRAY);
+        resetButton.setEnabled(false);
+        resetButton.setColorFilter(Color.LTGRAY);
+
         startButton.setOnClickListener(v -> startWiD());
         finishButton.setOnClickListener(v -> finishWiD());
         resetButton.setOnClickListener(v -> resetWiD());
@@ -165,8 +174,13 @@ public class WiDCreateFragment extends Fragment {
         finishTimeTextView.setTextColor(Color.BLACK);
         durationTextView.setTextColor(Color.BLACK);
 
-        startButton.setVisibility(View.GONE);
-        finishButton.setVisibility(View.VISIBLE);
+        startButton.setEnabled(false);
+        startButton.setColorFilter(Color.LTGRAY);
+        finishButton.setEnabled(true);
+        finishButton.setColorFilter(Color.BLACK);
+
+        titleLeftButton.setVisibility(View.GONE);
+        titleRightButton.setVisibility(View.GONE);
 
         // 시작 시간 흐름 멈추기.
         startHandler.removeCallbacks(startTimeRunnable);
@@ -200,17 +214,17 @@ public class WiDCreateFragment extends Fragment {
                 String formattedDuration;
 
                 // Add hours if elapsed time has hours
-                if (hours > 0 && minutes == 0 && seconds == 0) {
+                if (0 < hours && 0 == minutes && 0 == seconds) {
                     formattedDuration = String.format("%d시간", hours);
-                } else if (hours > 0 && minutes > 0 && seconds == 0) {
+                } else if (0 < hours && 0 < minutes && 0 == seconds) {
                     formattedDuration = String.format("%d시간 %d분", hours, minutes);
-                } else if (hours > 0 && minutes == 0 && seconds > 0) {
+                } else if (0 < hours && 0 == minutes && 0 < seconds) {
                     formattedDuration = String.format("%d시간 %d초", hours, seconds);
-                } else if (hours > 0) {
+                } else if (0 < hours) {
                     formattedDuration = String.format("%d시간 %d분 %d초", hours, minutes, seconds);
-                } else if (minutes > 0 && seconds == 0) {
+                } else if (0 < minutes && 0 == seconds) {
                     formattedDuration = String.format("%d분", minutes);
-                } else if (minutes > 0) { // Add minutes if elapsed time has minutes
+                } else if (0 < minutes) { // Add minutes if elapsed time has minutes
                     formattedDuration = String.format("%d분 %d초", minutes, seconds);
                 } else { // Display seconds only
                     formattedDuration = String.format("%d초", seconds);
@@ -236,12 +250,15 @@ public class WiDCreateFragment extends Fragment {
         finishHandler.postDelayed(finishTimeRunnable, 0);
     }
     private void finishWiD() {
-        resetButton.setVisibility(View.VISIBLE);
-
         MainActivity mainActivity = (MainActivity) getActivity();
         if (mainActivity != null) {
             mainActivity.enableBottomNavigation();
         }
+
+        resetButton.setEnabled(true);
+        resetButton.setColorFilter(Color.BLACK);
+        finishButton.setEnabled(false);
+        finishButton.setColorFilter(Color.LTGRAY);
 
         if (wiD != null) {
             wiD.setFinish(currentTime);
@@ -250,7 +267,6 @@ public class WiDCreateFragment extends Fragment {
             durationTextView.setTextColor(Color.LTGRAY);
 
             finishHandler.removeCallbacks(finishTimeRunnable);
-            finishButton.setVisibility(View.GONE);
 
             if (wiD.getStart().isAfter(wiD.getFinish())) { // 이틀에 걸친 WiD
                 // Calculate the duration for the first part of the WiD
@@ -318,14 +334,18 @@ public class WiDCreateFragment extends Fragment {
         }
     }
     private void resetWiD() {
-        startButton.setVisibility(View.VISIBLE);
-        startButton.setTextColor(Color.WHITE);
+        resetButton.setEnabled(false);
+        resetButton.setColorFilter(Color.LTGRAY);
+        startButton.setEnabled(true);
+        startButton.setColorFilter(Color.BLACK);
+
+        titleLeftButton.setVisibility(View.VISIBLE);
+        titleRightButton.setVisibility(View.VISIBLE);
+
         startHandler.postDelayed(startTimeRunnable, 0);
         startTimeTextView.setTextColor(Color.BLACK);
         durationTextView.setText("0초");
         underOneMinuteTextView.setVisibility(View.VISIBLE);
-
-        resetButton.setVisibility(View.GONE);
 
         titleRightButton.setVisibility(View.VISIBLE);
         titleRightButton.setEnabled(true);
