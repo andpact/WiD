@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+<!--    날짜 표시-->
     <LinearLayout
         android:id="@+id/headerLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@android:color/transparent"
         android:padding="16dp"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -17,7 +17,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/baseline_arrow_left_48"
-            android:background="@android:color/transparent"
+            android:backgroundTint="@color/transparent"
             />
 
         <LinearLayout
@@ -57,6 +57,7 @@
             />
     </LinearLayout>
 
+<!--    파이 차트-->
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/pieChart"
         android:layout_width="0dp"
@@ -70,6 +71,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+<!--    서클 뷰(시간 표시)-->
     <andpact.project.wid.util.CircleView
         android:id="@+id/circleView"
         android:layout_width="350dp"
@@ -80,6 +82,7 @@
         app:layout_constraintStart_toStartOf="@id/pieChart"
         app:layout_constraintEnd_toEndOf="@id/pieChart" />
 
+<!--    WiD 표시(간략히)-->
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -92,11 +95,12 @@
 
     </LinearLayout>
 
+<!--    Clicked WiD 표시-->
     <LinearLayout
         android:id="@+id/wiDLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="50dp"
+        android:layout_marginHorizontal="16dp"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -108,41 +112,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/wid_bg"
+            android:elevation="2dp"
             android:padding="10dp"
             android:orientation="vertical">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:gravity="center"
-                android:text="@string/app_name"/>
-
             <LinearLayout
-                android:id="@+id/wiDTitleLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    app:fontFamily="@font/acme_regular"
+                    android:text="@string/app_name"/>
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:textSize="18sp"
-                    android:text="@string/title" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/wiDTitleTextView"
-                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/wid_field_bg"
-                    android:gravity="center"
+                    android:layout_gravity="start"
+                    android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textSize="25sp" />
+                    android:textColor="@color/gray"
+                    app:fontFamily="@font/acme_regular"
+                    android:text="@string/app_name2"/>
 
             </LinearLayout>
 
@@ -150,21 +147,25 @@
                 android:id="@+id/wiDDateLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/baseline_calendar_month_24" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:textSize="18sp"
+                    android:layout_height="wrap_content"
+                    android:textSize="30sp"
                     android:text="@string/date" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/wid_field_bg"
                     android:gravity="center"
                     android:orientation="horizontal">
 
@@ -172,24 +173,47 @@
                         android:id="@+id/wiDDateTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="25sp"
+                        android:textSize="30sp"
                         android:textStyle="bold" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/wiDDayOfWeekTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="25sp"
+                        android:textSize="30sp"
                         android:textStyle="bold" />
 
-<!--                    <com.google.android.material.textview.MaterialTextView-->
-<!--                        android:id="@+id/wiDParenthesisTextView"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:textSize="25sp"-->
-<!--                        android:textStyle="bold" />-->
-
                 </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/wiDTitleLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/baseline_category_24" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="30sp"
+                    android:text="@string/title" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/wiDTitleTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textSize="30sp" />
 
             </LinearLayout>
 
@@ -197,24 +221,28 @@
                 android:id="@+id/wiDStartTimeLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/baseline_access_time_24" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:textSize="18sp"
+                    android:layout_height="wrap_content"
+                    android:textSize="30sp"
                     android:text="@string/start_time" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/wiDStartTimeTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/wid_field_bg"
                     android:gravity="center"
-                    android:textSize="25sp"
+                    android:textSize="30sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -223,24 +251,28 @@
                 android:id="@+id/wiDFinishTimeLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/baseline_access_time_filled_24" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:textSize="18sp"
+                    android:layout_height="wrap_content"
+                    android:textSize="30sp"
                     android:text="@string/finish_time" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/wiDFinishTimeTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/wid_field_bg"
                     android:gravity="center"
-                    android:textSize="25sp"
+                    android:textSize="30sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -249,24 +281,28 @@
                 android:id="@+id/wiDDurationLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/baseline_timelapse_24" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:textSize="18sp"
+                    android:layout_height="wrap_content"
+                    android:textSize="30sp"
                     android:text="@string/duration" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/wiDDurationTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/wid_field_bg"
                     android:gravity="center"
-                    android:textSize="25sp"
+                    android:textSize="30sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -275,31 +311,36 @@
                 android:id="@+id/wiDDetailLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:visibility="gone"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
-                    >
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/outline_description_24" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textSize="18sp"
+                        android:textSize="30sp"
                         android:text="@string/detail" />
 
-                    <com.google.android.material.textview.MaterialTextView
+                    <ImageButton
                         android:id="@+id/showEditDetailButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:layout_weight="0"
-                        android:textSize="18sp"
-                        android:textColor="@color/saturday_blue"
-                        android:text="수정" />
+                        android:backgroundTint="@color/transparent"
+                        android:src="@drawable/baseline_edit_24"/>
 
                 </LinearLayout>
 
@@ -308,11 +349,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:padding="10dp"
                     android:background="@drawable/wid_field_bg"
+                    android:padding="10dp"
                     android:minLines="4"
                     android:textStyle="bold"
-                    android:textSize="18sp"
+                    android:textSize="20sp"
                     android:hint="세부 사항 입력.."/>
 
             </LinearLayout>
@@ -341,102 +382,112 @@
             android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
+            <ImageButton
+                android:id="@+id/wiDSaveGalleryButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:backgroundTint="@color/black"
-                app:cornerRadius="5dp"
-                android:text="갤러리 저장" />
+                android:backgroundTint="@color/transparent"
+                android:elevation="2dp"
+                android:src="@drawable/baseline_download_36"
+                />
 
-            <com.google.android.material.button.MaterialButton
+            <ImageButton
                 android:id="@+id/wiDDeleteButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="5dp"
-                android:backgroundTint="@color/black"
-                app:cornerRadius="5dp"
-                android:text="WiD 삭제" />
+                android:backgroundTint="@color/transparent"
+                android:elevation="2dp"
+                android:src="@drawable/baseline_delete_36"
+                />
 
-            <com.google.android.material.button.MaterialButton
+            <ImageButton
                 android:id="@+id/wiDCloseButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="5dp"
-                android:backgroundTint="@color/black"
-                app:cornerRadius="5dp"
-                android:text="닫기" />
+                android:backgroundTint="@color/transparent"
+                android:elevation="2dp"
+                android:src="@drawable/baseline_arrow_back_36"
+                />
 
         </LinearLayout>
 
     </LinearLayout>
 
+<!--    WiD 세부사항-->
     <LinearLayout
         android:id="@+id/editDetailLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone"
-        android:gravity="center"
         android:layout_marginHorizontal="50dp"
-        android:background="@drawable/wid_bg"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:textStyle="bold"
-            android:textSize="25sp"
-            android:text="@string/detail"/>
-
-        <com.google.android.material.textfield.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="5dp"
-            app:counterEnabled="true"
-            app:counterMaxLength="200"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+            android:background="@drawable/wid_bg"
+            android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/detailInputEditText"
-                android:minLines="5"
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="30sp"
+                android:text="@string/detail"/>
 
-        </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="5dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="200"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/detailInputEditText"
+                    android:minLines="5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="5dp"
-            android:layout_marginHorizontal="15dp"
             android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
+            <ImageButton
                 android:id="@+id/editDetailButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:backgroundTint="@color/black"
-                app:cornerRadius="5dp"
-                android:text="완료"/>
+                android:backgroundTint="@color/transparent"
+                android:elevation="2dp"
+                android:src="@drawable/baseline_done_36"
+                />
 
-            <com.google.android.material.button.MaterialButton
+            <ImageButton
                 android:id="@+id/cancelEditDetailButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="5dp"
-                android:backgroundTint="@color/black"
-                app:cornerRadius="5dp"
-                android:text="취소"/>
+                android:backgroundTint="@color/transparent"
+                android:elevation="2dp"
+                android:src="@drawable/baseline_cancel_36"
+                />
 
         </LinearLayout>
 

@@ -38,8 +38,8 @@ import andpact.project.wid.util.TitleViewPagerAdapter;
 import andpact.project.wid.util.WiDDatabaseHelper;
 
 public class WiDCreateFragment extends Fragment {
-    private LinearLayout titleLinearLayout, dateLinearLayout, startTimeLinearLayout, finishTimeLinearLayout, durationLinearLayout;
-    private MaterialTextView dateTextView, dayOfWeekTextView, startTimeTextView, finishTimeTextView, durationTextView, underOneMinuteTextView;
+//    private LinearLayout titleLinearLayout, dateLinearLayout, startTimeLinearLayout, finishTimeLinearLayout, durationLinearLayout;
+    private MaterialTextView dateTextView, dayOfWeekTextView, startTimeTextView, finishTimeTextView, durationTextView;
 
     private DateTimeFormatter dateFormatter, timeFormatter;
     private ImageButton titleLeftButton, titleRightButton;
@@ -55,11 +55,11 @@ public class WiDCreateFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wid_create, container, false);
 
-        titleLinearLayout = view.findViewById(R.id.titleLinearLayout);
-        dateLinearLayout = view.findViewById(R.id.dateLinearLayout);
-        startTimeLinearLayout = view.findViewById(R.id.startTimeLinearLayout);
-        finishTimeLinearLayout = view.findViewById(R.id.finishTimeLinearLayout);
-        durationLinearLayout = view.findViewById(R.id.durationLinearLayout);
+//        titleLinearLayout = view.findViewById(R.id.titleLinearLayout);
+//        dateLinearLayout = view.findViewById(R.id.dateLinearLayout);
+//        startTimeLinearLayout = view.findViewById(R.id.startTimeLinearLayout);
+//        finishTimeLinearLayout = view.findViewById(R.id.finishTimeLinearLayout);
+//        durationLinearLayout = view.findViewById(R.id.durationLinearLayout);
 
         dateFormatter = DateTimeFormatter.ofPattern("yyyy.M.d ");
         timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -70,7 +70,6 @@ public class WiDCreateFragment extends Fragment {
         finishTimeTextView = view.findViewById(R.id.finishTimeTextView);
         finishTimeTextView.setTextColor(Color.LTGRAY); // 시작 전 회색으로
         durationTextView = view.findViewById(R.id.durationTextView);
-        underOneMinuteTextView = view.findViewById(R.id.underOneMinuteTextView);
 
         currentDate = LocalDate.now();
 
@@ -141,10 +140,6 @@ public class WiDCreateFragment extends Fragment {
         startButton = view.findViewById(R.id.startButton);
         finishButton = view.findViewById(R.id.finishButton);
         resetButton = view.findViewById(R.id.resetButton);
-
-        startButton.setBackgroundColor(Color.TRANSPARENT);
-        finishButton.setBackgroundColor(Color.TRANSPARENT);
-        resetButton.setBackgroundColor(Color.TRANSPARENT);
 
         finishButton.setEnabled(false);
         finishButton.setColorFilter(Color.LTGRAY);
@@ -232,11 +227,6 @@ public class WiDCreateFragment extends Fragment {
 
                 // Update the duration TextView
                 durationTextView.setText(formattedDuration);
-
-                // Check if duration is over 1 minute and hide underOneMinuteTextView
-                if (1 <= elapsedDuration.toMinutes()) {
-                    underOneMinuteTextView.setVisibility(View.GONE);
-                }
 
                 // Check if duration exceeds 12 hours and call finishWiD() method
                 if (12 <= hours) {
@@ -344,8 +334,8 @@ public class WiDCreateFragment extends Fragment {
 
         startHandler.postDelayed(startTimeRunnable, 0);
         startTimeTextView.setTextColor(Color.BLACK);
-        durationTextView.setText("0초");
-        underOneMinuteTextView.setVisibility(View.VISIBLE);
+        durationTextView.setText("");
+        durationTextView.setHint("1분 ~ 12시간..");
 
         titleRightButton.setVisibility(View.VISIBLE);
         titleRightButton.setEnabled(true);

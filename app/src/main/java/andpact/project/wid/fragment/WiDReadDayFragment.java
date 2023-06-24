@@ -22,11 +22,9 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.time.DayOfWeek;
@@ -48,17 +46,16 @@ public class WiDReadDayFragment extends Fragment {
     private LinearLayout headerLinearLayout, linearLayout;
     private WiDDatabaseHelper wiDDatabaseHelper;
     private LocalDate currentDate;
-    private ImageButton leftTriangle, rightTriangle;
+    private ImageButton leftTriangle, rightTriangle, wiDSaveGalleryButton, wiDDeleteButton, wiDCloseButton, editDetailButton, cancelEditDetailButton,
+            showEditDetailButton;
     private PieChart pieChart;
     private CircleView circleView;
 
-    private LinearLayout wiDLinearLayout, wiDTitleLinearLayout, wiDDateLinearLayout, wiDStartTimeLinearLayout,
+    private LinearLayout wiDLinearLayout, wiDDateLinearLayout, wiDTitleLinearLayout, wiDStartTimeLinearLayout,
             wiDFinishTimeLinearLayout, wiDDurationLinearLayout, wiDDetailLinearLayout, showDetailLinearLayout, editDetailLinearLayout;
-    private MaterialTextView wiDTitleTextView, wiDDateTextView, wiDDayOfWeekTextView, wiDStartTimeTextView,
+    private MaterialTextView wiDDateTextView, wiDTitleTextView, wiDDayOfWeekTextView, wiDStartTimeTextView,
             wiDFinishTimeTextView, wiDDurationTextView, wiDDetailTextView;
     private ImageView showDetailLinearLayoutImageView;
-    private MaterialTextView showEditDetailButton;
-    private MaterialButton editDetailButton, cancelEditDetailButton, wiDDeleteButton, wiDCloseButton;
     private TextInputEditText detailInputEditText;
     private long clickedWiDId;
     private WiD clickedWiD;
@@ -125,6 +122,18 @@ public class WiDReadDayFragment extends Fragment {
         wiDDurationLinearLayout = view.findViewById(R.id.wiDDurationLinearLayout);
         wiDDetailLinearLayout = view.findViewById(R.id.wiDDetailLinearLayout);
 
+//        LinearLayout.LayoutParams layoutParams10 = new LinearLayout.LayoutParams(
+//                LinearLayout.LayoutParams.MATCH_PARENT,
+//                LinearLayout.LayoutParams.WRAP_CONTENT
+//        );
+//        layoutParams10.setMargins(0, 10, 0, 0);
+//
+//        LinearLayout.LayoutParams layoutParams20 = new LinearLayout.LayoutParams(
+//                LinearLayout.LayoutParams.MATCH_PARENT,
+//                LinearLayout.LayoutParams.WRAP_CONTENT
+//        );
+//        layoutParams20.setMargins(0, 20, 0, 0);
+
         wiDTitleTextView = view.findViewById(R.id.wiDTitleTextView);
         wiDDateTextView = view.findViewById(R.id.wiDDateTextView);
         wiDDayOfWeekTextView = view.findViewById(R.id.wiDDayOfWeekTextView);
@@ -147,20 +156,20 @@ public class WiDReadDayFragment extends Fragment {
                     showDetailLinearLayoutImageView.setBackgroundResource(R.drawable.baseline_keyboard_arrow_down_24);
                     wiDDetailLinearLayout.setVisibility(View.GONE);
 
-                    wiDTitleLinearLayout.setOrientation(LinearLayout.VERTICAL);
-                    wiDDateLinearLayout.setOrientation(LinearLayout.VERTICAL);
-                    wiDStartTimeLinearLayout.setOrientation(LinearLayout.VERTICAL);
-                    wiDFinishTimeLinearLayout.setOrientation(LinearLayout.VERTICAL);
-                    wiDDurationLinearLayout.setOrientation(LinearLayout.VERTICAL);
+//                    wiDDateLinearLayout.setLayoutParams(layoutParams10);
+//                    wiDTitleLinearLayout.setLayoutParams(layoutParams10);
+//                    wiDStartTimeLinearLayout.setLayoutParams(layoutParams10);
+//                    wiDFinishTimeLinearLayout.setLayoutParams(layoutParams10);
+//                    wiDDurationLinearLayout.setLayoutParams(layoutParams10);
                 } else {
                     showDetailLinearLayoutImageView.setBackgroundResource(R.drawable.baseline_keyboard_arrow_up_24);
                     wiDDetailLinearLayout.setVisibility(View.VISIBLE);
 
-                    wiDTitleLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-                    wiDDateLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-                    wiDStartTimeLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-                    wiDFinishTimeLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-                    wiDDurationLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+//                    wiDDateLinearLayout.setLayoutParams(layoutParams20);
+//                    wiDTitleLinearLayout.setLayoutParams(layoutParams20);
+//                    wiDStartTimeLinearLayout.setLayoutParams(layoutParams20);
+//                    wiDFinishTimeLinearLayout.setLayoutParams(layoutParams20);
+//                    wiDDurationLinearLayout.setLayoutParams(layoutParams20);
                 }
                 isExpanded = !isExpanded;
             }
@@ -169,7 +178,7 @@ public class WiDReadDayFragment extends Fragment {
         detailInputEditText = view.findViewById(R.id.detailInputEditText);
 
         showEditDetailButton = view.findViewById(R.id.showEditDetailButton);
-
+        showEditDetailButton.setBackgroundColor(Color.TRANSPARENT);
         showEditDetailButton.setOnClickListener(v -> {
             detailInputEditText.setText(wiDDetailTextView.getText());
             editDetailLinearLayout.setVisibility(View.VISIBLE);
@@ -177,6 +186,7 @@ public class WiDReadDayFragment extends Fragment {
         });
 
         editDetailButton = view.findViewById(R.id.editDetailButton);
+        editDetailButton.setBackgroundColor(Color.TRANSPARENT);
         editDetailButton.setOnClickListener(v -> {
             String newDetail = detailInputEditText.getText().toString();
 
@@ -193,11 +203,14 @@ public class WiDReadDayFragment extends Fragment {
         });
 
         cancelEditDetailButton = view.findViewById(R.id.cancelEditDetailButton);
+        cancelEditDetailButton.setBackgroundColor(Color.TRANSPARENT);
         cancelEditDetailButton.setOnClickListener(v -> {
             editDetailLinearLayout.setVisibility(View.GONE);
 
             wiDLinearLayout.setVisibility(View.VISIBLE);
         });
+
+        wiDSaveGalleryButton = view.findViewById(R.id.wiDSaveGalleryButton);
 
         wiDDeleteButton = view.findViewById(R.id.wiDDeleteButton);
         wiDDeleteButton.setOnClickListener(v -> {
@@ -225,7 +238,6 @@ public class WiDReadDayFragment extends Fragment {
         });
 
         wiDCloseButton = view.findViewById(R.id.wiDCloseButton);
-
         wiDCloseButton.setOnClickListener(v -> {
             wiDLinearLayout.setVisibility(View.GONE);
             clickedWiDId = 0;
@@ -237,12 +249,6 @@ public class WiDReadDayFragment extends Fragment {
             linearLayout.setVisibility(View.VISIBLE);
 
             wiDDetailLinearLayout.setVisibility(View.GONE);
-
-            wiDTitleLinearLayout.setOrientation(LinearLayout.VERTICAL);
-            wiDDateLinearLayout.setOrientation(LinearLayout.VERTICAL);
-            wiDStartTimeLinearLayout.setOrientation(LinearLayout.VERTICAL);
-            wiDFinishTimeLinearLayout.setOrientation(LinearLayout.VERTICAL);
-            wiDDurationLinearLayout.setOrientation(LinearLayout.VERTICAL);
 
             showDetailLinearLayoutImageView.setBackgroundResource(R.drawable.baseline_keyboard_arrow_down_24);
 
@@ -257,7 +263,6 @@ public class WiDReadDayFragment extends Fragment {
 
         return view;
     }
-
     private void decreaseDate() {
         currentDate = currentDate.minusDays(1);
 
@@ -336,6 +341,8 @@ public class WiDReadDayFragment extends Fragment {
                 itemLayout.setOrientation(LinearLayout.HORIZONTAL);
                 itemLayout.setGravity(Gravity.CENTER_VERTICAL);
                 itemLayout.setTag(wiD.getId());
+                int color = DataMaps.getColorMap(getContext()).get(wiD.getTitle());
+                itemLayout.setBackgroundColor(color);
 
                 // Create and add the numberTextView
                 MaterialTextView numberTextView = new MaterialTextView(getContext());
@@ -403,12 +410,6 @@ public class WiDReadDayFragment extends Fragment {
                     pieChart.setVisibility(View.GONE);
                     circleView.setVisibility(View.GONE);
                     linearLayout.setVisibility(View.GONE);
-
-//                    왜 안되냐?
-//                    headerLinearLayout.setEnabled(false);
-//                    headerLinearLayout.setClickable(false);
-//                    linearLayout.setEnabled(false);
-//                    linearLayout.setClickable(false);
 
                     wiDLinearLayout.setVisibility(View.VISIBLE);
                     clickedWiDId = (Long) itemLayout.getTag();
@@ -509,5 +510,8 @@ public class WiDReadDayFragment extends Fragment {
         snackbarView.setLayoutParams(params);
 
         snackbar.show();
+    }
+    private void saveGallery() {
+        // showDetailLinearLayout 없애고 저장 ㄱㄱ
     }
 }

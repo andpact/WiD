@@ -59,7 +59,7 @@
             android:layout_weight="1"
             android:text="@string/sunday"
             android:textSize="18sp"
-            android:textColor="@color/sunday_red"
+            android:textColor="@color/red"
             android:gravity="center"/>
 
         <TextView
@@ -113,7 +113,7 @@
             android:layout_weight="1"
             android:text="@string/saturday"
             android:textSize="18sp"
-            android:textColor="@color/saturday_blue"
+            android:textColor="@color/blue"
             android:gravity="center"/>
 
     </LinearLayout>

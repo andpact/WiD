@@ -151,15 +151,16 @@ public class WiDReadMonthFragment extends Fragment {
                 // Set the center text color based on the day of the week
                 if (i % 7 == 0) {
                     // Sunday (0th day of the week)
-//                    pieChart.setCenterTextColor(R.color.sunday_red); // 왜 안됨 이거
+//                    pieChart.setCenterTextColor(R.color.red); // 왜 안됨 이거
                     pieChart.setCenterTextColor(Color.RED);
                 } else if (i % 7 == 6) {
                     // Saturday (6th day of the week)
-//                    pieChart.setCenterTextColor(R.color.saturday_blue);
+//                    pieChart.setCenterTextColor(R.color.blue);
                     pieChart.setCenterTextColor(Color.BLUE);
                 } else {
                     // Other days of the week
-                    pieChart.setCenterTextColor(R.color.black);
+                    pieChart.setCenterTextColor(Color.BLACK);
+//                    pieChart.setCenterTextColor(R.color.black);
                 }
 
                 List<WiD> wiDList = wiDDatabaseHelper.getWiDByDate(firstOfMonth.toString());
