@@ -41,8 +41,8 @@ public class CircleView extends View {
 
         int centerX = width / 2;
 //        int centerY = height / 2;
-        int centerY = height / 2 + 15; // 원의 위치를 파이 차트와 맞추기 위해 살짝 아래로 내림.
-        float textRadius = radius * 0.9f; // 글자는 원의 안쪽에 표시됨.
+        int centerY = height / 2 + 8; // 원의 위치를 파이 차트와 맞추기 위해 살짝 아래로 내림.
+        float textRadius = radius * 0.9f; // 글자는 원의 안쪽에 표시되는게 원칙.
 //        float textSize = radius * 0.1f;
         float textSize = radius * 0.07f; // 원의 둘레에 표시되는 숫자의 글자 크기를 줄임.
 

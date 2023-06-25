@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -129,11 +130,11 @@ public class WiDReadWeekFragment extends Fragment {
             pieChart.setCenterTextTypeface(Typeface.DEFAULT_BOLD);
 
             if (firstDayOfWeek.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
-                pieChart.setCenterTextColor(Color.RED);
+                pieChart.setCenterTextColor(ContextCompat.getColor(getContext(), R.color.red));
             } else if (firstDayOfWeek.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
-                pieChart.setCenterTextColor(Color.BLUE);
+                pieChart.setCenterTextColor(ContextCompat.getColor(getContext(), R.color.blue));
             } else {
-                pieChart.setCenterTextColor(Color.BLACK);
+                pieChart.setCenterTextColor(ContextCompat.getColor(getContext(), R.color.black));
             }
 
             List<WiD> wiDList = wiDDatabaseHelper.getWiDByDate(firstDayOfWeek.toString());
@@ -142,7 +143,7 @@ public class WiDReadWeekFragment extends Fragment {
                 entries = new ArrayList<>(); // 빈 엔트리 셋 생성
                 entries.add(new PieEntry(1, ""));
                 dataSet = new PieDataSet(entries, "");
-                dataSet.setColor(Color.LTGRAY);
+                dataSet.setColor(ContextCompat.getColor(getContext(), R.color.light_gray));
                 data = new PieData(dataSet);
                 data.setDrawValues(false); // 엔트리 값 표시 X
                 pieChart.setData(data);
@@ -197,7 +198,7 @@ public class WiDReadWeekFragment extends Fragment {
                 // 파이 데이터셋 생성
                 dataSet = new PieDataSet(entries, "");
                 dataSet.setColors(entries.stream()
-                        .map(entry -> DataMaps.getColorMap(getContext()).getOrDefault(entry.getLabel(), Color.LTGRAY))
+                        .map(entry -> DataMaps.getColorMap(getContext()).getOrDefault(entry.getLabel(), ContextCompat.getColor(getContext(), R.color.light_gray)))
                         .collect(Collectors.toList()));
 
                 // 파이 데이터셋 생성
@@ -241,7 +242,6 @@ public class WiDReadWeekFragment extends Fragment {
 
             for (Title key : sortedTitles) {
                 LinearLayout itemLinearLayout = new LinearLayout(getContext());
-                itemLinearLayout.setPadding(0, 16, 0, 0);
                 itemLinearLayout.setLayoutParams(new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT));

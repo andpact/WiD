@@ -11,6 +11,7 @@ import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import java.time.Duration;
@@ -136,7 +137,7 @@ public class WiDReadMonthFragment extends Fragment {
                 entries = new ArrayList<>(); // 빈 엔트리 셋 생성
                 entries.add(new PieEntry(1, ""));
                 dataSet = new PieDataSet(entries, "");
-                dataSet.setColor(Color.TRANSPARENT);
+                dataSet.setColor(ContextCompat.getColor(getContext(), R.color.transparent));
                 data = new PieData(dataSet);
                 data.setDrawValues(false); // 엔트리 값 표시 X
                 pieChart.setData(data);
@@ -151,16 +152,13 @@ public class WiDReadMonthFragment extends Fragment {
                 // Set the center text color based on the day of the week
                 if (i % 7 == 0) {
                     // Sunday (0th day of the week)
-//                    pieChart.setCenterTextColor(R.color.red); // 왜 안됨 이거
-                    pieChart.setCenterTextColor(Color.RED);
+                    pieChart.setCenterTextColor(ContextCompat.getColor(getContext(), R.color.red));
                 } else if (i % 7 == 6) {
                     // Saturday (6th day of the week)
-//                    pieChart.setCenterTextColor(R.color.blue);
-                    pieChart.setCenterTextColor(Color.BLUE);
+                    pieChart.setCenterTextColor(ContextCompat.getColor(getContext(), R.color.blue));
                 } else {
                     // Other days of the week
-                    pieChart.setCenterTextColor(Color.BLACK);
-//                    pieChart.setCenterTextColor(R.color.black);
+                    pieChart.setCenterTextColor(ContextCompat.getColor(getContext(), R.color.black));
                 }
 
                 List<WiD> wiDList = wiDDatabaseHelper.getWiDByDate(firstOfMonth.toString());
@@ -169,7 +167,7 @@ public class WiDReadMonthFragment extends Fragment {
                     entries = new ArrayList<>(); // 빈 엔트리 셋 생성
                     entries.add(new PieEntry(1, ""));
                     dataSet = new PieDataSet(entries, "");
-                    dataSet.setColor(Color.LTGRAY);
+                    dataSet.setColor(ContextCompat.getColor(getContext(), R.color.light_gray));
                     data = new PieData(dataSet);
                     data.setDrawValues(false); // 엔트리 값 표시 X
                     pieChart.setData(data);
@@ -224,7 +222,7 @@ public class WiDReadMonthFragment extends Fragment {
                     // 파이 데이터셋 생성
                     dataSet = new PieDataSet(entries, "");
                     dataSet.setColors(entries.stream()
-                            .map(entry -> DataMaps.getColorMap(getContext()).getOrDefault(entry.getLabel(), Color.LTGRAY))
+                            .map(entry -> DataMaps.getColorMap(getContext()).getOrDefault(entry.getLabel(), ContextCompat.getColor(getContext(), R.color.light_gray)))
                             .collect(Collectors.toList()));
 
                     // 파이 데이터셋 생성

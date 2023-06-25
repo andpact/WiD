@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -28,22 +29,28 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import andpact.project.wid.R;
 import andpact.project.wid.model.WiD;
 import andpact.project.wid.util.CircleView;
 import andpact.project.wid.util.DataMaps;
+import andpact.project.wid.util.Title;
 import andpact.project.wid.util.WiDDatabaseHelper;
 
 public class WiDReadDayFragment extends Fragment {
     private MaterialTextView dateTextView, dayOfWeekTextView;
     private DateTimeFormatter dateFormatter, timeFormatter, timeFormatter2;
-    private LinearLayout headerLinearLayout, linearLayout;
+    private LinearLayout headerLinearLayout, totalDurationLinearLayout, totalDurationItemLinearLayout, linearLayout;
     private WiDDatabaseHelper wiDDatabaseHelper;
     private LocalDate currentDate;
     private ImageButton leftTriangle, rightTriangle, wiDSaveGalleryButton, wiDDeleteButton, wiDCloseButton, editDetailButton, cancelEditDetailButton,
@@ -59,6 +66,7 @@ public class WiDReadDayFragment extends Fragment {
     private TextInputEditText detailInputEditText;
     private long clickedWiDId;
     private WiD clickedWiD;
+    private Map<String, Duration> totalDurationForDayMap;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -66,6 +74,8 @@ public class WiDReadDayFragment extends Fragment {
         dateTextView = view.findViewById(R.id.dateTextView);
         dayOfWeekTextView = view.findViewById(R.id.dayOfWeekTextView);
         headerLinearLayout = view.findViewById(R.id.headerLinearLayout);
+        totalDurationLinearLayout = view.findViewById(R.id.totalDurationLinearLayout);
+        totalDurationItemLinearLayout = view.findViewById(R.id.totalDurationItemLinearLayout);
         linearLayout = view.findViewById(R.id.linearLayout);
 
         leftTriangle = view.findViewById(R.id.leftTriangle);
@@ -87,7 +97,7 @@ public class WiDReadDayFragment extends Fragment {
         // 텍스트 스타일 설정 (옵션)
         pieChart.setCenterTextSize(15f);
         pieChart.setCenterTextTypeface(Typeface.DEFAULT_BOLD);
-        pieChart.setCenterTextColor(Color.BLACK);
+        pieChart.setCenterTextColor(ContextCompat.getColor(getContext(), R.color.black));
 
         circleView = view.findViewById(R.id.circleView);
 
@@ -104,11 +114,11 @@ public class WiDReadDayFragment extends Fragment {
         dayOfWeekTextView.setText(koreanDayOfWeek);
 
         if (currentDate.getDayOfWeek() == DayOfWeek.SATURDAY) {
-            dayOfWeekTextView.setTextColor(Color.BLUE);
+            dayOfWeekTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.blue));
         } else if (currentDate.getDayOfWeek() == DayOfWeek.SUNDAY) {
-            dayOfWeekTextView.setTextColor(Color.RED);
+            dayOfWeekTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
         } else {
-            dayOfWeekTextView.setTextColor(Color.BLACK);
+            dayOfWeekTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
         }
 
         leftTriangle.setOnClickListener(v -> decreaseDate());
@@ -121,18 +131,6 @@ public class WiDReadDayFragment extends Fragment {
         wiDFinishTimeLinearLayout = view.findViewById(R.id.wiDFinishTimeLinearLayout);
         wiDDurationLinearLayout = view.findViewById(R.id.wiDDurationLinearLayout);
         wiDDetailLinearLayout = view.findViewById(R.id.wiDDetailLinearLayout);
-
-//        LinearLayout.LayoutParams layoutParams10 = new LinearLayout.LayoutParams(
-//                LinearLayout.LayoutParams.MATCH_PARENT,
-//                LinearLayout.LayoutParams.WRAP_CONTENT
-//        );
-//        layoutParams10.setMargins(0, 10, 0, 0);
-//
-//        LinearLayout.LayoutParams layoutParams20 = new LinearLayout.LayoutParams(
-//                LinearLayout.LayoutParams.MATCH_PARENT,
-//                LinearLayout.LayoutParams.WRAP_CONTENT
-//        );
-//        layoutParams20.setMargins(0, 20, 0, 0);
 
         wiDTitleTextView = view.findViewById(R.id.wiDTitleTextView);
         wiDDateTextView = view.findViewById(R.id.wiDDateTextView);
@@ -149,27 +147,14 @@ public class WiDReadDayFragment extends Fragment {
         showDetailLinearLayoutImageView = view.findViewById(R.id.showDetailLinearLayoutImageView);
         showDetailLinearLayout.setOnClickListener(new View.OnClickListener() {
             boolean isExpanded = false;
-
             @Override
             public void onClick(View v) {
                 if (isExpanded) {
                     showDetailLinearLayoutImageView.setBackgroundResource(R.drawable.baseline_keyboard_arrow_down_24);
                     wiDDetailLinearLayout.setVisibility(View.GONE);
-
-//                    wiDDateLinearLayout.setLayoutParams(layoutParams10);
-//                    wiDTitleLinearLayout.setLayoutParams(layoutParams10);
-//                    wiDStartTimeLinearLayout.setLayoutParams(layoutParams10);
-//                    wiDFinishTimeLinearLayout.setLayoutParams(layoutParams10);
-//                    wiDDurationLinearLayout.setLayoutParams(layoutParams10);
                 } else {
                     showDetailLinearLayoutImageView.setBackgroundResource(R.drawable.baseline_keyboard_arrow_up_24);
                     wiDDetailLinearLayout.setVisibility(View.VISIBLE);
-
-//                    wiDDateLinearLayout.setLayoutParams(layoutParams20);
-//                    wiDTitleLinearLayout.setLayoutParams(layoutParams20);
-//                    wiDStartTimeLinearLayout.setLayoutParams(layoutParams20);
-//                    wiDFinishTimeLinearLayout.setLayoutParams(layoutParams20);
-//                    wiDDurationLinearLayout.setLayoutParams(layoutParams20);
                 }
                 isExpanded = !isExpanded;
             }
@@ -251,12 +236,6 @@ public class WiDReadDayFragment extends Fragment {
             wiDDetailLinearLayout.setVisibility(View.GONE);
 
             showDetailLinearLayoutImageView.setBackgroundResource(R.drawable.baseline_keyboard_arrow_down_24);
-
-//            왜 안되냐?;;
-//            headerLinearLayout.setEnabled(true);
-//            headerLinearLayout.setClickable(true);
-//            linearLayout.setEnabled(true);
-//            linearLayout.setClickable(true);
         });
 
         updateWiDList();
@@ -302,6 +281,14 @@ public class WiDReadDayFragment extends Fragment {
     }
     private void updateWiDList() {
         linearLayout.removeAllViews();
+        totalDurationItemLinearLayout.removeAllViews();
+
+        totalDurationForDayMap = new HashMap<>();
+
+        for (Title title : Title.values()) { // "STUDY"
+            totalDurationForDayMap.put(title.toString(), Duration.ZERO);
+        }
+
         List<WiD> wiDList = wiDDatabaseHelper.getWiDByDate(currentDate.toString());
 
         ArrayList<PieEntry> entries;
@@ -312,11 +299,13 @@ public class WiDReadDayFragment extends Fragment {
             entries = new ArrayList<>(); // 빈 엔트리 셋 생성
             entries.add(new PieEntry(1, ""));
             dataSet = new PieDataSet(entries, "");
-            dataSet.setColor(Color.LTGRAY);
+            dataSet.setColor(ContextCompat.getColor(getContext(), R.color.light_gray));
             data = new PieData(dataSet);
             data.setDrawValues(false); // 엔트리 값 표시 X
             pieChart.setData(data);
             pieChart.invalidate();
+
+            totalDurationLinearLayout.setVisibility(View.INVISIBLE);
 
             // "세부 사항으로 검색해 보세요." 텍스트 뷰 생성 및 설정
             MaterialTextView noContextTextView = new MaterialTextView(getContext());
@@ -327,6 +316,8 @@ public class WiDReadDayFragment extends Fragment {
             linearLayout.addView(noContextTextView);
 
         } else {
+            totalDurationLinearLayout.setVisibility(View.VISIBLE);
+
             entries = new ArrayList<>();
 
             // 시작 시간 초기화
@@ -336,8 +327,10 @@ public class WiDReadDayFragment extends Fragment {
 
             for (WiD wiD : wiDList) {
 
+                Duration durationForDay = totalDurationForDayMap.get(wiD.getTitle()).plus(wiD.getDuration());
+                totalDurationForDayMap.put(wiD.getTitle(), durationForDay);
+
                 LinearLayout itemLayout = new LinearLayout(getContext());
-                itemLayout.setPadding(0, 16, 0, 0);
                 itemLayout.setOrientation(LinearLayout.HORIZONTAL);
                 itemLayout.setGravity(Gravity.CENTER_VERTICAL);
                 itemLayout.setTag(wiD.getId());
@@ -489,7 +482,7 @@ public class WiDReadDayFragment extends Fragment {
             // 파이 데이터셋 생성
             dataSet = new PieDataSet(entries, "");
             dataSet.setColors(entries.stream()
-                    .map(entry -> DataMaps.getColorMap(getContext()).getOrDefault(entry.getLabel(), Color.LTGRAY))
+                    .map(entry -> DataMaps.getColorMap(getContext()).getOrDefault(entry.getLabel(), ContextCompat.getColor(getContext(), R.color.light_gray)))
                     .collect(Collectors.toList()));
 
             // 파이 데이터셋 생성
@@ -499,6 +492,63 @@ public class WiDReadDayFragment extends Fragment {
             // 파이 차트에 데이터 설정
             pieChart.setData(data);
             pieChart.invalidate(); // 차트 갱신
+
+            List<Title> sortedTitles = new ArrayList<>(Arrays.asList(Title.values()));
+
+            Collections.sort(sortedTitles, (t1, t2) -> {
+                Duration duration1 = totalDurationForDayMap.get(t1.toString());
+                Duration duration2 = totalDurationForDayMap.get(t2.toString());
+                return duration2.compareTo(duration1);
+            });
+
+            for (Title key : sortedTitles) {
+                LinearLayout totalDurationItemLayout = new LinearLayout(getContext());
+                totalDurationItemLayout.setOrientation(LinearLayout.HORIZONTAL);
+                totalDurationItemLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+                int color = DataMaps.getColorMap(getContext()).get(key.toString());
+                totalDurationItemLayout.setBackgroundColor(color);
+
+                MaterialTextView titleTextView = new MaterialTextView(getContext());
+                titleTextView.setText(DataMaps.getTitleMap(getContext()).get(key.toString()));
+                titleTextView.setLayoutParams(new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+                titleTextView.setTextSize(20);
+                titleTextView.setTypeface(null, Typeface.BOLD);
+
+                MaterialTextView totalDurationTextView = new MaterialTextView(getContext());
+                Duration totalDuration = totalDurationForDayMap.get(key.toString());
+
+                if (totalDuration == Duration.ZERO) {
+                    continue;
+                }
+
+                long totalDurationHours = totalDuration.toHours();
+                long totalDurationMinutes = (totalDuration.toMinutes() % 60);
+                String totalDurationText;
+                if (totalDurationHours > 0 && totalDurationMinutes == 0) {
+                    totalDurationText = String.format("%d시간", totalDurationHours);
+                } else if (totalDurationHours > 0) {
+                    totalDurationText = String.format("%d시간 %d분", totalDurationHours, totalDurationMinutes);
+                } else {
+                    totalDurationText = String.format("%d분", totalDurationMinutes);
+                }
+                totalDurationTextView.setLayoutParams(new LinearLayout.LayoutParams(
+                        0,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        1.0f));
+                totalDurationTextView.setText(totalDurationText);
+                totalDurationTextView.setTextSize(18);
+                totalDurationTextView.setTypeface(null, Typeface.BOLD);
+                totalDurationTextView.setGravity(Gravity.CENTER);
+
+                totalDurationItemLayout.addView(titleTextView);
+                totalDurationItemLayout.addView(totalDurationTextView);
+
+                totalDurationItemLinearLayout.addView(totalDurationItemLayout);
+            }
         }
     }
     private void showSnackbar(String message) {
