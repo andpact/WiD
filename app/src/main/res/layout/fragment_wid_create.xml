@@ -17,7 +17,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/wid_bg"
+            android:background="@drawable/bg_light_gray"
             android:elevation="2dp"
             android:padding="10dp"
             android:orientation="vertical">
@@ -37,15 +37,12 @@
                     app:fontFamily="@font/acme_regular"
                     android:text="@string/app_name"/>
 
-                <com.google.android.material.textview.MaterialTextView
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/titleColorCircle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/gray"
-                    app:fontFamily="@font/acme_regular"
-                    android:text="@string/app_name2"/>
+                    android:background="@drawable/circle"
+                    />
 
             </LinearLayout>
 
@@ -72,7 +69,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/wid_field_bg"
                     android:gravity="center"
                     android:orientation="horizontal">
 
@@ -130,7 +126,6 @@
 
                     <androidx.viewpager2.widget.ViewPager2
                         android:id="@+id/viewPager2"
-                        android:background="@drawable/wid_field_bg"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"/>
@@ -171,7 +166,6 @@
                     android:id="@+id/startTimeTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/wid_field_bg"
                     android:gravity="center"
                     android:textSize="30sp"
                     android:textStyle="bold" />
@@ -202,7 +196,6 @@
                     android:id="@+id/finishTimeTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/wid_field_bg"
                     android:gravity="center"
                     android:textSize="30sp"
                     android:textStyle="bold" />
@@ -233,11 +226,10 @@
                     android:id="@+id/durationTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/wid_field_bg"
                     android:gravity="center"
                     android:textSize="30sp"
                     android:textStyle="bold"
-                    android:hint="1분 ~ 12시간.."
+                    android:hint="최소 1분 최대 12시간"
                     />
 
             </LinearLayout>
@@ -255,7 +247,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:elevation="2dp"
                 android:backgroundTint="@color/transparent"
                 android:src="@drawable/baseline_play_arrow_36"/>
 
@@ -264,7 +255,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:elevation="2dp"
                 android:backgroundTint="@color/transparent"
                 android:src="@drawable/baseline_stop_36"/>
 
@@ -273,7 +263,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:elevation="2dp"
                 android:backgroundTint="@color/transparent"
                 android:src="@drawable/baseline_refresh_36"/>
 

@@ -41,11 +41,11 @@ import com.google.android.material.textview.MaterialTextView;
 
 public class WiDReadMonthFragment extends Fragment {
     private TextView dateTextView;
-    private ImageButton leftTriangle, rightTriangle;
+    private ImageButton decreaseDateButton, increaseDateButton;
     private LocalDate currentDate, firstOfMonth;
     private DateTimeFormatter formatter;
     private GridLayout gridLayout;
-    private LinearLayout statisticsTabLinearLayout, statisticsLinearLayout;
+    private LinearLayout wiDHolderLayout;
     private WiDDatabaseHelper wiDDatabaseHelper;
     private Map<String, Duration> totalDurationMap;
     private Map<String, Integer> bestDayMap;
@@ -57,12 +57,11 @@ public class WiDReadMonthFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_wid_read_month, container, false);
 
         dateTextView = view.findViewById(R.id.dateTextView);
-        leftTriangle = view.findViewById(R.id.leftTriangle);
-        rightTriangle = view.findViewById(R.id.rightTriangle);
+        decreaseDateButton = view.findViewById(R.id.decreaseDateButton);
+        increaseDateButton = view.findViewById(R.id.increaseDateButton);
 
         gridLayout = view.findViewById(R.id.gridLayout);
-        statisticsTabLinearLayout = view.findViewById(R.id.statisticsTabLinearLayout);
-        statisticsLinearLayout = view.findViewById(R.id.statisticsLinearLayout);
+        wiDHolderLayout = view.findViewById(R.id.wiDHolderLayout);
         wiDDatabaseHelper = new WiDDatabaseHelper(getContext());
 
         // Initialize the date formatter
@@ -75,8 +74,8 @@ public class WiDReadMonthFragment extends Fragment {
         updateDateTextView();
 
         // Set click listeners for the left and right arrows
-        leftTriangle.setOnClickListener(v -> decreaseMonth());
-        rightTriangle.setOnClickListener(v -> increaseMonth());
+        decreaseDateButton.setOnClickListener(v -> decreaseMonth());
+        increaseDateButton.setOnClickListener(v -> increaseMonth());
 
         return view;
     }
@@ -85,17 +84,15 @@ public class WiDReadMonthFragment extends Fragment {
         currentDate = currentDate.minusMonths(1);
         updateDateTextView();
     }
-
     private void increaseMonth() {
         currentDate = currentDate.plusMonths(1);
         updateDateTextView();
     }
-
     private void updateDateTextView() {
         boolean hasData = false;
 
         gridLayout.removeAllViews();
-        statisticsLinearLayout.removeAllViews();
+        wiDHolderLayout.removeAllViews();
         firstOfMonth = currentDate.withDayOfMonth(1);
         int startDay = firstOfMonth.getDayOfWeek().getValue() % 7; // 0 to 6, Sun to Mon
         int daysInMonth = currentDate.lengthOfMonth();
@@ -255,8 +252,6 @@ public class WiDReadMonthFragment extends Fragment {
             // Create a list to store the Title values and their corresponding totalDurations
             List<Title> sortedTitles = new ArrayList<>(Arrays.asList(Title.values()));
 
-            statisticsTabLinearLayout.setVisibility(View.VISIBLE);
-
             // Sort the titles based on totalDuration in descending order
             Collections.sort(sortedTitles, (t1, t2) -> {
                 Duration duration1 = totalDurationMap.get(t1.toString());
@@ -264,73 +259,23 @@ public class WiDReadMonthFragment extends Fragment {
                 return duration2.compareTo(duration1);
             });
 
-            int count = 1;
-
             for (Title key : sortedTitles) {
                 LinearLayout itemLinearLayout = new LinearLayout(getContext());
-                itemLinearLayout.setPadding(0, 16, 0, 0);
-                itemLinearLayout.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT));
+                itemLinearLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 itemLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-                MaterialTextView numberTextView = new MaterialTextView(getContext());
-                numberTextView.setLayoutParams(new LinearLayout.LayoutParams(
-                        0,
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        0.5f));
-                numberTextView.setText(count + "");
-                numberTextView.setTypeface(null, Typeface.BOLD);
-                numberTextView.setGravity(Gravity.CENTER);
-
                 MaterialTextView titleTextView = new MaterialTextView(getContext());
-                titleTextView.setLayoutParams(new LinearLayout.LayoutParams(
-                        0,
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        0.5f));
+                titleTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f));
                 titleTextView.setText(DataMaps.getTitleMap(getContext()).get(key.toString()));
                 titleTextView.setTypeface(null, Typeface.BOLD);
                 titleTextView.setGravity(Gravity.CENTER);
 
-                MaterialTextView totalDurationTextView = new MaterialTextView(getContext());
-                Duration totalDuration = totalDurationMap.get(key.toString());
+                MaterialTextView bestDayAndDurationTextView = new MaterialTextView(getContext());
+                int bestDay = bestDayMap.get(key.toString());
+                bestDayAndDurationTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+                bestDayAndDurationTextView.setTypeface(null, Typeface.BOLD);
+                bestDayAndDurationTextView.setGravity(Gravity.CENTER);
 
-                // 총 소요 시간 자체가 없으면 표시를 안함.
-                if (totalDuration == Duration.ZERO) {
-                    continue;
-                }
-
-                count++;
-
-                long totalDurationHours = totalDuration.toHours();
-                long totalDurationMinutes = (totalDuration.toMinutes() % 60);
-                String totalDurationText;
-                if (totalDurationHours > 0 && totalDurationMinutes == 0) {
-                    totalDurationText = String.format("%d시간", totalDurationHours);
-                } else if (totalDurationHours > 0) {
-                    totalDurationText = String.format("%d시간 %d분", totalDurationHours, totalDurationMinutes);
-                } else {
-                    totalDurationText = String.format("%d분", totalDurationMinutes);
-                }
-                totalDurationTextView.setLayoutParams(new LinearLayout.LayoutParams(
-                        0,
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        1.0f));
-                totalDurationTextView.setText(totalDurationText);
-
-                totalDurationTextView.setTypeface(null, Typeface.BOLD);
-                totalDurationTextView.setGravity(Gravity.CENTER);
-                MaterialTextView bestDayTextView = new MaterialTextView(getContext());
-                int bestDayValue = bestDayMap.get(key.toString());
-                bestDayTextView.setLayoutParams(new LinearLayout.LayoutParams(
-                        0,
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        0.7f));
-                bestDayTextView.setText(bestDayValue + "일");
-                bestDayTextView.setTypeface(null, Typeface.BOLD);
-                bestDayTextView.setGravity(Gravity.CENTER);
-
-                MaterialTextView bestDurationTextView = new MaterialTextView(getContext());
                 Duration bestDuration = bestDurationMap.get(key.toString());
                 long bestDurationHours = bestDuration.toHours();
                 long bestDurationMinutes = (bestDuration.toMinutes() % 60);
@@ -342,31 +287,46 @@ public class WiDReadMonthFragment extends Fragment {
                 } else {
                     bestDurationText = String.format("%d분", bestDurationMinutes);
                 }
-                bestDurationTextView.setLayoutParams(new LinearLayout.LayoutParams(
-                        0,
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        0.7f));
-                bestDurationTextView.setText(bestDurationText);
-                bestDurationTextView.setTypeface(null, Typeface.BOLD);
-                bestDurationTextView.setGravity(Gravity.CENTER);
 
-                itemLinearLayout.addView(numberTextView);
+                bestDayAndDurationTextView.setText(bestDay + "일(" + bestDurationText + ")");
+
+                MaterialTextView totalDurationTextView = new MaterialTextView(getContext());
+                Duration totalDuration = totalDurationMap.get(key.toString());
+
+                // 총 소요 시간 자체가 없으면 표시를 안함.
+                if (totalDuration == Duration.ZERO) {
+                    continue;
+                }
+
+                long totalDurationHours = totalDuration.toHours();
+                long totalDurationMinutes = (totalDuration.toMinutes() % 60);
+                String totalDurationText;
+                if (totalDurationHours > 0 && totalDurationMinutes == 0) {
+                    totalDurationText = String.format("%d시간", totalDurationHours);
+                } else if (totalDurationHours > 0) {
+                    totalDurationText = String.format("%d시간 %d분", totalDurationHours, totalDurationMinutes);
+                } else {
+                    totalDurationText = String.format("%d분", totalDurationMinutes);
+                }
+                totalDurationTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f));
+                totalDurationTextView.setText(totalDurationText);
+                totalDurationTextView.setTypeface(null, Typeface.BOLD);
+                totalDurationTextView.setGravity(Gravity.CENTER);
+
                 itemLinearLayout.addView(titleTextView);
+                itemLinearLayout.addView(bestDayAndDurationTextView);
                 itemLinearLayout.addView(totalDurationTextView);
-                itemLinearLayout.addView(bestDayTextView);
-                itemLinearLayout.addView(bestDurationTextView);
 
-                statisticsLinearLayout.addView(itemLinearLayout);
+                wiDHolderLayout.addView(itemLinearLayout);
             }
         } else {
             MaterialTextView noDataTextView = new MaterialTextView(getContext());
-            noDataTextView.setText("표시할 WiD가 없어요.");
-            noDataTextView.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            noDataTextView.setTextSize(30);
+            noDataTextView.setText("표시할 데이터가 없어요.");
+            noDataTextView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             noDataTextView.setGravity(Gravity.CENTER);
-            statisticsTabLinearLayout.setVisibility(View.GONE);
-            statisticsLinearLayout.addView(noDataTextView);
+            noDataTextView.setPadding(0, 20, 0, 20);
+            wiDHolderLayout.addView(noDataTextView);
         }
     }
 }

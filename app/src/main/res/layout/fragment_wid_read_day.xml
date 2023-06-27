@@ -5,7 +5,7 @@
 
 <!--    날짜 표시-->
     <LinearLayout
-        android:id="@+id/headerLinearLayout"
+        android:id="@+id/dateLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -13,7 +13,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
-            android:id="@+id/leftTriangle"
+            android:id="@+id/decreaseDateButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/baseline_arrow_left_48"
@@ -49,7 +49,7 @@
         </LinearLayout>
 
         <ImageButton
-            android:id="@+id/rightTriangle"
+            android:id="@+id/increaseDateButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/baseline_arrow_right_48"
@@ -63,7 +63,7 @@
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:layout_marginStart="26dp"
-        app:layout_constraintTop_toBottomOf="@id/headerLinearLayout"
+        app:layout_constraintTop_toBottomOf="@id/dateLayout"
         app:layout_constraintStart_toStartOf="parent"
         />
 
@@ -78,10 +78,11 @@
         app:layout_constraintEnd_toEndOf="@id/pieChart" />
 
     <LinearLayout
-        android:id="@+id/totalDurationLinearLayout"
+        android:id="@+id/totalDurationLayout"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
+        android:background="@drawable/bg_light_gray"
         app:layout_constraintTop_toTopOf="@id/circleView"
         app:layout_constraintStart_toEndOf="@id/circleView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -94,9 +95,11 @@
             android:orientation="horizontal">
 
             <com.google.android.material.textview.MaterialTextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="17sp"
                 android:text="@string/title"/>
 
             <com.google.android.material.textview.MaterialTextView
@@ -104,13 +107,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textSize="18sp"
+                android:textSize="17sp"
                 android:text="합계"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/totalDurationItemLinearLayout"
+            android:id="@+id/totalDurationHolderLayout"
+            android:background="@drawable/bg_light_gray"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -119,22 +123,84 @@
 
     </LinearLayout>
 
-<!--    WiD 표시(간략히)-->
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/wiDLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:orientation="vertical"
+        android:layout_marginHorizontal="16dp"
         app:layout_constraintTop_toBottomOf="@id/circleView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:textSize="17sp"
+                android:text="번호" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:textSize="17sp"
+                android:text="제목" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:gravity="center"
+                android:textSize="17sp"
+                android:text="시작" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:gravity="center"
+                android:textSize="17sp"
+                android:text="종료" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:gravity="center"
+                android:textSize="17sp"
+                android:text="진행" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:gravity="center"
+                android:textSize="17sp"
+                android:text="자세히" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/wiDHolderLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        </LinearLayout>
 
     </LinearLayout>
 
 <!--    Clicked WiD 표시-->
     <LinearLayout
-        android:id="@+id/wiDLinearLayout"
+        android:id="@+id/clickedWiDLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
@@ -148,7 +214,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/wid_bg"
+            android:background="@drawable/bg_light_gray"
             android:elevation="2dp"
             android:padding="10dp"
             android:orientation="vertical">
@@ -181,7 +247,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/wiDDateLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -207,14 +272,14 @@
                     android:orientation="horizontal">
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/wiDDateTextView"
+                        android:id="@+id/clickedWiDDateTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="30sp"
                         android:textStyle="bold" />
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/wiDDayOfWeekTextView"
+                        android:id="@+id/clickedWiDDayOfWeekTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="30sp"
@@ -225,7 +290,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/wiDTitleLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -245,7 +309,7 @@
                     android:text="@string/title" />
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/wiDTitleTextView"
+                    android:id="@+id/clickedWiDTitleTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -255,7 +319,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/wiDStartTimeLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -275,7 +338,7 @@
                     android:text="@string/start_time" />
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/wiDStartTimeTextView"
+                    android:id="@+id/clickedWiDStartTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -285,7 +348,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/wiDFinishTimeLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -305,7 +367,7 @@
                     android:text="@string/finish_time" />
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/wiDFinishTimeTextView"
+                    android:id="@+id/clickedWiDFinishTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -315,7 +377,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/wiDDurationLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -335,7 +396,7 @@
                     android:text="@string/duration" />
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/wiDDurationTextView"
+                    android:id="@+id/clickedWiDDurationTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -345,7 +406,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/wiDDetailLinearLayout"
+                android:id="@+id/clickedWiDDetailLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -372,7 +433,7 @@
                         android:text="@string/detail" />
 
                     <ImageButton
-                        android:id="@+id/showEditDetailButton"
+                        android:id="@+id/clickedWiDShowEditDetailButton"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_weight="0"
@@ -382,11 +443,11 @@
                 </LinearLayout>
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/wiDDetailTextView"
+                    android:id="@+id/clickedWiDDetailTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/wid_field_bg"
+                    android:background="@drawable/bg_no_color"
                     android:padding="10dp"
                     android:minLines="4"
                     android:textStyle="bold"
@@ -396,7 +457,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/showDetailLinearLayout"
+                android:id="@+id/showClickedWiDetailLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -404,7 +465,7 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/showDetailLinearLayoutImageView"
+                    android:id="@+id/showClickedWiDDetailLayoutImageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/baseline_keyboard_arrow_down_24"/>
@@ -420,32 +481,29 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/wiDSaveGalleryButton"
+                android:id="@+id/clickedWiDSaveGalleryButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/transparent"
-                android:elevation="2dp"
                 android:src="@drawable/baseline_download_36"
                 />
 
             <ImageButton
-                android:id="@+id/wiDDeleteButton"
+                android:id="@+id/clickedWiDDeleteButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/transparent"
-                android:elevation="2dp"
                 android:src="@drawable/baseline_delete_36"
                 />
 
             <ImageButton
-                android:id="@+id/wiDCloseButton"
+                android:id="@+id/clickedWiDCloseButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/transparent"
-                android:elevation="2dp"
                 android:src="@drawable/baseline_arrow_back_36"
                 />
 
@@ -455,7 +513,7 @@
 
 <!--    WiD 세부사항-->
     <LinearLayout
-        android:id="@+id/editDetailLinearLayout"
+        android:id="@+id/clickedWiDEditDetailLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -469,7 +527,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/wid_bg"
+            android:background="@drawable/bg_light_gray"
             android:orientation="vertical">
 
             <com.google.android.material.textview.MaterialTextView
@@ -491,7 +549,7 @@
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/detailInputEditText"
+                    android:id="@+id/clickedWiDDetailInputEditText"
                     android:minLines="5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -507,22 +565,20 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/editDetailButton"
+                android:id="@+id/clickedWiDEditDetailButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/transparent"
-                android:elevation="2dp"
                 android:src="@drawable/baseline_done_36"
                 />
 
             <ImageButton
-                android:id="@+id/cancelEditDetailButton"
+                android:id="@+id/clickedWiDCancelEditDetailButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/transparent"
-                android:elevation="2dp"
                 android:src="@drawable/baseline_cancel_36"
                 />
 

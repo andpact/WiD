@@ -3,23 +3,20 @@ package andpact.project.wid.fragment;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.material.button.MaterialButton;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.time.DayOfWeek;
@@ -27,6 +24,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 import andpact.project.wid.R;
 import andpact.project.wid.activity.MainActivity;
@@ -38,9 +36,8 @@ import andpact.project.wid.util.TitleViewPagerAdapter;
 import andpact.project.wid.util.WiDDatabaseHelper;
 
 public class WiDCreateFragment extends Fragment {
-//    private LinearLayout titleLinearLayout, dateLinearLayout, startTimeLinearLayout, finishTimeLinearLayout, durationLinearLayout;
     private MaterialTextView dateTextView, dayOfWeekTextView, startTimeTextView, finishTimeTextView, durationTextView;
-
+    private ShapeableImageView titleColorCircle;
     private DateTimeFormatter dateFormatter, timeFormatter;
     private ImageButton titleLeftButton, titleRightButton;
     private ViewPager2 viewPager2;
@@ -55,14 +52,10 @@ public class WiDCreateFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wid_create, container, false);
 
-//        titleLinearLayout = view.findViewById(R.id.titleLinearLayout);
-//        dateLinearLayout = view.findViewById(R.id.dateLinearLayout);
-//        startTimeLinearLayout = view.findViewById(R.id.startTimeLinearLayout);
-//        finishTimeLinearLayout = view.findViewById(R.id.finishTimeLinearLayout);
-//        durationLinearLayout = view.findViewById(R.id.durationLinearLayout);
-
         dateFormatter = DateTimeFormatter.ofPattern("yyyy.M.d ");
         timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+        titleColorCircle = view.findViewById(R.id.titleColorCircle);
 
         dateTextView = view.findViewById(R.id.dateTextView);
         dayOfWeekTextView = view.findViewById(R.id.dayOfWeekTextView);
@@ -103,6 +96,10 @@ public class WiDCreateFragment extends Fragment {
                 if (position >= 0 && position < titles.length) {
                     Title selectedTitle = titles[position];
                     clickedTitle = selectedTitle.toString();
+
+                    Map<String, Integer> colorMap = DataMaps.getColorMap(getContext());
+                    GradientDrawable drawable = (GradientDrawable) titleColorCircle.getBackground();
+                    drawable.setColor(colorMap.get(clickedTitle));
                 }
                 super.onPageSelected(position);
             }

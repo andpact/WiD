@@ -42,11 +42,11 @@ import andpact.project.wid.util.WiDDatabaseHelper;
 
 public class WiDReadWeekFragment extends Fragment {
     private TextView dateTextView, weekOfYearTextView;
-    private ImageButton leftTriangle, rightTriangle;
+    private ImageButton decreaseDateButton, increaseDateButton;
     private LocalDate currentDate;
     private GridLayout gridLayout;
     private DateTimeFormatter formatter;
-    private LinearLayout statisticsTabLinearLayout, statisticsLinearLayout;
+    private LinearLayout wiDHolderLayout;
     private WiDDatabaseHelper wiDDatabaseHelper;
     private Map<String, Duration> totalDurationMap;
     private Map<String, Integer> bestDayMap;
@@ -58,21 +58,21 @@ public class WiDReadWeekFragment extends Fragment {
 
         dateTextView = view.findViewById(R.id.dateTextView);
         weekOfYearTextView = view.findViewById(R.id.weekOfYearTextView);
-        leftTriangle = view.findViewById(R.id.leftTriangle);
-        rightTriangle = view.findViewById(R.id.rightTriangle);
+        decreaseDateButton = view.findViewById(R.id.decreaseDateButton);
+        increaseDateButton = view.findViewById(R.id.increaseDateButton);
 
         currentDate = LocalDate.now();
 
         formatter = DateTimeFormatter.ofPattern("yyyy.M W번째 '주'");
 
         gridLayout = view.findViewById(R.id.gridLayout);
-        statisticsTabLinearLayout = view.findViewById(R.id.statisticsTabLinearLayout);
-        statisticsLinearLayout = view.findViewById(R.id.statisticsLinearLayout);
+        wiDHolderLayout = view.findViewById(R.id.wiDHolderLayout);
+
         wiDDatabaseHelper = new WiDDatabaseHelper(getContext());
 
         // Set click listeners for the left and right arrows
-        leftTriangle.setOnClickListener(v -> decreaseWeek());
-        rightTriangle.setOnClickListener(v -> increaseWeek());
+        decreaseDateButton.setOnClickListener(v -> decreaseWeek());
+        increaseDateButton.setOnClickListener(v -> increaseWeek());
 
         updateDateTextView();
 
@@ -91,7 +91,7 @@ public class WiDReadWeekFragment extends Fragment {
         boolean hasData = false;
 
         gridLayout.removeAllViews();
-        statisticsLinearLayout.removeAllViews();
+        wiDHolderLayout.removeAllViews();
 
         totalDurationMap = new HashMap<>();
         bestDayMap = new HashMap<>();
@@ -231,7 +231,6 @@ public class WiDReadWeekFragment extends Fragment {
         if (hasData) {
             // Create a list to store the Title values and their corresponding totalDurations
             List<Title> sortedTitles = new ArrayList<>(Arrays.asList(Title.values()));
-            statisticsTabLinearLayout.setVisibility(View.VISIBLE);
 
             // Sort the titles based on totalDuration in descending order
             Collections.sort(sortedTitles, (t1, t2) -> {
@@ -242,22 +241,34 @@ public class WiDReadWeekFragment extends Fragment {
 
             for (Title key : sortedTitles) {
                 LinearLayout itemLinearLayout = new LinearLayout(getContext());
-                itemLinearLayout.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT));
+                itemLinearLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 itemLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-                int color = DataMaps.getColorMap(getContext()).get(key.toString());
-                itemLinearLayout.setBackgroundColor(color);
 
                 MaterialTextView titleTextView = new MaterialTextView(getContext());
-                titleTextView.setLayoutParams(new LinearLayout.LayoutParams(
-                        0,
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        1.0f));
+                titleTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f));
                 titleTextView.setText(DataMaps.getTitleMap(getContext()).get(key.toString()));
-                titleTextView.setTextSize(20);
                 titleTextView.setTypeface(null, Typeface.BOLD);
                 titleTextView.setGravity(Gravity.CENTER);
+
+                MaterialTextView bestDayAndDurationTextView = new MaterialTextView(getContext());
+                int bestDay = bestDayMap.get(key.toString());
+                bestDayAndDurationTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+                bestDayAndDurationTextView.setTypeface(null, Typeface.BOLD);
+                bestDayAndDurationTextView.setGravity(Gravity.CENTER);
+
+                Duration bestDuration = bestDurationMap.get(key.toString());
+                long bestDurationHours = bestDuration.toHours();
+                long bestDurationMinutes = (bestDuration.toMinutes() % 60);
+                String bestDurationText;
+                if (bestDurationHours > 0 && bestDurationMinutes == 0) {
+                    bestDurationText = String.format("%d시간", bestDurationHours);
+                } else if (bestDurationHours > 0) {
+                    bestDurationText = String.format("%d시간 %d분", bestDurationHours, bestDurationMinutes);
+                } else {
+                    bestDurationText = String.format("%d분", bestDurationMinutes);
+                }
+
+                bestDayAndDurationTextView.setText(bestDay + "일(" + bestDurationText + ")");
 
                 MaterialTextView totalDurationTextView = new MaterialTextView(getContext());
                 Duration totalDuration = totalDurationMap.get(key.toString());
@@ -277,55 +288,25 @@ public class WiDReadWeekFragment extends Fragment {
                 } else {
                     totalDurationText = String.format("%d분", totalDurationMinutes);
                 }
-                totalDurationTextView.setLayoutParams(new LinearLayout.LayoutParams(
-                        0,
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        1.0f));
+                totalDurationTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f));
                 totalDurationTextView.setText(totalDurationText);
-                totalDurationTextView.setTextSize(20);
                 totalDurationTextView.setTypeface(null, Typeface.BOLD);
                 totalDurationTextView.setGravity(Gravity.CENTER);
 
-                MaterialTextView bestDayAndDurationTextView = new MaterialTextView(getContext());
-                int bestDay = bestDayMap.get(key.toString());
-                bestDayAndDurationTextView.setLayoutParams(new LinearLayout.LayoutParams(
-                        0,
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        1f));
-                bestDayAndDurationTextView.setTextSize(20);
-                bestDayAndDurationTextView.setTypeface(null, Typeface.BOLD);
-                bestDayAndDurationTextView.setGravity(Gravity.CENTER);
-
-                Duration bestDuration = bestDurationMap.get(key.toString());
-                long bestDurationHours = bestDuration.toHours();
-                long bestDurationMinutes = (bestDuration.toMinutes() % 60);
-                String bestDurationText;
-                if (bestDurationHours > 0 && bestDurationMinutes == 0) {
-                    bestDurationText = String.format("%d시간", bestDurationHours);
-                } else if (bestDurationHours > 0) {
-                    bestDurationText = String.format("%d시간 %d분", bestDurationHours, bestDurationMinutes);
-                } else {
-                    bestDurationText = String.format("%d분", bestDurationMinutes);
-                }
-
-                bestDayAndDurationTextView.setText(bestDay + "일(" + bestDurationText + ")");
-
                 itemLinearLayout.addView(titleTextView);
-                itemLinearLayout.addView(totalDurationTextView);
                 itemLinearLayout.addView(bestDayAndDurationTextView);
+                itemLinearLayout.addView(totalDurationTextView);
 
-                statisticsLinearLayout.addView(itemLinearLayout);
+                wiDHolderLayout.addView(itemLinearLayout);
             }
         } else {
             MaterialTextView noDataTextView = new MaterialTextView(getContext());
             noDataTextView.setTextSize(30);
-            noDataTextView.setText("표시할 WiD가 없어요.");
-            noDataTextView.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            noDataTextView.setText("표시할 데이터가 없어요.");
+            noDataTextView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             noDataTextView.setGravity(Gravity.CENTER);
-            statisticsTabLinearLayout.setVisibility(View.GONE);
-            statisticsLinearLayout.addView(noDataTextView);
+            noDataTextView.setPadding(0, 20, 0, 20);
+            wiDHolderLayout.addView(noDataTextView);
         }
     }
 }

@@ -42,7 +42,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/wid_bg"
+            android:background="@drawable/bg_light_gray"
             android:elevation="2dp"
             android:padding="10dp"
             android:orientation="vertical">
@@ -280,7 +280,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/wid_field_bg"
+                    android:background="@drawable/bg_no_color"
                     android:padding="10dp"
                     android:minLines="4"
                     android:textStyle="bold"
@@ -319,7 +319,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/transparent"
-                android:elevation="2dp"
                 android:src="@drawable/baseline_download_36"
                 />
 
@@ -329,7 +328,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/transparent"
-                android:elevation="2dp"
                 android:src="@drawable/baseline_delete_36"
                 />
 
@@ -339,7 +337,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/transparent"
-                android:elevation="2dp"
                 android:src="@drawable/baseline_arrow_back_36"
                 />
 
@@ -363,7 +360,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/wid_bg"
+            android:background="@drawable/bg_light_gray"
             android:orientation="vertical">
 
             <com.google.android.material.textview.MaterialTextView
@@ -406,7 +403,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/transparent"
-                android:elevation="2dp"
                 android:src="@drawable/baseline_done_36"
                 />
 
@@ -416,7 +412,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/transparent"
-                android:elevation="2dp"
                 android:src="@drawable/baseline_cancel_36"
                 />
 

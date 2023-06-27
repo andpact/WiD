@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
-        android:id="@+id/headerLayout"
+        android:id="@+id/dateLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
-            android:id="@+id/leftTriangle"
+            android:id="@+id/decreaseDateButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/baseline_arrow_left_48"
@@ -53,7 +53,7 @@
         </LinearLayout>
 
         <ImageButton
-            android:id="@+id/rightTriangle"
+            android:id="@+id/increaseDateButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/baseline_arrow_right_48"
@@ -70,7 +70,7 @@
         android:background="@android:color/transparent"
         android:paddingHorizontal="16dp"
         android:paddingTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/headerLayout">
+        app:layout_constraintTop_toBottomOf="@id/dateLayout">
 
         <TextView
             android:layout_width="0dp"
@@ -150,55 +150,67 @@
     </GridLayout>
 
     <LinearLayout
-        android:id="@+id/statisticsTabLinearLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="16dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/gridLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        >
+        android:layout_marginHorizontal="16dp"
+        android:background="@drawable/bg_light_gray"
+        android:orientation="vertical">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/wiDHeaderLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="30sp"
-            android:text="제목"
-            />
+            android:orientation="horizontal"
+            >
 
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="25sp"
+                android:text="@string/title"
+                />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="25sp"
+                android:text="최고"
+                />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="25sp"
+                android:text="총합"
+                />
+
+        </LinearLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="30sp"
-            android:text="총합"
-            />
+            app:dividerInsetStart="16dp"
+            app:dividerInsetEnd="16dp"/>
 
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/wiDHolderLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="30sp"
-            android:text="최고"
-            />
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/wiDHeaderLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/statisticsLinearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:paddingHorizontal="16dp"
-        app:layout_constraintTop_toBottomOf="@id/statisticsTabLinearLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        </LinearLayout>
 
     </LinearLayout>
 

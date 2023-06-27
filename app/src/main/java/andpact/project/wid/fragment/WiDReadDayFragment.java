@@ -50,20 +50,19 @@ import andpact.project.wid.util.WiDDatabaseHelper;
 public class WiDReadDayFragment extends Fragment {
     private MaterialTextView dateTextView, dayOfWeekTextView;
     private DateTimeFormatter dateFormatter, timeFormatter, timeFormatter2;
-    private LinearLayout headerLinearLayout, totalDurationLinearLayout, totalDurationItemLinearLayout, linearLayout;
+    private LinearLayout dateLayout, totalDurationLayout, totalDurationHolderLayout, wiDLayout, wiDHolderLayout;
     private WiDDatabaseHelper wiDDatabaseHelper;
     private LocalDate currentDate;
-    private ImageButton leftTriangle, rightTriangle, wiDSaveGalleryButton, wiDDeleteButton, wiDCloseButton, editDetailButton, cancelEditDetailButton,
-            showEditDetailButton;
+    private ImageButton decreaseDateButton, increaseDateButton, clickedWiDSaveGalleryButton, clickedWiDDeleteButton, clickedWiDCloseButton, clickedWiDEditDetailButton, clickedWiDCancelEditDetailButton,
+            clickedWiDShowEditDetailButton;
     private PieChart pieChart;
     private CircleView circleView;
 
-    private LinearLayout wiDLinearLayout, wiDDateLinearLayout, wiDTitleLinearLayout, wiDStartTimeLinearLayout,
-            wiDFinishTimeLinearLayout, wiDDurationLinearLayout, wiDDetailLinearLayout, showDetailLinearLayout, editDetailLinearLayout;
-    private MaterialTextView wiDDateTextView, wiDTitleTextView, wiDDayOfWeekTextView, wiDStartTimeTextView,
-            wiDFinishTimeTextView, wiDDurationTextView, wiDDetailTextView;
-    private ImageView showDetailLinearLayoutImageView;
-    private TextInputEditText detailInputEditText;
+    private LinearLayout clickedWiDLayout, clickedWiDDetailLayout, showClickedWiDetailLayout, clickedWiDEditDetailLayout;
+    private MaterialTextView clickedWiDDateTextView, clickedWiDDayOfWeekTextView, clickedWiDTitleTextView, clickedWiDStartTextView,
+            clickedWiDFinishTextView, clickedWiDDurationTextView, clickedWiDDetailTextView;
+    private ImageView showClickedWiDDetailLayoutImageView;
+    private TextInputEditText clickedWiDDetailInputEditText;
     private long clickedWiDId;
     private WiD clickedWiD;
     private Map<String, Duration> totalDurationForDayMap;
@@ -73,15 +72,17 @@ public class WiDReadDayFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_wid_read_day, container, false);
         dateTextView = view.findViewById(R.id.dateTextView);
         dayOfWeekTextView = view.findViewById(R.id.dayOfWeekTextView);
-        headerLinearLayout = view.findViewById(R.id.headerLinearLayout);
-        totalDurationLinearLayout = view.findViewById(R.id.totalDurationLinearLayout);
-        totalDurationItemLinearLayout = view.findViewById(R.id.totalDurationItemLinearLayout);
-        linearLayout = view.findViewById(R.id.linearLayout);
+        dateLayout = view.findViewById(R.id.dateLayout);
+        totalDurationLayout = view.findViewById(R.id.totalDurationLayout);
+        totalDurationHolderLayout = view.findViewById(R.id.totalDurationHolderLayout);
+        wiDLayout = view.findViewById(R.id.wiDLayout);
+        wiDHolderLayout = view.findViewById(R.id.wiDHolderLayout);
 
-        leftTriangle = view.findViewById(R.id.leftTriangle);
-        rightTriangle = view.findViewById(R.id.rightTriangle);
+        decreaseDateButton = view.findViewById(R.id.decreaseDateButton);
+        increaseDateButton = view.findViewById(R.id.increaseDateButton);
 
         pieChart = view.findViewById(R.id.pieChart);
+//        pieChart.setElevation(2);
         pieChart.setUsePercentValues(false); // 상대 값(퍼센트)이 아닌 절대 값 사용
         pieChart.setDrawEntryLabels(false); // 엔트리 라벨 표시 X
         pieChart.getDescription().setEnabled(false); // 설명 비활성화
@@ -121,84 +122,76 @@ public class WiDReadDayFragment extends Fragment {
             dayOfWeekTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
         }
 
-        leftTriangle.setOnClickListener(v -> decreaseDate());
-        rightTriangle.setOnClickListener(v -> increaseDate());
+        decreaseDateButton.setOnClickListener(v -> decreaseDate());
+        increaseDateButton.setOnClickListener(v -> increaseDate());
 
-        wiDLinearLayout = view.findViewById(R.id.wiDLinearLayout);
-        wiDTitleLinearLayout = view.findViewById(R.id.wiDTitleLinearLayout);
-        wiDDateLinearLayout = view.findViewById(R.id.wiDDateLinearLayout);
-        wiDStartTimeLinearLayout = view.findViewById(R.id.wiDStartTimeLinearLayout);
-        wiDFinishTimeLinearLayout = view.findViewById(R.id.wiDFinishTimeLinearLayout);
-        wiDDurationLinearLayout = view.findViewById(R.id.wiDDurationLinearLayout);
-        wiDDetailLinearLayout = view.findViewById(R.id.wiDDetailLinearLayout);
+        clickedWiDLayout = view.findViewById(R.id.clickedWiDLayout);
+        clickedWiDDetailLayout = view.findViewById(R.id.clickedWiDDetailLayout);
 
-        wiDTitleTextView = view.findViewById(R.id.wiDTitleTextView);
-        wiDDateTextView = view.findViewById(R.id.wiDDateTextView);
-        wiDDayOfWeekTextView = view.findViewById(R.id.wiDDayOfWeekTextView);
-        wiDStartTimeTextView = view.findViewById(R.id.wiDStartTimeTextView);
-        wiDFinishTimeTextView = view.findViewById(R.id.wiDFinishTimeTextView);
-        wiDDurationTextView = view.findViewById(R.id.wiDDurationTextView);
-        wiDDetailTextView = view.findViewById(R.id.wiDDetailTextView);
+        clickedWiDDateTextView = view.findViewById(R.id.clickedWiDDateTextView);
+        clickedWiDDayOfWeekTextView = view.findViewById(R.id.clickedWiDDayOfWeekTextView);
+        clickedWiDTitleTextView = view.findViewById(R.id.clickedWiDTitleTextView);
+        clickedWiDStartTextView = view.findViewById(R.id.clickedWiDStartTextView);
+        clickedWiDFinishTextView = view.findViewById(R.id.clickedWiDFinishTextView);
+        clickedWiDDurationTextView = view.findViewById(R.id.clickedWiDDurationTextView);
+        clickedWiDDetailTextView = view.findViewById(R.id.clickedWiDDetailTextView);
 
-        showDetailLinearLayout = view.findViewById(R.id.showDetailLinearLayout);
+        showClickedWiDetailLayout = view.findViewById(R.id.showClickedWiDetailLayout);
 
-        editDetailLinearLayout = view.findViewById(R.id.editDetailLinearLayout);
+        clickedWiDEditDetailLayout = view.findViewById(R.id.clickedWiDEditDetailLayout);
 
-        showDetailLinearLayoutImageView = view.findViewById(R.id.showDetailLinearLayoutImageView);
-        showDetailLinearLayout.setOnClickListener(new View.OnClickListener() {
+        showClickedWiDDetailLayoutImageView = view.findViewById(R.id.showClickedWiDDetailLayoutImageView);
+        showClickedWiDetailLayout.setOnClickListener(new View.OnClickListener() {
             boolean isExpanded = false;
             @Override
             public void onClick(View v) {
                 if (isExpanded) {
-                    showDetailLinearLayoutImageView.setBackgroundResource(R.drawable.baseline_keyboard_arrow_down_24);
-                    wiDDetailLinearLayout.setVisibility(View.GONE);
+                    showClickedWiDDetailLayoutImageView.setBackgroundResource(R.drawable.baseline_keyboard_arrow_down_24);
+                    clickedWiDDetailLayout.setVisibility(View.GONE);
                 } else {
-                    showDetailLinearLayoutImageView.setBackgroundResource(R.drawable.baseline_keyboard_arrow_up_24);
-                    wiDDetailLinearLayout.setVisibility(View.VISIBLE);
+                    showClickedWiDDetailLayoutImageView.setBackgroundResource(R.drawable.baseline_keyboard_arrow_up_24);
+                    clickedWiDDetailLayout.setVisibility(View.VISIBLE);
                 }
                 isExpanded = !isExpanded;
             }
         });
 
-        detailInputEditText = view.findViewById(R.id.detailInputEditText);
+        clickedWiDDetailInputEditText = view.findViewById(R.id.clickedWiDDetailInputEditText);
 
-        showEditDetailButton = view.findViewById(R.id.showEditDetailButton);
-        showEditDetailButton.setBackgroundColor(Color.TRANSPARENT);
-        showEditDetailButton.setOnClickListener(v -> {
-            detailInputEditText.setText(wiDDetailTextView.getText());
-            editDetailLinearLayout.setVisibility(View.VISIBLE);
-            wiDLinearLayout.setVisibility(View.GONE);
+        clickedWiDShowEditDetailButton = view.findViewById(R.id.clickedWiDShowEditDetailButton);
+        clickedWiDShowEditDetailButton.setOnClickListener(v -> {
+            clickedWiDDetailInputEditText.setText(clickedWiDDetailTextView.getText());
+            clickedWiDEditDetailLayout.setVisibility(View.VISIBLE);
+            clickedWiDLayout.setVisibility(View.GONE);
         });
 
-        editDetailButton = view.findViewById(R.id.editDetailButton);
-        editDetailButton.setBackgroundColor(Color.TRANSPARENT);
-        editDetailButton.setOnClickListener(v -> {
-            String newDetail = detailInputEditText.getText().toString();
+        clickedWiDEditDetailButton = view.findViewById(R.id.clickedWiDEditDetailButton);
+        clickedWiDEditDetailButton.setOnClickListener(v -> {
+            String newDetail = clickedWiDDetailInputEditText.getText().toString();
 
             wiDDatabaseHelper.updateWiDDetailById(clickedWiDId, newDetail);
 
-            wiDDetailTextView.setText(newDetail);
-            editDetailLinearLayout.setVisibility(View.GONE);
+            clickedWiDDetailTextView.setText(newDetail);
+            clickedWiDEditDetailLayout.setVisibility(View.GONE);
 
-            wiDLinearLayout.setVisibility(View.VISIBLE);
+            clickedWiDLayout.setVisibility(View.VISIBLE);
 
             updateWiDList();
 
             showSnackbar("세부 사항이 수정되었습니다.");
         });
 
-        cancelEditDetailButton = view.findViewById(R.id.cancelEditDetailButton);
-        cancelEditDetailButton.setBackgroundColor(Color.TRANSPARENT);
-        cancelEditDetailButton.setOnClickListener(v -> {
-            editDetailLinearLayout.setVisibility(View.GONE);
+        clickedWiDCancelEditDetailButton = view.findViewById(R.id.clickedWiDCancelEditDetailButton);
+        clickedWiDCancelEditDetailButton.setOnClickListener(v -> {
+            clickedWiDEditDetailLayout.setVisibility(View.GONE);
 
-            wiDLinearLayout.setVisibility(View.VISIBLE);
+            clickedWiDLayout.setVisibility(View.VISIBLE);
         });
 
-        wiDSaveGalleryButton = view.findViewById(R.id.wiDSaveGalleryButton);
+        clickedWiDSaveGalleryButton = view.findViewById(R.id.clickedWiDSaveGalleryButton);
 
-        wiDDeleteButton = view.findViewById(R.id.wiDDeleteButton);
-        wiDDeleteButton.setOnClickListener(v -> {
+        clickedWiDDeleteButton = view.findViewById(R.id.clickedWiDDeleteButton);
+        clickedWiDDeleteButton.setOnClickListener(v -> {
             // Create and show the confirmation dialog
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
             builder.setMessage("WiD를 삭제하시겠습니까?");
@@ -207,7 +200,7 @@ public class WiDReadDayFragment extends Fragment {
                 // Call the deleteWiDById method with the retrieved ID
                 wiDDatabaseHelper.deleteWiDById(clickedWiDId);
 
-                wiDLinearLayout.setVisibility(View.GONE);
+                clickedWiDLayout.setVisibility(View.GONE);
 
                 updateWiDList();
 
@@ -222,20 +215,21 @@ public class WiDReadDayFragment extends Fragment {
             dialog.show();
         });
 
-        wiDCloseButton = view.findViewById(R.id.wiDCloseButton);
-        wiDCloseButton.setOnClickListener(v -> {
-            wiDLinearLayout.setVisibility(View.GONE);
+        clickedWiDCloseButton = view.findViewById(R.id.clickedWiDCloseButton);
+        clickedWiDCloseButton.setOnClickListener(v -> {
+            clickedWiDLayout.setVisibility(View.GONE);
             clickedWiDId = 0;
             clickedWiD = null;
 
-            headerLinearLayout.setVisibility(View.VISIBLE);
+            dateLayout.setVisibility(View.VISIBLE);
             pieChart.setVisibility(View.VISIBLE);
             circleView.setVisibility(View.VISIBLE);
-            linearLayout.setVisibility(View.VISIBLE);
+            totalDurationLayout.setVisibility(View.VISIBLE);
+            wiDLayout.setVisibility(View.VISIBLE);
 
-            wiDDetailLinearLayout.setVisibility(View.GONE);
+            clickedWiDDetailLayout.setVisibility(View.GONE);
 
-            showDetailLinearLayoutImageView.setBackgroundResource(R.drawable.baseline_keyboard_arrow_down_24);
+            showClickedWiDDetailLayoutImageView.setBackgroundResource(R.drawable.baseline_keyboard_arrow_down_24);
         });
 
         updateWiDList();
@@ -280,8 +274,8 @@ public class WiDReadDayFragment extends Fragment {
         updateWiDList();
     }
     private void updateWiDList() {
-        linearLayout.removeAllViews();
-        totalDurationItemLinearLayout.removeAllViews();
+        wiDHolderLayout.removeAllViews();
+        totalDurationHolderLayout.removeAllViews();
 
         totalDurationForDayMap = new HashMap<>();
 
@@ -305,18 +299,20 @@ public class WiDReadDayFragment extends Fragment {
             pieChart.setData(data);
             pieChart.invalidate();
 
-            totalDurationLinearLayout.setVisibility(View.INVISIBLE);
+            totalDurationLayout.setVisibility(View.INVISIBLE);
 
             // "세부 사항으로 검색해 보세요." 텍스트 뷰 생성 및 설정
-            MaterialTextView noContextTextView = new MaterialTextView(getContext());
-            noContextTextView.setText("표시할 WiD가 없어요.");
-            noContextTextView.setGravity(Gravity.CENTER);
+            MaterialTextView noDataTextView = new MaterialTextView(getContext());
+            noDataTextView.setText("표시할 WiD가 없어요.");
+            noDataTextView.setGravity(Gravity.CENTER);
+            noDataTextView.setTextSize(30);
+            noDataTextView.setPadding(0, 20, 0, 20);
 
             // 리니어 레이아웃에 텍스트 뷰 추가
-            linearLayout.addView(noContextTextView);
+            wiDHolderLayout.addView(noDataTextView);
 
         } else {
-            totalDurationLinearLayout.setVisibility(View.VISIBLE);
+            totalDurationLayout.setVisibility(View.VISIBLE);
 
             entries = new ArrayList<>();
 
@@ -333,9 +329,8 @@ public class WiDReadDayFragment extends Fragment {
                 LinearLayout itemLayout = new LinearLayout(getContext());
                 itemLayout.setOrientation(LinearLayout.HORIZONTAL);
                 itemLayout.setGravity(Gravity.CENTER_VERTICAL);
+                itemLayout.setBackgroundResource(R.drawable.bg_light_gray);
                 itemLayout.setTag(wiD.getId());
-                int color = DataMaps.getColorMap(getContext()).get(wiD.getTitle());
-                itemLayout.setBackgroundColor(color);
 
                 // Create and add the numberTextView
                 MaterialTextView numberTextView = new MaterialTextView(getContext());
@@ -399,31 +394,32 @@ public class WiDReadDayFragment extends Fragment {
                 itemLayout.addView(detailImageView);
 
                 itemLayout.setOnClickListener(v -> {
-                    headerLinearLayout.setVisibility(View.GONE);
+                    dateLayout.setVisibility(View.GONE);
                     pieChart.setVisibility(View.GONE);
                     circleView.setVisibility(View.GONE);
-                    linearLayout.setVisibility(View.GONE);
+                    totalDurationLayout.setVisibility(View.GONE);
+                    wiDLayout.setVisibility(View.GONE);
 
-                    wiDLinearLayout.setVisibility(View.VISIBLE);
+                    clickedWiDLayout.setVisibility(View.VISIBLE);
                     clickedWiDId = (Long) itemLayout.getTag();
                     clickedWiD = wiDDatabaseHelper.getWiDById(clickedWiDId);
 
-                    wiDTitleTextView.setText(DataMaps.getTitleMap(getContext()).get(clickedWiD.getTitle()));
-                    wiDDateTextView.setText(clickedWiD.getDate().format(dateFormatter));
+                    clickedWiDDateTextView.setText(clickedWiD.getDate().format(dateFormatter));
+                    clickedWiDTitleTextView.setText(DataMaps.getTitleMap(getContext()).get(clickedWiD.getTitle()));
 
                     String wiDKoreanDayOfWeek = DataMaps.getDayOfWeekMap().get(clickedWiD.getDate().getDayOfWeek());
-                    wiDDayOfWeekTextView.setText(wiDKoreanDayOfWeek);
+                    clickedWiDDayOfWeekTextView.setText(wiDKoreanDayOfWeek);
 
                     if (clickedWiD.getDate().getDayOfWeek() == DayOfWeek.SATURDAY) {
-                        wiDDayOfWeekTextView.setTextColor(Color.BLUE);
+                        clickedWiDDayOfWeekTextView.setTextColor(Color.BLUE);
                     } else if (clickedWiD.getDate().getDayOfWeek() == DayOfWeek.SUNDAY) {
-                        wiDDayOfWeekTextView.setTextColor(Color.RED);
+                        clickedWiDDayOfWeekTextView.setTextColor(Color.RED);
                     } else {
-                        wiDDayOfWeekTextView.setTextColor(Color.BLACK);
+                        clickedWiDDayOfWeekTextView.setTextColor(Color.BLACK);
                     }
 
-                    wiDStartTimeTextView.setText(clickedWiD.getStart().format(timeFormatter));
-                    wiDFinishTimeTextView.setText(clickedWiD.getFinish().format(timeFormatter));
+                    clickedWiDStartTextView.setText(clickedWiD.getStart().format(timeFormatter));
+                    clickedWiDFinishTextView.setText(clickedWiD.getFinish().format(timeFormatter));
 
                     long clickedWiDHours = clickedWiD.getDuration().toHours();
                     long clickedWiDMinutes = (clickedWiD.getDuration().toMinutes() % 60);
@@ -446,13 +442,13 @@ public class WiDReadDayFragment extends Fragment {
                         clickedWiDDurationText = String.format("%d초", clickedWiDSeconds);
                     }
 
-                    wiDDurationTextView.setText(clickedWiDDurationText);
+                    clickedWiDDurationTextView.setText(clickedWiDDurationText);
 
-                    wiDDetailTextView.setText(clickedWiD.getDetail());
+                    clickedWiDDetailTextView.setText(clickedWiD.getDetail());
 
                 });
 
-                linearLayout.addView(itemLayout);
+                wiDHolderLayout.addView(itemLayout);
 
                 // WiD 객체의 시작 시간과 종료 시간을 분 단위로 계산
                 int finishMinutes = wiD.getFinish().getHour() * 60 + wiD.getFinish().getMinute();
@@ -504,21 +500,19 @@ public class WiDReadDayFragment extends Fragment {
             for (Title key : sortedTitles) {
                 LinearLayout totalDurationItemLayout = new LinearLayout(getContext());
                 totalDurationItemLayout.setOrientation(LinearLayout.HORIZONTAL);
-                totalDurationItemLayout.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT));
-                int color = DataMaps.getColorMap(getContext()).get(key.toString());
-                totalDurationItemLayout.setBackgroundColor(color);
+                totalDurationItemLayout.setBackgroundResource(R.drawable.bg_light_gray);
+                totalDurationItemLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
                 MaterialTextView titleTextView = new MaterialTextView(getContext());
                 titleTextView.setText(DataMaps.getTitleMap(getContext()).get(key.toString()));
-                titleTextView.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT));
+                titleTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+                titleTextView.setGravity(Gravity.CENTER);
                 titleTextView.setTextSize(20);
                 titleTextView.setTypeface(null, Typeface.BOLD);
 
                 MaterialTextView totalDurationTextView = new MaterialTextView(getContext());
+                totalDurationTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+                totalDurationTextView.setGravity(Gravity.CENTER);
                 Duration totalDuration = totalDurationForDayMap.get(key.toString());
 
                 if (totalDuration == Duration.ZERO) {
@@ -535,10 +529,7 @@ public class WiDReadDayFragment extends Fragment {
                 } else {
                     totalDurationText = String.format("%d분", totalDurationMinutes);
                 }
-                totalDurationTextView.setLayoutParams(new LinearLayout.LayoutParams(
-                        0,
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        1.0f));
+                totalDurationTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f));
                 totalDurationTextView.setText(totalDurationText);
                 totalDurationTextView.setTextSize(18);
                 totalDurationTextView.setTypeface(null, Typeface.BOLD);
@@ -547,7 +538,7 @@ public class WiDReadDayFragment extends Fragment {
                 totalDurationItemLayout.addView(titleTextView);
                 totalDurationItemLayout.addView(totalDurationTextView);
 
-                totalDurationItemLinearLayout.addView(totalDurationItemLayout);
+                totalDurationHolderLayout.addView(totalDurationItemLayout);
             }
         }
     }
