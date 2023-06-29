@@ -16,4 +16,17 @@ public class WiDReadYearFragment extends Fragment {
 
         return view;
     }
+    private void updateWiDLayout() {
+//        LocalDate today = LocalDate.now();
+//        int currentYear = currentDate.getYear();
+//        int todayYear = today.getYear();
+//
+//        if (currentYear == todayYear) {
+//            increaseDateButton.setEnabled(false);
+//            increaseDateButton.setAlpha(0.5f);
+//        } else {
+//            increaseDateButton.setEnabled(true);
+//            increaseDateButton.setAlpha(1f);
+//        }
+    }
 }

@@ -73,9 +73,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void disableBottomNavigation() {
-        bottomNavigationView.setVisibility(View.GONE);
+        bottomNavigationView.setAlpha(0.5f);
+        for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
+            bottomNavigationView.getMenu().getItem(i).setEnabled(false);
+        }
     }
     public void enableBottomNavigation() {
-        bottomNavigationView.setVisibility(View.VISIBLE);
+        bottomNavigationView.setAlpha(1);
+        for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
+            bottomNavigationView.getMenu().getItem(i).setEnabled(true);
+        }
     }
 }

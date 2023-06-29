@@ -75,7 +75,7 @@ public class WiDCreateFragment extends Fragment {
 
         titleLeftButton.setOnClickListener(v -> {
             int currentPosition = viewPager2.getCurrentItem();
-            if (currentPosition > 0) {
+            if (0 < currentPosition) {
                 viewPager2.setCurrentItem(currentPosition - 1);
             }
         });
@@ -93,7 +93,7 @@ public class WiDCreateFragment extends Fragment {
             public void onPageSelected(int position) {
                 Title[] titles = Title.values();
 
-                if (position >= 0 && position < titles.length) {
+                if (0 <= position && position < titles.length) {
                     Title selectedTitle = titles[position];
                     clickedTitle = selectedTitle.toString();
 

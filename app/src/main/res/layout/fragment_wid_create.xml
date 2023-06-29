@@ -229,7 +229,7 @@
                     android:gravity="center"
                     android:textSize="30sp"
                     android:textStyle="bold"
-                    android:hint="최소 1분 최대 12시간"
+                    android:hint="최소 1분.."
                     />
 
             </LinearLayout>

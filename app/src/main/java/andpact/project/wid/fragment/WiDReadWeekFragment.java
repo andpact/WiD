@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -74,20 +75,34 @@ public class WiDReadWeekFragment extends Fragment {
         decreaseDateButton.setOnClickListener(v -> decreaseWeek());
         increaseDateButton.setOnClickListener(v -> increaseWeek());
 
-        updateDateTextView();
+        updateWiDLayout();
 
         return view;
     }
     private void decreaseWeek() {
         currentDate = currentDate.minusDays(7);
-        updateDateTextView();
+        updateWiDLayout();
     }
 
     private void increaseWeek() {
         currentDate = currentDate.plusDays(7);
-        updateDateTextView();
+        updateWiDLayout();
     }
-    private void updateDateTextView() {
+    private void updateWiDLayout() {
+
+        LocalDate today = LocalDate.now();
+        WeekFields weekFields = WeekFields.of(Locale.getDefault());
+        int currentWeek = currentDate.get(weekFields.weekOfYear());
+        int todayWeek = today.get(weekFields.weekOfYear());
+
+        if (currentWeek == todayWeek) {
+            increaseDateButton.setEnabled(false);
+            increaseDateButton.setAlpha(0.2f);
+        } else {
+            increaseDateButton.setEnabled(true);
+            increaseDateButton.setAlpha(1f);
+        }
+
         boolean hasData = false;
 
         gridLayout.removeAllViews();

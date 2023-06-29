@@ -71,7 +71,7 @@ public class WiDReadMonthFragment extends Fragment {
         currentDate = LocalDate.now();
 
         // Set the formatted date to the TextView
-        updateDateTextView();
+        updateWiDLayout();
 
         // Set click listeners for the left and right arrows
         decreaseDateButton.setOnClickListener(v -> decreaseMonth());
@@ -82,13 +82,25 @@ public class WiDReadMonthFragment extends Fragment {
 
     private void decreaseMonth() {
         currentDate = currentDate.minusMonths(1);
-        updateDateTextView();
+        updateWiDLayout();
     }
     private void increaseMonth() {
         currentDate = currentDate.plusMonths(1);
-        updateDateTextView();
+        updateWiDLayout();
     }
-    private void updateDateTextView() {
+    private void updateWiDLayout() {
+        LocalDate today = LocalDate.now();
+        int currentMonth = currentDate.getMonthValue();
+        int todayMonth = today.getMonthValue();
+
+        if (currentMonth == todayMonth) {
+            increaseDateButton.setEnabled(false);
+            increaseDateButton.setAlpha(0.2f);
+        } else {
+            increaseDateButton.setEnabled(true);
+            increaseDateButton.setAlpha(1f);
+        }
+
         boolean hasData = false;
 
         gridLayout.removeAllViews();

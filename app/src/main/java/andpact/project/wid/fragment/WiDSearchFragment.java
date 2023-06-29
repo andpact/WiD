@@ -37,7 +37,7 @@ import andpact.project.wid.util.WiDDatabaseHelper;
 public class WiDSearchFragment extends Fragment {
     private SearchView searchView;
     private DateTimeFormatter dateFormatter, timeFormatter, timeFormatter2;
-    private LinearLayout linearLayout, wiDLinearLayout;
+    private LinearLayout wiDLayout, wiDLinearLayout;
     private MaterialTextView wiDDateTextView, wiDTitleTextView, wiDDayOfWeekTextView, wiDStartTimeTextView,
             wiDFinishTimeTextView, wiDDurationTextView, wiDDetailTextView;
     private ImageButton wiDSaveGalleryButton, wiDDeleteButton, wiDCloseButton, editDetailButton, cancelEditDetailButton,
@@ -55,7 +55,7 @@ public class WiDSearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_wid_search, container, false);
 
         searchView = view.findViewById(R.id.searchView);
-        linearLayout = view.findViewById(R.id.linearLayout);
+        wiDLayout = view.findViewById(R.id.wiDLayout);
         wiDDatabaseHelper = new WiDDatabaseHelper(getContext());
 
         dateFormatter = DateTimeFormatter.ofPattern("yyyy.M.d ");
@@ -145,7 +145,7 @@ public class WiDSearchFragment extends Fragment {
                 wiDLinearLayout.setVisibility(View.GONE);
 
                 updateLinearLayout(searchViewText);
-                linearLayout.setVisibility(View.VISIBLE);
+                wiDLayout.setVisibility(View.VISIBLE);
 
                 showSnackbar("WiD가 삭제되었습니다.");
             });
@@ -164,7 +164,7 @@ public class WiDSearchFragment extends Fragment {
             clickedWiDId = 0;
             clickedWiD = null;
 
-            linearLayout.setVisibility(View.VISIBLE);
+            wiDLayout.setVisibility(View.VISIBLE);
 
             wiDDetailLinearLayout.setVisibility(View.GONE);
 
@@ -179,7 +179,7 @@ public class WiDSearchFragment extends Fragment {
         noContextTextView.setGravity(Gravity.CENTER);
 
         // 리니어 레이아웃에 텍스트 뷰 추가
-        linearLayout.addView(noContextTextView);
+        wiDLayout.addView(noContextTextView);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -191,10 +191,10 @@ public class WiDSearchFragment extends Fragment {
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
                     // 검색어가 비어있을 때, 리니어 레이아웃 초기화
-                    linearLayout.removeAllViews();
+                    wiDLayout.removeAllViews();
 
                     // 리니어 레이아웃에 텍스트 뷰 추가
-                    linearLayout.addView(noContextTextView);
+                    wiDLayout.addView(noContextTextView);
                 } else {
                     searchViewText = newText;
                     updateLinearLayout(searchViewText);
@@ -430,7 +430,7 @@ public class WiDSearchFragment extends Fragment {
         List<WiD> wiDList = wiDDatabaseHelper.getWiDListByDetail(newText);
 
         // 기존에 표시되어있던 뷰들을 모두 제거
-        linearLayout.removeAllViews();
+        wiDLayout.removeAllViews();
 
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
@@ -443,7 +443,7 @@ public class WiDSearchFragment extends Fragment {
                 LinearLayout dateLinearLayout = new LinearLayout(getContext());
                 dateLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
                 dateLinearLayout.setPadding(0, 32, 0, 0);
-                linearLayout.addView(dateLinearLayout);
+                wiDLayout.addView(dateLinearLayout);
 
                 // 새로운 날짜인 경우에만 dateTextView를 생성하고 추가
                 date = wiD.getDate();
@@ -547,7 +547,7 @@ public class WiDSearchFragment extends Fragment {
             itemLayout.addView(detailImageView);
 
             itemLayout.setOnClickListener(v -> {
-                linearLayout.setVisibility(View.GONE);
+                wiDLayout.setVisibility(View.GONE);
 
                 wiDLinearLayout.setVisibility(View.VISIBLE);
                 clickedWiDId = (Long) itemLayout.getTag();
@@ -598,7 +598,7 @@ public class WiDSearchFragment extends Fragment {
             });
 
             itemLayout.setOnClickListener(v -> {
-                linearLayout.setVisibility(View.GONE);
+                wiDLayout.setVisibility(View.GONE);
 
                 wiDLinearLayout.setVisibility(View.VISIBLE);
                 clickedWiDId = (Long) itemLayout.getTag();
@@ -647,7 +647,7 @@ public class WiDSearchFragment extends Fragment {
                 wiDDetailTextView.setText(clickedWiD.getDetail());
 
             });
-            linearLayout.addView(itemLayout);
+            wiDLayout.addView(itemLayout);
         }
     }
     private void showSnackbar(String message) {

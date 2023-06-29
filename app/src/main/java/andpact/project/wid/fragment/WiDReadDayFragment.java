@@ -2,6 +2,7 @@ package andpact.project.wid.fragment;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -24,8 +25,10 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.time.DayOfWeek;
@@ -51,17 +54,17 @@ public class WiDReadDayFragment extends Fragment {
     private MaterialTextView dateTextView, dayOfWeekTextView;
     private DateTimeFormatter dateFormatter, timeFormatter, timeFormatter2;
     private LinearLayout dateLayout, totalDurationLayout, totalDurationHolderLayout, wiDLayout, wiDHolderLayout;
+    private ShapeableImageView titleColorCircle;
     private WiDDatabaseHelper wiDDatabaseHelper;
     private LocalDate currentDate;
-    private ImageButton decreaseDateButton, increaseDateButton, clickedWiDSaveGalleryButton, clickedWiDDeleteButton, clickedWiDCloseButton, clickedWiDEditDetailButton, clickedWiDCancelEditDetailButton,
-            clickedWiDShowEditDetailButton;
+    private ImageButton decreaseDateButton, increaseDateButton, clickedWiDSaveGalleryButton, clickedWiDDeleteButton, clickedWiDCloseButton, clickedWiDShowEditDetailButton, clickedWiDEditDetailButton;
     private PieChart pieChart;
     private CircleView circleView;
-
-    private LinearLayout clickedWiDLayout, clickedWiDDetailLayout, showClickedWiDetailLayout, clickedWiDEditDetailLayout;
+    private LinearLayout clickedWiDLayout, clickedWiDDetailLayout, showClickedWiDetailLayout;
     private MaterialTextView clickedWiDDateTextView, clickedWiDDayOfWeekTextView, clickedWiDTitleTextView, clickedWiDStartTextView,
             clickedWiDFinishTextView, clickedWiDDurationTextView, clickedWiDDetailTextView;
     private ImageView showClickedWiDDetailLayoutImageView;
+    private TextInputLayout clickedWiDTextInputLayout;
     private TextInputEditText clickedWiDDetailInputEditText;
     private long clickedWiDId;
     private WiD clickedWiD;
@@ -77,6 +80,8 @@ public class WiDReadDayFragment extends Fragment {
         totalDurationHolderLayout = view.findViewById(R.id.totalDurationHolderLayout);
         wiDLayout = view.findViewById(R.id.wiDLayout);
         wiDHolderLayout = view.findViewById(R.id.wiDHolderLayout);
+
+        titleColorCircle = view.findViewById(R.id.titleColorCircle);
 
         decreaseDateButton = view.findViewById(R.id.decreaseDateButton);
         increaseDateButton = view.findViewById(R.id.increaseDateButton);
@@ -109,19 +114,6 @@ public class WiDReadDayFragment extends Fragment {
         timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         timeFormatter2 = DateTimeFormatter.ofPattern("HH:mm");
 
-        String formattedDate = currentDate.format(dateFormatter);
-        dateTextView.setText(formattedDate);
-        String koreanDayOfWeek = DataMaps.getDayOfWeekMap().get(currentDate.getDayOfWeek());
-        dayOfWeekTextView.setText(koreanDayOfWeek);
-
-        if (currentDate.getDayOfWeek() == DayOfWeek.SATURDAY) {
-            dayOfWeekTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.blue));
-        } else if (currentDate.getDayOfWeek() == DayOfWeek.SUNDAY) {
-            dayOfWeekTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
-        } else {
-            dayOfWeekTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
-        }
-
         decreaseDateButton.setOnClickListener(v -> decreaseDate());
         increaseDateButton.setOnClickListener(v -> increaseDate());
 
@@ -137,8 +129,6 @@ public class WiDReadDayFragment extends Fragment {
         clickedWiDDetailTextView = view.findViewById(R.id.clickedWiDDetailTextView);
 
         showClickedWiDetailLayout = view.findViewById(R.id.showClickedWiDetailLayout);
-
-        clickedWiDEditDetailLayout = view.findViewById(R.id.clickedWiDEditDetailLayout);
 
         showClickedWiDDetailLayoutImageView = view.findViewById(R.id.showClickedWiDDetailLayoutImageView);
         showClickedWiDetailLayout.setOnClickListener(new View.OnClickListener() {
@@ -156,36 +146,34 @@ public class WiDReadDayFragment extends Fragment {
             }
         });
 
+        clickedWiDTextInputLayout = view.findViewById(R.id.clickedWiDTextInputLayout);
         clickedWiDDetailInputEditText = view.findViewById(R.id.clickedWiDDetailInputEditText);
 
         clickedWiDShowEditDetailButton = view.findViewById(R.id.clickedWiDShowEditDetailButton);
         clickedWiDShowEditDetailButton.setOnClickListener(v -> {
+            clickedWiDDetailTextView.setVisibility(View.GONE);
+            clickedWiDTextInputLayout.setVisibility(View.VISIBLE);
+            clickedWiDShowEditDetailButton.setVisibility(View.GONE);
+            clickedWiDEditDetailButton.setVisibility(View.VISIBLE);
             clickedWiDDetailInputEditText.setText(clickedWiDDetailTextView.getText());
-            clickedWiDEditDetailLayout.setVisibility(View.VISIBLE);
-            clickedWiDLayout.setVisibility(View.GONE);
         });
 
         clickedWiDEditDetailButton = view.findViewById(R.id.clickedWiDEditDetailButton);
         clickedWiDEditDetailButton.setOnClickListener(v -> {
+            clickedWiDDetailTextView.setVisibility(View.VISIBLE);
+            clickedWiDTextInputLayout.setVisibility(View.GONE);
+            clickedWiDShowEditDetailButton.setVisibility(View.VISIBLE);
+            clickedWiDEditDetailButton.setVisibility(View.GONE);
+
             String newDetail = clickedWiDDetailInputEditText.getText().toString();
 
             wiDDatabaseHelper.updateWiDDetailById(clickedWiDId, newDetail);
 
             clickedWiDDetailTextView.setText(newDetail);
-            clickedWiDEditDetailLayout.setVisibility(View.GONE);
 
-            clickedWiDLayout.setVisibility(View.VISIBLE);
-
-            updateWiDList();
+            updateWiDLayout();
 
             showSnackbar("세부 사항이 수정되었습니다.");
-        });
-
-        clickedWiDCancelEditDetailButton = view.findViewById(R.id.clickedWiDCancelEditDetailButton);
-        clickedWiDCancelEditDetailButton.setOnClickListener(v -> {
-            clickedWiDEditDetailLayout.setVisibility(View.GONE);
-
-            clickedWiDLayout.setVisibility(View.VISIBLE);
         });
 
         clickedWiDSaveGalleryButton = view.findViewById(R.id.clickedWiDSaveGalleryButton);
@@ -202,7 +190,7 @@ public class WiDReadDayFragment extends Fragment {
 
                 clickedWiDLayout.setVisibility(View.GONE);
 
-                updateWiDList();
+                updateWiDLayout();
 
                 showSnackbar("WiD가 삭제되었습니다.");
             });
@@ -221,59 +209,64 @@ public class WiDReadDayFragment extends Fragment {
             clickedWiDId = 0;
             clickedWiD = null;
 
-            dateLayout.setVisibility(View.VISIBLE);
-            pieChart.setVisibility(View.VISIBLE);
-            circleView.setVisibility(View.VISIBLE);
-            totalDurationLayout.setVisibility(View.VISIBLE);
-            wiDLayout.setVisibility(View.VISIBLE);
+            decreaseDateButton.setEnabled(true);
+            increaseDateButton.setEnabled(true);
+
+            dateLayout.setAlpha(1.0f);
+            totalDurationLayout.setAlpha(1.0f);
+            pieChart.setAlpha(1.0f);
+            circleView.setAlpha(1.0f);
+            wiDLayout.setAlpha(1.0f);
+
+            for (int i = 0; i < wiDHolderLayout.getChildCount(); i++) {
+                View childView = wiDHolderLayout.getChildAt(i);
+                if (childView instanceof LinearLayout) {
+                    LinearLayout tmpItemLayout = (LinearLayout) childView;
+                    tmpItemLayout.setEnabled(true);
+                }
+            }
 
             clickedWiDDetailLayout.setVisibility(View.GONE);
 
             showClickedWiDDetailLayoutImageView.setBackgroundResource(R.drawable.baseline_keyboard_arrow_down_24);
         });
 
-        updateWiDList();
+        updateWiDLayout();
 
         return view;
     }
     private void decreaseDate() {
         currentDate = currentDate.minusDays(1);
-
-        String formattedDate = currentDate.format(dateFormatter);
-        dateTextView.setText(formattedDate);
-
-        String koreanDayOfWeek = DataMaps.getDayOfWeekMap().get(currentDate.getDayOfWeek());
-        dayOfWeekTextView.setText(koreanDayOfWeek);
-
-        if (currentDate.getDayOfWeek() == DayOfWeek.SATURDAY) {
-            dayOfWeekTextView.setTextColor(Color.BLUE);
-        } else if (currentDate.getDayOfWeek() == DayOfWeek.SUNDAY) {
-            dayOfWeekTextView.setTextColor(Color.RED);
-        } else {
-            dayOfWeekTextView.setTextColor(Color.BLACK);
-        }
-        updateWiDList();
+        updateWiDLayout();
     }
     private void increaseDate() {
         currentDate = currentDate.plusDays(1);
+        updateWiDLayout();
+    }
+    private void updateWiDLayout() {
+
+        LocalDate today = LocalDate.now();
+        if (currentDate.equals(today)) {
+            increaseDateButton.setEnabled(false);
+            increaseDateButton.setAlpha(0.2f);
+        } else {
+            increaseDateButton.setEnabled(true);
+            increaseDateButton.setAlpha(1f);
+        }
 
         String formattedDate = currentDate.format(dateFormatter);
         dateTextView.setText(formattedDate);
-
         String koreanDayOfWeek = DataMaps.getDayOfWeekMap().get(currentDate.getDayOfWeek());
         dayOfWeekTextView.setText(koreanDayOfWeek);
 
         if (currentDate.getDayOfWeek() == DayOfWeek.SATURDAY) {
-            dayOfWeekTextView.setTextColor(Color.BLUE);
+            dayOfWeekTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.blue));
         } else if (currentDate.getDayOfWeek() == DayOfWeek.SUNDAY) {
-            dayOfWeekTextView.setTextColor(Color.RED);
+            dayOfWeekTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
         } else {
-            dayOfWeekTextView.setTextColor(Color.BLACK);
+            dayOfWeekTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
         }
 
-        updateWiDList();
-    }
-    private void updateWiDList() {
         wiDHolderLayout.removeAllViews();
         totalDurationHolderLayout.removeAllViews();
 
@@ -394,15 +387,31 @@ public class WiDReadDayFragment extends Fragment {
                 itemLayout.addView(detailImageView);
 
                 itemLayout.setOnClickListener(v -> {
-                    dateLayout.setVisibility(View.GONE);
-                    pieChart.setVisibility(View.GONE);
-                    circleView.setVisibility(View.GONE);
-                    totalDurationLayout.setVisibility(View.GONE);
-                    wiDLayout.setVisibility(View.GONE);
+
+                    decreaseDateButton.setEnabled(false);
+                    increaseDateButton.setEnabled(false);
+
+                    dateLayout.setAlpha(0.2f);
+                    totalDurationLayout.setAlpha(0.2f);
+                    pieChart.setAlpha(0.2f);
+                    circleView.setAlpha(0.2f);
+                    wiDLayout.setAlpha(0.2f);
+
+                    for (int i = 0; i < wiDHolderLayout.getChildCount(); i++) {
+                        View childView = wiDHolderLayout.getChildAt(i);
+                        if (childView instanceof LinearLayout) {
+                            LinearLayout tmpItemLayout = (LinearLayout) childView;
+                            tmpItemLayout.setEnabled(false);
+                        }
+                    }
 
                     clickedWiDLayout.setVisibility(View.VISIBLE);
                     clickedWiDId = (Long) itemLayout.getTag();
                     clickedWiD = wiDDatabaseHelper.getWiDById(clickedWiDId);
+
+                    Map<String, Integer> colorMap = DataMaps.getColorMap(getContext());
+                    GradientDrawable drawable = (GradientDrawable) titleColorCircle.getBackground();
+                    drawable.setColor(colorMap.get(clickedWiD.getTitle()));
 
                     clickedWiDDateTextView.setText(clickedWiD.getDate().format(dateFormatter));
                     clickedWiDTitleTextView.setText(DataMaps.getTitleMap(getContext()).get(clickedWiD.getTitle()));
