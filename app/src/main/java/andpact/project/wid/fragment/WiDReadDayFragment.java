@@ -54,7 +54,7 @@ public class WiDReadDayFragment extends Fragment {
     private MaterialTextView dateTextView, dayOfWeekTextView;
     private DateTimeFormatter dateFormatter, timeFormatter, timeFormatter2;
     private LinearLayout dateLayout, totalDurationLayout, totalDurationHolderLayout, wiDLayout, wiDHolderLayout;
-    private ShapeableImageView titleColorCircle;
+    private ShapeableImageView totalDurationColorRectangle, wiDColorRectangle, titleColorCircle;
     private WiDDatabaseHelper wiDDatabaseHelper;
     private LocalDate currentDate;
     private ImageButton decreaseDateButton, increaseDateButton, clickedWiDSaveGalleryButton, clickedWiDDeleteButton, clickedWiDCloseButton, clickedWiDShowEditDetailButton, clickedWiDEditDetailButton;
@@ -69,6 +69,7 @@ public class WiDReadDayFragment extends Fragment {
     private long clickedWiDId;
     private WiD clickedWiD;
     private Map<String, Duration> totalDurationForDayMap;
+    private Map<String, Integer> colorMap;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -81,7 +82,11 @@ public class WiDReadDayFragment extends Fragment {
         wiDLayout = view.findViewById(R.id.wiDLayout);
         wiDHolderLayout = view.findViewById(R.id.wiDHolderLayout);
 
+        totalDurationColorRectangle = view.findViewById(R.id.totalDurationColorRectangle);
+        wiDColorRectangle = view.findViewById(R.id.wiDColorRectangle);
         titleColorCircle = view.findViewById(R.id.titleColorCircle);
+
+        colorMap = DataMaps.getColorMap(getContext());
 
         decreaseDateButton = view.findViewById(R.id.decreaseDateButton);
         increaseDateButton = view.findViewById(R.id.increaseDateButton);
@@ -93,8 +98,8 @@ public class WiDReadDayFragment extends Fragment {
         pieChart.getDescription().setEnabled(false); // 설명 비활성화
         pieChart.getLegend().setEnabled(false); // 각주(범례) 표시 X
 //        pieChart.setDrawHoleEnabled(false); // 가운데 원 표시 X
-//        pieChart.setHoleColor(Color.TRANSPARENT);// 가운데 원 색
         pieChart.setHoleRadius(70); // 가운데 원의 반지름은 큰 원의 70%
+        pieChart.setHoleColor(Color.TRANSPARENT);
 
         // 가운데 텍스트 설정
         pieChart.setDrawCenterText(true);
@@ -325,11 +330,17 @@ public class WiDReadDayFragment extends Fragment {
                 itemLayout.setBackgroundResource(R.drawable.bg_light_gray);
                 itemLayout.setTag(wiD.getId());
 
+                ShapeableImageView imageView = new ShapeableImageView(getContext());
+                imageView.setBackgroundResource(R.drawable.rectangle);
+                GradientDrawable wiDDrawable = (GradientDrawable) imageView.getBackground();
+                wiDDrawable.setColor(colorMap.get(wiD.getTitle()));
+                itemLayout.addView(imageView);
+
                 // Create and add the numberTextView
                 MaterialTextView numberTextView = new MaterialTextView(getContext());
                 numberTextView.setText(String.valueOf(count++)); // Set the current count as the text
                 numberTextView.setTypeface(null, Typeface.BOLD);
-                numberTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.5f));
+                numberTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.4f));
                 numberTextView.setGravity(Gravity.CENTER);
                 itemLayout.addView(numberTextView);
 
@@ -337,7 +348,7 @@ public class WiDReadDayFragment extends Fragment {
                 MaterialTextView titleTextView = new MaterialTextView(getContext());
                 titleTextView.setText(DataMaps.getTitleMap(getContext()).get(wiD.getTitle()));
                 titleTextView.setTypeface(null, Typeface.BOLD);
-                titleTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.5f));
+                titleTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.4f));
                 titleTextView.setGravity(Gravity.CENTER);
                 itemLayout.addView(titleTextView);
 
@@ -345,7 +356,7 @@ public class WiDReadDayFragment extends Fragment {
                 MaterialTextView startTimeTextView = new MaterialTextView(getContext());
                 startTimeTextView.setText(wiD.getStart().format(timeFormatter2));
                 startTimeTextView.setTypeface(null, Typeface.BOLD);
-                startTimeTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.7f));
+                startTimeTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.6f));
                 startTimeTextView.setGravity(Gravity.CENTER);
                 itemLayout.addView(startTimeTextView);
 
@@ -353,7 +364,7 @@ public class WiDReadDayFragment extends Fragment {
                 MaterialTextView finishTimeTextView = new MaterialTextView(getContext());
                 finishTimeTextView.setText(wiD.getFinish().format(timeFormatter2));
                 finishTimeTextView.setTypeface(null, Typeface.BOLD);
-                finishTimeTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.7f));
+                finishTimeTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.6f));
                 finishTimeTextView.setGravity(Gravity.CENTER);
                 itemLayout.addView(finishTimeTextView);
 
@@ -361,17 +372,24 @@ public class WiDReadDayFragment extends Fragment {
                 MaterialTextView durationTextView = new MaterialTextView(getContext());
                 long hours = wiD.getDuration().toHours();
                 long minutes = (wiD.getDuration().toMinutes() % 60);
-                String durationText;
+                String formattedDuration;
 
                 if (hours > 0 && minutes == 0) {
-                    durationText = String.format("%d시간", hours);
+                    formattedDuration = String.format("%d시간", hours);
                 } else if (hours > 0) {
-                    durationText = String.format("%d시간 %d분", hours, minutes);
+                    formattedDuration = String.format("%d시간 %d분", hours, minutes);
                 } else {
-                    durationText = String.format("%d분", minutes);
+                    formattedDuration = String.format("%d분", minutes);
                 }
 
-                durationTextView.setText(durationText);
+                Duration elapsedDuration = wiD.getDuration();
+                long totalSeconds = elapsedDuration.getSeconds(); // 총 경과한 초 수
+
+                double percentage = ((double) totalSeconds / (24 * 60 * 60)) * 100; // 일(day) 비율을 퍼센트로 계산
+                double roundedPercentage = Math.round(percentage * 10.0) / 10.0;
+
+                durationTextView.setText(formattedDuration);
+                durationTextView.append(" (" + roundedPercentage + ")");
                 durationTextView.setTypeface(null, Typeface.BOLD);
                 durationTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.8f));
                 durationTextView.setGravity(Gravity.CENTER);
@@ -409,9 +427,8 @@ public class WiDReadDayFragment extends Fragment {
                     clickedWiDId = (Long) itemLayout.getTag();
                     clickedWiD = wiDDatabaseHelper.getWiDById(clickedWiDId);
 
-                    Map<String, Integer> colorMap = DataMaps.getColorMap(getContext());
-                    GradientDrawable drawable = (GradientDrawable) titleColorCircle.getBackground();
-                    drawable.setColor(colorMap.get(clickedWiD.getTitle()));
+                    GradientDrawable clickedWiDDrawable = (GradientDrawable) titleColorCircle.getBackground();
+                    clickedWiDDrawable.setColor(colorMap.get(clickedWiD.getTitle()));
 
                     clickedWiDDateTextView.setText(clickedWiD.getDate().format(dateFormatter));
                     clickedWiDTitleTextView.setText(DataMaps.getTitleMap(getContext()).get(clickedWiD.getTitle()));
@@ -451,7 +468,14 @@ public class WiDReadDayFragment extends Fragment {
                         clickedWiDDurationText = String.format("%d초", clickedWiDSeconds);
                     }
 
+                    Duration clickedWiDElapsedDuration = clickedWiD.getDuration();
+                    long clickedWiDTotalSeconds = clickedWiDElapsedDuration.getSeconds(); // 총 경과한 초 수
+
+                    double clickedWiDPercentage = ((double) clickedWiDTotalSeconds / (24 * 60 * 60)) * 100; // 일(day) 비율을 퍼센트로 계산
+                    double clickedWiDRoundedPercentage = Math.round(clickedWiDPercentage * 10.0) / 10.0;
+
                     clickedWiDDurationTextView.setText(clickedWiDDurationText);
+                    clickedWiDDurationTextView.append(" (" + clickedWiDRoundedPercentage + ")");
 
                     clickedWiDDetailTextView.setText(clickedWiD.getDetail());
 
@@ -512,16 +536,21 @@ public class WiDReadDayFragment extends Fragment {
                 totalDurationItemLayout.setBackgroundResource(R.drawable.bg_light_gray);
                 totalDurationItemLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
+                ShapeableImageView imageView = new ShapeableImageView(getContext());
+                imageView.setBackgroundResource(R.drawable.rectangle);
+                GradientDrawable wiDDrawable = (GradientDrawable) imageView.getBackground();
+                wiDDrawable.setColor(colorMap.get(key.toString()));
+                totalDurationItemLayout.addView(imageView);
+
                 MaterialTextView titleTextView = new MaterialTextView(getContext());
                 titleTextView.setText(DataMaps.getTitleMap(getContext()).get(key.toString()));
                 titleTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
                 titleTextView.setGravity(Gravity.CENTER);
-                titleTextView.setTextSize(20);
+//                titleTextView.setTextSize(20);
                 titleTextView.setTypeface(null, Typeface.BOLD);
+                totalDurationItemLayout.addView(titleTextView);
 
                 MaterialTextView totalDurationTextView = new MaterialTextView(getContext());
-                totalDurationTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
-                totalDurationTextView.setGravity(Gravity.CENTER);
                 Duration totalDuration = totalDurationForDayMap.get(key.toString());
 
                 if (totalDuration == Duration.ZERO) {
@@ -531,6 +560,7 @@ public class WiDReadDayFragment extends Fragment {
                 long totalDurationHours = totalDuration.toHours();
                 long totalDurationMinutes = (totalDuration.toMinutes() % 60);
                 String totalDurationText;
+
                 if (totalDurationHours > 0 && totalDurationMinutes == 0) {
                     totalDurationText = String.format("%d시간", totalDurationHours);
                 } else if (totalDurationHours > 0) {
@@ -538,13 +568,20 @@ public class WiDReadDayFragment extends Fragment {
                 } else {
                     totalDurationText = String.format("%d분", totalDurationMinutes);
                 }
+
+                Duration elapsedDuration = totalDuration;
+                long totalSeconds = elapsedDuration.getSeconds(); // 총 경과한 초 수
+
+                double percentage = ((double) totalSeconds / (24 * 60 * 60)) * 100; // 일(day) 비율을 퍼센트로 계산
+                double roundedPercentage = Math.round(percentage * 10.0) / 10.0;
+
                 totalDurationTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f));
                 totalDurationTextView.setText(totalDurationText);
-                totalDurationTextView.setTextSize(18);
+                totalDurationTextView.append(" (" + roundedPercentage + ")");
+//                totalDurationTextView.setTextSize(18);
                 totalDurationTextView.setTypeface(null, Typeface.BOLD);
                 totalDurationTextView.setGravity(Gravity.CENTER);
 
-                totalDurationItemLayout.addView(titleTextView);
                 totalDurationItemLayout.addView(totalDurationTextView);
 
                 totalDurationHolderLayout.addView(totalDurationItemLayout);

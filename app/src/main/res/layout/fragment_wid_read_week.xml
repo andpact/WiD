@@ -166,12 +166,17 @@
             android:orientation="horizontal"
             >
 
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/wiDColorRectangle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/rectangle"/>
+
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0.5"
                 android:gravity="center"
-                android:textSize="25sp"
                 android:text="@string/title"
                 />
 
@@ -180,8 +185,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textSize="25sp"
-                android:text="최고"
+                android:text="최고 (%)"
                 />
 
             <com.google.android.material.textview.MaterialTextView
@@ -189,8 +193,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textSize="25sp"
-                android:text="총합"
+                android:text="총합 (%)"
                 />
 
         </LinearLayout>

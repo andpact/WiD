@@ -22,9 +22,15 @@ import com.google.android.material.textview.MaterialTextView;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
+import java.util.Calendar;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import andpact.project.wid.R;
 import andpact.project.wid.activity.MainActivity;
@@ -36,7 +42,7 @@ import andpact.project.wid.util.TitleViewPagerAdapter;
 import andpact.project.wid.util.WiDDatabaseHelper;
 
 public class WiDCreateFragment extends Fragment {
-    private MaterialTextView dateTextView, dayOfWeekTextView, startTimeTextView, finishTimeTextView, durationTextView;
+    private MaterialTextView timeLeftTextView, dateTextView, dayOfWeekTextView, startTimeTextView, finishTimeTextView, durationTextView;
     private ShapeableImageView titleColorCircle;
     private DateTimeFormatter dateFormatter, timeFormatter;
     private ImageButton titleLeftButton, titleRightButton;
@@ -46,7 +52,9 @@ public class WiDCreateFragment extends Fragment {
     private WiD wiD;
     private LocalDate currentDate;
     private LocalTime currentTime;
-    private Handler startHandler, finishHandler;
+    private Timer leftTimer;
+    private int timeLeftCurrentIndex;
+    private Handler timeLeftHandler, startHandler, finishHandler;
     private Runnable startTimeRunnable, finishTimeRunnable;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,6 +64,20 @@ public class WiDCreateFragment extends Fragment {
         timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
         titleColorCircle = view.findViewById(R.id.titleColorCircle);
+
+        timeLeftTextView = view.findViewById(R.id.timeLeftTextView);
+
+        timeLeftHandler = new Handler();
+        leftTimer = new Timer();
+        timeLeftCurrentIndex = 0;
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                timeLeftHandler.post(() -> updateTImeLeft());
+            }
+        };
+
+        leftTimer.schedule(timerTask, 0, 3000);
 
         dateTextView = view.findViewById(R.id.dateTextView);
         dayOfWeekTextView = view.findViewById(R.id.dayOfWeekTextView);
@@ -149,6 +171,74 @@ public class WiDCreateFragment extends Fragment {
 
         return view;
     }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        leftTimer.cancel();
+    }
+    private void updateTImeLeft() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime endOfDay = now.with(LocalTime.MAX);
+        LocalDateTime endOfWeek = now.with(TemporalAdjusters.next(DayOfWeek.SUNDAY)).with(LocalTime.MAX);
+        LocalDateTime endOfMonth = now.with(TemporalAdjusters.lastDayOfMonth()).with(LocalTime.MAX);
+
+        Duration duration;
+        long months;
+        long days;
+        long hours;
+        long minutes;
+
+        switch (timeLeftCurrentIndex) {
+            case 0: // Today
+                duration = Duration.between(now, endOfDay);
+                hours = duration.toHours();
+                minutes = duration.toMinutes() % 60;
+                if (hours == 0) {
+                    timeLeftTextView.setText(String.format("오늘이 %d분 남았습니다.", minutes));
+                } else if (minutes == 0) {
+                    timeLeftTextView.setText(String.format("오늘이 %d시간 남았습니다.", hours));
+                } else {
+                    timeLeftTextView.setText(String.format("오늘이 %d시간 %d분 남았습니다.", hours, minutes));
+                }
+                break;
+            case 1: // This week
+                duration = Duration.between(now, endOfWeek);
+                days = duration.toDays();
+                hours = duration.toHours() % 24;
+                if (days == 0) {
+                    timeLeftTextView.setText(String.format("이번 주가 %d시간 남았습니다.", hours));
+                } else if (hours == 0) {
+                    timeLeftTextView.setText(String.format("이번 주가 %d일 남았습니다.", days));
+                } else {
+                    timeLeftTextView.setText(String.format("이번 주가 %d일 %d시간 남았습니다.", days, hours));
+                }
+                break;
+            case 2: // This month
+                duration = Duration.between(now, endOfMonth);
+                days = duration.toDays();
+                hours = duration.toHours() % 24;
+                if (days == 0) {
+                    timeLeftTextView.setText(String.format("이번 달이 %d시간 남았습니다.", hours));
+                } else if (hours == 0) {
+                    timeLeftTextView.setText(String.format("이번 달이 %d일 남았습니다.", days));
+                } else {
+                    timeLeftTextView.setText(String.format("이번 달이 %d일 %d시간 남았습니다.", days, hours));
+                }
+                break;
+            case 3: // This year
+                months = 12 - now.getMonthValue();
+                days = Duration.between(now, endOfMonth).toDays();
+                if (months == 0) {
+                    timeLeftTextView.setText(String.format("이번 년도가 %d일 남았습니다.", days));
+                } else if (days == 0) {
+                    timeLeftTextView.setText(String.format("이번 년도가 %d개월 남았습니다.", months));
+                } else {
+                    timeLeftTextView.setText(String.format("이번 년도가 %d개월 %d일 남았습니다.", months, days));
+                }
+                break;
+        }
+        timeLeftCurrentIndex = (timeLeftCurrentIndex + 1) % 4;
+    }
     private void startWiD() {
         wiD = new WiD();
         wiD.setTitle(clickedTitle);
@@ -203,6 +293,9 @@ public class WiDCreateFragment extends Fragment {
                 long minutes = (elapsedSeconds % 3600) / 60;
                 long seconds = elapsedSeconds % 60;
 
+                double percentage = ((double) elapsedSeconds / (24 * 60 * 60)) * 100;
+                double roundedPercentage = Math.round(percentage * 10.0) / 10.0;
+
                 String formattedDuration;
 
                 // Add hours if elapsed time has hours
@@ -220,6 +313,12 @@ public class WiDCreateFragment extends Fragment {
                     formattedDuration = String.format("%d분 %d초", minutes, seconds);
                 } else { // Display seconds only
                     formattedDuration = String.format("%d초", seconds);
+                }
+
+                if (0.1 <= roundedPercentage) {
+                    formattedDuration = String.format("%s (%.1f%%)", formattedDuration, roundedPercentage);
+                } else {
+                    formattedDuration = String.format("%s (0%%)", formattedDuration);
                 }
 
                 // Update the duration TextView
@@ -332,7 +431,7 @@ public class WiDCreateFragment extends Fragment {
         startHandler.postDelayed(startTimeRunnable, 0);
         startTimeTextView.setTextColor(Color.BLACK);
         durationTextView.setText("");
-        durationTextView.setHint("1분 ~ 12시간..");
+        durationTextView.setHint("최소 1분..");
 
         titleRightButton.setVisibility(View.VISIBLE);
         titleRightButton.setEnabled(true);

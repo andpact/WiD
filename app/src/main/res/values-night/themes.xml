@@ -6,7 +6,7 @@
         <item name="colorPrimaryVariant">@color/purple</item>
         <item name="colorOnPrimary">@color/black</item>
 
-        <item name="android:fontFamily">@font/gamja_flower_regular</item>
-        <item name="fontFamily">@font/gamja_flower_regular</item>
+<!--        <item name="android:fontFamily">@font/gamja_flower_regular</item>-->
+<!--        <item name="fontFamily">@font/gamja_flower_regular</item>-->
     </style>
 </resources>

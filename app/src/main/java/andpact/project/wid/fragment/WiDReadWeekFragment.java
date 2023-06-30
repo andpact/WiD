@@ -2,6 +2,7 @@ package andpact.project.wid.fragment;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.time.DayOfWeek;
@@ -53,6 +55,7 @@ public class WiDReadWeekFragment extends Fragment {
     private Map<String, Integer> bestDayMap;
     private Map<String, Duration> bestDurationMap;
     private Map<String, Duration> totalDurationForDayMap;
+    private Map<String, Integer> colorMap;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wid_read_week, container, false);
@@ -61,6 +64,8 @@ public class WiDReadWeekFragment extends Fragment {
         weekOfYearTextView = view.findViewById(R.id.weekOfYearTextView);
         decreaseDateButton = view.findViewById(R.id.decreaseDateButton);
         increaseDateButton = view.findViewById(R.id.increaseDateButton);
+
+        colorMap = DataMaps.getColorMap(getContext());
 
         currentDate = LocalDate.now();
 
@@ -89,7 +94,6 @@ public class WiDReadWeekFragment extends Fragment {
         updateWiDLayout();
     }
     private void updateWiDLayout() {
-
         LocalDate today = LocalDate.now();
         WeekFields weekFields = WeekFields.of(Locale.getDefault());
         int currentWeek = currentDate.get(weekFields.weekOfYear());
@@ -123,6 +127,36 @@ public class WiDReadWeekFragment extends Fragment {
             firstDayOfWeek = firstDayOfWeek.minusDays(1);
         }
 
+        for (int i = 0; i < 14; i++) {
+            ArrayList<PieEntry> entries = new ArrayList<>(); // 빈 엔트리 셋 생성
+            entries.add(new PieEntry(1, ""));
+            PieDataSet dataSet = new PieDataSet(entries, "");
+            dataSet.setColor(ContextCompat.getColor(getContext(), R.color.light_gray));
+            PieData data = new PieData(dataSet);
+            data.setDrawValues(false); // 엔트리 값 표시 X
+            PieChart pieChart = new PieChart(getContext());
+            pieChart.setUsePercentValues(false); // 상대 값(퍼센트)이 아닌 절대 값 사용
+            pieChart.setDrawEntryLabels(false); // 엔트리 라벨 표시 X
+            pieChart.getDescription().setEnabled(false); // 설명 비활성화
+            pieChart.getLegend().setEnabled(false); // 각주(범례) 표시 X
+            pieChart.setHoleRadius(70); // 가운데 원의 반지름은 큰 원의 70%
+            pieChart.setHoleColor(Color.TRANSPARENT);
+            GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
+            layoutParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+
+            if (i < 7) {
+                pieChart.setAlpha(0.3f);
+            } else {
+                pieChart.setAlpha(0.6f);
+            }
+
+            pieChart.setLayoutParams(layoutParams);
+            pieChart.setData(data);
+            pieChart.invalidate();
+
+            gridLayout.addView(pieChart);
+        }
+
         for (int i = 0; i < 7; i++) { // 일주일 파이 차트 그리기
             ArrayList<PieEntry> entries;
             PieDataSet dataSet;
@@ -134,6 +168,7 @@ public class WiDReadWeekFragment extends Fragment {
             pieChart.getDescription().setEnabled(false); // 설명 비활성화
             pieChart.getLegend().setEnabled(false); // 각주(범례) 표시 X
             pieChart.setHoleRadius(70); // 가운데 원의 반지름은 큰 원의 70%
+            pieChart.setHoleColor(Color.TRANSPARENT);
 
             GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
             layoutParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
@@ -237,6 +272,37 @@ public class WiDReadWeekFragment extends Fragment {
             gridLayout.addView(pieChart);
             firstDayOfWeek = firstDayOfWeek.plusDays(1);
         }
+
+        for (int i = 0; i < 14; i++) {
+            ArrayList<PieEntry> entries = new ArrayList<>(); // 빈 엔트리 셋 생성
+            entries.add(new PieEntry(1, ""));
+            PieDataSet dataSet = new PieDataSet(entries, "");
+            dataSet.setColor(ContextCompat.getColor(getContext(), R.color.light_gray));
+            PieData data = new PieData(dataSet);
+            data.setDrawValues(false); // 엔트리 값 표시 X
+            PieChart pieChart = new PieChart(getContext());
+            pieChart.setUsePercentValues(false); // 상대 값(퍼센트)이 아닌 절대 값 사용
+            pieChart.setDrawEntryLabels(false); // 엔트리 라벨 표시 X
+            pieChart.getDescription().setEnabled(false); // 설명 비활성화
+            pieChart.getLegend().setEnabled(false); // 각주(범례) 표시 X
+            pieChart.setHoleRadius(70); // 가운데 원의 반지름은 큰 원의 70%
+            pieChart.setHoleColor(Color.TRANSPARENT);
+            GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
+            layoutParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+
+            if (i < 7) {
+                pieChart.setAlpha(0.6f);
+            } else {
+                pieChart.setAlpha(0.3f);
+            }
+
+            pieChart.setLayoutParams(layoutParams);
+            pieChart.setData(data);
+            pieChart.invalidate();
+
+            gridLayout.addView(pieChart);
+        }
+
         String formattedDate = currentDate.format(formatter);
         dateTextView.setText(formattedDate);
 
@@ -259,8 +325,14 @@ public class WiDReadWeekFragment extends Fragment {
                 itemLinearLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 itemLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
+                ShapeableImageView imageView = new ShapeableImageView(getContext());
+                imageView.setBackgroundResource(R.drawable.rectangle);
+                GradientDrawable wiDDrawable = (GradientDrawable) imageView.getBackground();
+                wiDDrawable.setColor(colorMap.get(key.toString()));
+                itemLinearLayout.addView(imageView);
+
                 MaterialTextView titleTextView = new MaterialTextView(getContext());
-                titleTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f));
+                titleTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.5f));
                 titleTextView.setText(DataMaps.getTitleMap(getContext()).get(key.toString()));
                 titleTextView.setTypeface(null, Typeface.BOLD);
                 titleTextView.setGravity(Gravity.CENTER);
@@ -274,16 +346,29 @@ public class WiDReadWeekFragment extends Fragment {
                 Duration bestDuration = bestDurationMap.get(key.toString());
                 long bestDurationHours = bestDuration.toHours();
                 long bestDurationMinutes = (bestDuration.toMinutes() % 60);
-                String bestDurationText;
-                if (bestDurationHours > 0 && bestDurationMinutes == 0) {
-                    bestDurationText = String.format("%d시간", bestDurationHours);
-                } else if (bestDurationHours > 0) {
-                    bestDurationText = String.format("%d시간 %d분", bestDurationHours, bestDurationMinutes);
+
+                String formattedBestDuration;
+
+                if (0 < bestDurationHours && 0 == bestDurationMinutes) {
+                    formattedBestDuration = String.format("%d시간", bestDurationHours);
+                } else if (0 < bestDurationHours) {
+                    formattedBestDuration = String.format("%d시간 %d분", bestDurationHours, bestDurationMinutes);
                 } else {
-                    bestDurationText = String.format("%d분", bestDurationMinutes);
+                    formattedBestDuration = String.format("%d분", bestDurationMinutes);
                 }
 
-                bestDayAndDurationTextView.setText(bestDay + "일(" + bestDurationText + ")");
+                long bestDurationSeconds = bestDuration.getSeconds(); // 총 경과한 초 수
+                double bestDurationPercentage = ((double) bestDurationSeconds / (24 * 60 * 60 * 7)) * 100; // 주(week) 비율을 퍼센트로 계산
+                double bestDurationRoundedPercentage = Math.round(bestDurationPercentage * 10.0) / 10.0;
+
+                String bestDurationRoundedPercentageText;
+                if (bestDurationRoundedPercentage == 0.0) {
+                    bestDurationRoundedPercentageText = "0";
+                } else {
+                    bestDurationRoundedPercentageText = String.valueOf(bestDurationRoundedPercentage);
+                }
+
+                bestDayAndDurationTextView.setText(bestDay + "일 / " + formattedBestDuration + " (" + bestDurationRoundedPercentageText + ")");
 
                 MaterialTextView totalDurationTextView = new MaterialTextView(getContext());
                 Duration totalDuration = totalDurationMap.get(key.toString());
@@ -295,16 +380,31 @@ public class WiDReadWeekFragment extends Fragment {
 
                 long totalDurationHours = totalDuration.toHours();
                 long totalDurationMinutes = (totalDuration.toMinutes() % 60);
-                String totalDurationText;
-                if (totalDurationHours > 0 && totalDurationMinutes == 0) {
-                    totalDurationText = String.format("%d시간", totalDurationHours);
-                } else if (totalDurationHours > 0) {
-                    totalDurationText = String.format("%d시간 %d분", totalDurationHours, totalDurationMinutes);
+
+                String formattedTotalDuration;
+
+                if (0 < totalDurationHours && 0 == totalDurationMinutes) {
+                    formattedTotalDuration = String.format("%d시간", totalDurationHours);
+                } else if (0 < totalDurationHours) {
+                    formattedTotalDuration = String.format("%d시간 %d분", totalDurationHours, totalDurationMinutes);
                 } else {
-                    totalDurationText = String.format("%d분", totalDurationMinutes);
+                    formattedTotalDuration = String.format("%d분", totalDurationMinutes);
                 }
+
+                long totalDurationSeconds = totalDuration.getSeconds(); // 총 경과한 초 수
+                double totalDurationPercentage = ((double) totalDurationSeconds / (24 * 60 * 60 * 7)) * 100; // 주(week) 비율을 퍼센트로 계산
+                double totalDurationRoundedPercentage = Math.round(totalDurationPercentage * 10.0) / 10.0;
+
+                String totalDurationRoundedPercentageText;
+                if (totalDurationRoundedPercentage == 0.0) {
+                    totalDurationRoundedPercentageText = "0";
+                } else {
+                    totalDurationRoundedPercentageText = String.valueOf(totalDurationRoundedPercentage);
+                }
+
                 totalDurationTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f));
-                totalDurationTextView.setText(totalDurationText);
+                totalDurationTextView.setText(formattedTotalDuration);
+                totalDurationTextView.append(" (" + totalDurationRoundedPercentageText + ")");
                 totalDurationTextView.setTypeface(null, Typeface.BOLD);
                 totalDurationTextView.setGravity(Gravity.CENTER);
 
