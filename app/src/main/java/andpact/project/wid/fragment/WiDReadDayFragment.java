@@ -51,10 +51,10 @@ import andpact.project.wid.util.Title;
 import andpact.project.wid.util.WiDDatabaseHelper;
 
 public class WiDReadDayFragment extends Fragment {
-    private MaterialTextView dateTextView, dayOfWeekTextView;
+    private MaterialTextView dateTextView, dayOfWeekTextView, setDateTodayButton;
     private DateTimeFormatter dateFormatter, timeFormatter, timeFormatter2;
     private LinearLayout dateLayout, totalDurationLayout, totalDurationHolderLayout, wiDLayout, wiDHolderLayout;
-    private ShapeableImageView totalDurationColorRectangle, wiDColorRectangle, titleColorCircle;
+    private ShapeableImageView titleColorCircle;
     private WiDDatabaseHelper wiDDatabaseHelper;
     private LocalDate currentDate;
     private ImageButton decreaseDateButton, increaseDateButton, clickedWiDSaveGalleryButton, clickedWiDDeleteButton, clickedWiDCloseButton, clickedWiDShowEditDetailButton, clickedWiDEditDetailButton;
@@ -74,16 +74,20 @@ public class WiDReadDayFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wid_read_day, container, false);
+
         dateTextView = view.findViewById(R.id.dateTextView);
         dayOfWeekTextView = view.findViewById(R.id.dayOfWeekTextView);
+        setDateTodayButton = view.findViewById(R.id.setDateTodayButton);
+        setDateTodayButton.setOnClickListener(v -> {
+            currentDate = LocalDate.now();
+            updateWiDLayout();
+        });
         dateLayout = view.findViewById(R.id.dateLayout);
         totalDurationLayout = view.findViewById(R.id.totalDurationLayout);
         totalDurationHolderLayout = view.findViewById(R.id.totalDurationHolderLayout);
         wiDLayout = view.findViewById(R.id.wiDLayout);
         wiDHolderLayout = view.findViewById(R.id.wiDHolderLayout);
 
-        totalDurationColorRectangle = view.findViewById(R.id.totalDurationColorRectangle);
-        wiDColorRectangle = view.findViewById(R.id.wiDColorRectangle);
         titleColorCircle = view.findViewById(R.id.titleColorCircle);
 
         colorMap = DataMaps.getColorMap(getContext());

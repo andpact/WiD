@@ -44,7 +44,7 @@ import andpact.project.wid.util.Title;
 import andpact.project.wid.util.WiDDatabaseHelper;
 
 public class WiDReadWeekFragment extends Fragment {
-    private TextView dateTextView, weekOfYearTextView;
+    private TextView dateTextView, weekOfYearTextView, setDateTodayButton;
     private ImageButton decreaseDateButton, increaseDateButton;
     private LocalDate currentDate;
     private GridLayout gridLayout;
@@ -62,6 +62,12 @@ public class WiDReadWeekFragment extends Fragment {
 
         dateTextView = view.findViewById(R.id.dateTextView);
         weekOfYearTextView = view.findViewById(R.id.weekOfYearTextView);
+        setDateTodayButton = view.findViewById(R.id.setDateTodayButton);
+        setDateTodayButton.setOnClickListener(v -> {
+            currentDate = LocalDate.now();
+            updateWiDLayout();
+        });
+
         decreaseDateButton = view.findViewById(R.id.decreaseDateButton);
         increaseDateButton = view.findViewById(R.id.increaseDateButton);
 

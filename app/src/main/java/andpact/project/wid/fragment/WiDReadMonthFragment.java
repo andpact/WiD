@@ -42,7 +42,7 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
 public class WiDReadMonthFragment extends Fragment {
-    private TextView dateTextView;
+    private TextView dateTextView, setDateTodayButton;
     private ImageButton decreaseDateButton, increaseDateButton;
     private LocalDate currentDate, firstOfMonth;
     private DateTimeFormatter formatter;
@@ -60,6 +60,12 @@ public class WiDReadMonthFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_wid_read_month, container, false);
 
         dateTextView = view.findViewById(R.id.dateTextView);
+        setDateTodayButton = view.findViewById(R.id.setDateTodayButton);
+        setDateTodayButton.setOnClickListener(v -> {
+            currentDate = LocalDate.now();
+            updateWiDLayout();
+        });
+
         decreaseDateButton = view.findViewById(R.id.decreaseDateButton);
         increaseDateButton = view.findViewById(R.id.increaseDateButton);
 
