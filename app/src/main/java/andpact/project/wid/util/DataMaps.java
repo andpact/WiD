@@ -33,9 +33,11 @@ public class DataMaps {
             colorMap.put(Title.WORK.toString(), context.getColor(R.color.work_color));
             colorMap.put(Title.READING.toString(), context.getColor(R.color.reading_color));
             colorMap.put(Title.EXERCISE.toString(), context.getColor(R.color.exercise_color));
-            colorMap.put(Title.SLEEP.toString(), context.getColor(R.color.sleep_color));
-            colorMap.put(Title.TRAVEL.toString(), context.getColor(R.color.travel_color));
             colorMap.put(Title.HOBBY.toString(), context.getColor(R.color.hobby_color));
+            colorMap.put(Title.MEAL.toString(), context.getColor(R.color.meal_color));
+            colorMap.put(Title.SHOWER.toString(), context.getColor(R.color.shower_color));
+            colorMap.put(Title.TRAVEL.toString(), context.getColor(R.color.travel_color));
+            colorMap.put(Title.SLEEP.toString(), context.getColor(R.color.sleep_color));
             colorMap.put(Title.OTHER.toString(), context.getColor(R.color.other_color));
         }
         return colorMap;
@@ -47,11 +49,14 @@ public class DataMaps {
             titleMap.put(Title.WORK.toString(), context.getString(R.string.title_2));
             titleMap.put(Title.READING.toString(), context.getString(R.string.title_3));
             titleMap.put(Title.EXERCISE.toString(), context.getString(R.string.title_4));
-            titleMap.put(Title.SLEEP.toString(), context.getString(R.string.title_5));
-            titleMap.put(Title.TRAVEL.toString(), context.getString(R.string.title_6));
-            titleMap.put(Title.HOBBY.toString(), context.getString(R.string.title_7));
-            titleMap.put(Title.OTHER.toString(), context.getString(R.string.title_8));
+            titleMap.put(Title.HOBBY.toString(), context.getString(R.string.title_5));
+            titleMap.put(Title.MEAL.toString(), context.getString(R.string.title_6));
+            titleMap.put(Title.SHOWER.toString(), context.getString(R.string.title_7));
+            titleMap.put(Title.TRAVEL.toString(), context.getString(R.string.title_8));
+            titleMap.put(Title.SLEEP.toString(), context.getString(R.string.title_9));
+            titleMap.put(Title.OTHER.toString(), context.getString(R.string.title_10));
         }
         return titleMap;
     }
+
 }

@@ -6,8 +6,10 @@ public enum Title {
     WORK,
     READING,
     EXERCISE,
-    SLEEP,
-    TRAVEL, // 여행 또는 이동
     HOBBY,
+    MEAL,
+    SHOWER,
+    TRAVEL, // 여행 또는 이동,
+    SLEEP,
     OTHER
 }

@@ -175,14 +175,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
                 android:gravity="center"
-                android:text="@string/start" />
+                android:text="@string/start_time" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
                 android:gravity="center"
-                android:text="@string/finish" />
+                android:text="@string/finish_time" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="0dp"

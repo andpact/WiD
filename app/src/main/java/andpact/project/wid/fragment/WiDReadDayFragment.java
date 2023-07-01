@@ -82,6 +82,7 @@ public class WiDReadDayFragment extends Fragment {
             currentDate = LocalDate.now();
             updateWiDLayout();
         });
+
         dateLayout = view.findViewById(R.id.dateLayout);
         totalDurationLayout = view.findViewById(R.id.totalDurationLayout);
         totalDurationHolderLayout = view.findViewById(R.id.totalDurationHolderLayout);
@@ -390,10 +391,17 @@ public class WiDReadDayFragment extends Fragment {
                 long totalSeconds = elapsedDuration.getSeconds(); // 총 경과한 초 수
 
                 double percentage = ((double) totalSeconds / (24 * 60 * 60)) * 100; // 일(day) 비율을 퍼센트로 계산
-                double roundedPercentage = Math.round(percentage * 10.0) / 10.0;
+                double roundedPercentage = Math.floor(percentage * 10.0) / 10.0;
+
+                String roundedPercentageText;
+                if (roundedPercentage == 0.0) {
+                    roundedPercentageText = "0";
+                } else {
+                    roundedPercentageText = String.valueOf(roundedPercentage);
+                }
 
                 durationTextView.setText(formattedDuration);
-                durationTextView.append(" (" + roundedPercentage + ")");
+                durationTextView.append(" (" + roundedPercentageText + ")");
                 durationTextView.setTypeface(null, Typeface.BOLD);
                 durationTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.8f));
                 durationTextView.setGravity(Gravity.CENTER);
@@ -476,7 +484,7 @@ public class WiDReadDayFragment extends Fragment {
                     long clickedWiDTotalSeconds = clickedWiDElapsedDuration.getSeconds(); // 총 경과한 초 수
 
                     double clickedWiDPercentage = ((double) clickedWiDTotalSeconds / (24 * 60 * 60)) * 100; // 일(day) 비율을 퍼센트로 계산
-                    double clickedWiDRoundedPercentage = Math.round(clickedWiDPercentage * 10.0) / 10.0;
+                    double clickedWiDRoundedPercentage = Math.floor(clickedWiDPercentage * 10.0) / 10.0;
 
                     clickedWiDDurationTextView.setText(clickedWiDDurationText);
                     clickedWiDDurationTextView.append(" (" + clickedWiDRoundedPercentage + ")");

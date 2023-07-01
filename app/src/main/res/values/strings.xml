@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">WiD</string>
     <string name="app_name2">what i did</string>
+
     <string name="bottom_navigation_label_1">등록</string>
     <string name="bottom_navigation_label_2">목록</string>
     <string name="bottom_navigation_label_3">검색</string>
@@ -9,15 +10,12 @@
     <string name="title_2">일</string>
     <string name="title_3">독서</string>
     <string name="title_4">운동</string>
-    <string name="title_5">잠</string>
-    <string name="title_6">이동</string>
-    <string name="title_7">취미</string>
-    <string name="title_8">기타</string>
-
-    <string name="zero_duration">00:00:00</string>
-    <string name="start">시작</string>
-    <string name="finish">종료</string>
-    <string name="reset">초기화</string>
+    <string name="title_5">취미</string>
+    <string name="title_6">식사</string>
+    <string name="title_7">샤워</string>
+    <string name="title_8">이동</string>
+    <string name="title_9">취침</string>
+    <string name="title_10">기타</string>
 
     <string name="sunday">일</string>
     <string name="monday">월</string>

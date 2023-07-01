@@ -7,11 +7,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import andpact.project.wid.fragment.TitleTextViewFragment;
 
-public class TitleViewPagerAdapter extends FragmentStateAdapter {
-    private static final int NUM_PAGES = 8;
-    public TitleViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+public class TitleTextViewPagerAdapter extends FragmentStateAdapter {
+    private static final int NUM_PAGES = 10;
+    public TitleTextViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
-
     }
     @NonNull
     @Override
@@ -23,7 +22,6 @@ public class TitleViewPagerAdapter extends FragmentStateAdapter {
     public int getItemCount() {
         return NUM_PAGES;
     }
-
     @Override
     public long getItemId(int position) {
         return super.getItemId(position);

@@ -321,7 +321,7 @@ public class WiDReadMonthFragment extends Fragment {
 
                 long bestDurationSeconds = bestDuration.getSeconds(); // 총 경과한 초 수
                 double bestDurationPercentage = ((double) bestDurationSeconds / (24 * 60 * 60 * daysInMonth)) * 100; // 월(month) 비율을 퍼센트로 계산
-                double bestDurationRoundedPercentage = Math.round(bestDurationPercentage * 10.0) / 10.0;
+                double bestDurationRoundedPercentage = Math.floor(bestDurationPercentage * 10.0) / 10.0;
 
                 String bestDurationRoundedPercentageText;
                 if (bestDurationRoundedPercentage == 0.0) {
@@ -354,7 +354,7 @@ public class WiDReadMonthFragment extends Fragment {
 
                 long totalDurationSeconds = totalDuration.getSeconds(); // 총 경과한 초 수
                 double totalDurationPercentage = ((double) totalDurationSeconds / (24 * 60 * 60 * daysInMonth)) * 100; // 월(month) 비율을 퍼센트로 계산
-                double totalDurationRoundedPercentage = Math.round(totalDurationPercentage * 10.0) / 10.0;
+                double totalDurationRoundedPercentage = Math.floor(totalDurationPercentage * 10.0) / 10.0;
 
                 String totalDurationRoundedPercentageText;
                 if (totalDurationRoundedPercentage == 0.0) {

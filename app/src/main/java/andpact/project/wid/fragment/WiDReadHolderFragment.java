@@ -19,7 +19,8 @@ import andpact.project.wid.util.ReadFragmentPagerAdapter;
 public class WiDReadHolderFragment extends Fragment {
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
-    private TabItem dayTab, weekTab, monthTab, yearTab;
+    private TabItem dayTab, weekTab, monthTab;
+//    private TabItem yearTab;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -32,7 +33,7 @@ public class WiDReadHolderFragment extends Fragment {
         dayTab = view.findViewById(R.id.dayTab);
         weekTab = view.findViewById(R.id.weekTab);
         monthTab = view.findViewById(R.id.monthTab);
-        yearTab = view.findViewById(R.id.yearTab);
+//        yearTab = view.findViewById(R.id.yearTab);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

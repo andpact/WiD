@@ -23,7 +23,6 @@ public class TitleTextViewFragment extends Fragment {
         titleTextViewFragment.setArguments(args);
         return titleTextViewFragment;
     }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -36,11 +35,10 @@ public class TitleTextViewFragment extends Fragment {
 
         return view;
     }
-
     private String getTextForPosition(int position) {
         // 각각의 위치에 해당하는 텍스트를 반환
-        String[] texts = {"공부", "일", "독서", "운동", "잠", "이동", "취미", "기타"};
-        if (position >= 0 && position < texts.length) {
+        String[] texts = {"공부", "일", "독서", "운동", "취미", "식사", "샤워", "이동", "취침", "기타"};
+        if (0 <= position && position < texts.length) {
             return texts[position];
         }
         return "";

@@ -12,7 +12,7 @@ import andpact.project.wid.fragment.WiDReadWeekFragment;
 import andpact.project.wid.fragment.WiDReadYearFragment;
 
 public class ReadFragmentPagerAdapter extends FragmentStateAdapter {
-    private final int NUM_FRAGMENTS = 4;
+    private final int NUM_FRAGMENTS = 3;
 
     public ReadFragmentPagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
         super(fragmentManager, lifecycle);
@@ -27,8 +27,8 @@ public class ReadFragmentPagerAdapter extends FragmentStateAdapter {
                 return new WiDReadWeekFragment();
             case 2:
                 return new WiDReadMonthFragment();
-            case 3:
-                return new WiDReadYearFragment();
+//            case 3:
+//                return new WiDReadYearFragment();
             default:
                 return null;
         }
