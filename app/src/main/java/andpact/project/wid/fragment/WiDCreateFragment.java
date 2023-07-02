@@ -197,7 +197,7 @@ public class WiDCreateFragment extends Fragment {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime endOfDay = now.toLocalDate().atTime(LocalTime.MAX);
         LocalDateTime startOfDay = now.toLocalDate().atTime(LocalTime.MIN);
-        LocalDateTime endOfWeek = now.toLocalDate().with(TemporalAdjusters.next(DayOfWeek.SUNDAY)).atTime(LocalTime.MAX);
+        LocalDateTime endOfWeek = now.getDayOfWeek() == DayOfWeek.SUNDAY ? now.with(LocalTime.MAX) : now.toLocalDate().with(TemporalAdjusters.next(DayOfWeek.SUNDAY)).atTime(LocalTime.MAX);
         LocalDateTime startOfWeek = endOfWeek.minusDays(6).with(LocalTime.MIN);
         LocalDateTime endOfMonth = now.toLocalDate().with(TemporalAdjusters.lastDayOfMonth()).atTime(LocalTime.MAX);
         LocalDateTime startOfMonth = endOfMonth.with(TemporalAdjusters.firstDayOfMonth()).with(LocalTime.MIN);

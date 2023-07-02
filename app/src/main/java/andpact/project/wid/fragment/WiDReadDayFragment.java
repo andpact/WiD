@@ -210,6 +210,7 @@ public class WiDReadDayFragment extends Fragment {
             });
             // Show the dialog
             AlertDialog dialog = builder.create();
+            dialog.getWindow().setWindowAnimations(0); // 애니메이션 없앰.
             dialog.show();
         });
 
@@ -490,7 +491,6 @@ public class WiDReadDayFragment extends Fragment {
                     clickedWiDDurationTextView.append(" (" + clickedWiDRoundedPercentage + ")");
 
                     clickedWiDDetailTextView.setText(clickedWiD.getDetail());
-
                 });
 
                 wiDHolderLayout.addView(itemLayout);
