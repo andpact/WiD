@@ -285,7 +285,12 @@ public class WiDReadMonthFragment extends Fragment {
 
             for (Title key : sortedTitles) {
                 LinearLayout itemLinearLayout = new LinearLayout(getContext());
-                itemLinearLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                layoutParams.setMargins(0, 16, 0, 0); // 위쪽 마진을 16으로 설정
+                itemLinearLayout.setLayoutParams(layoutParams);
+//                itemLinearLayout.setPadding(0, 16, 0, 16);
+                itemLinearLayout.setElevation(4);
+                itemLinearLayout.setBackgroundResource(R.drawable.bg_white);
                 itemLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
                 ShapeableImageView imageView = new ShapeableImageView(getContext());
@@ -309,17 +314,25 @@ public class WiDReadMonthFragment extends Fragment {
                 Duration bestDuration = bestDurationMap.get(key.toString());
                 long bestDurationHours = bestDuration.toHours();
                 long bestDurationMinutes = (bestDuration.toMinutes() % 60);
-
+                long bestDurationSeconds = (bestDuration.getSeconds() % 60);
                 String formattedBestDuration;
-                if (0 < bestDurationHours && 0 == bestDurationMinutes) {
+
+                if (0 < bestDurationHours && 0 == bestDurationMinutes && 0 == bestDurationSeconds) {
                     formattedBestDuration = String.format("%d시간", bestDurationHours);
+                } else if (0 < bestDurationHours && 0 < bestDurationMinutes && 0 == bestDurationSeconds) {
+                    formattedBestDuration = String.format("%d시간 %d분", bestDurationHours, bestDurationMinutes);
+                } else if (0 < bestDurationHours && 0 == bestDurationMinutes && 0 < bestDurationSeconds) {
+                    formattedBestDuration = String.format("%d시간 %d초", bestDurationHours, bestDurationSeconds);
                 } else if (0 < bestDurationHours) {
                     formattedBestDuration = String.format("%d시간 %d분", bestDurationHours, bestDurationMinutes);
-                } else {
+                } else if (0 < bestDurationMinutes && 0 == bestDurationSeconds) {
                     formattedBestDuration = String.format("%d분", bestDurationMinutes);
+                } else if (0 < bestDurationMinutes) {
+                    formattedBestDuration = String.format("%d분 %d초", bestDurationMinutes, bestDurationSeconds);
+                } else {
+                    formattedBestDuration = String.format("%d초", bestDurationSeconds);
                 }
 
-                long bestDurationSeconds = bestDuration.getSeconds(); // 총 경과한 초 수
                 double bestDurationPercentage = ((double) bestDurationSeconds / (24 * 60 * 60 * daysInMonth)) * 100; // 월(month) 비율을 퍼센트로 계산
                 double bestDurationRoundedPercentage = Math.floor(bestDurationPercentage * 10.0) / 10.0;
 
@@ -342,17 +355,26 @@ public class WiDReadMonthFragment extends Fragment {
 
                 long totalDurationHours = totalDuration.toHours();
                 long totalDurationMinutes = (totalDuration.toMinutes() % 60);
+                long totalDurationSeconds = (totalDuration.getSeconds() % 60);
 
-                String formattedTotalDuration;
-                if (0 < totalDurationHours && 0 == totalDurationMinutes) {
-                    formattedTotalDuration = String.format("%d시간", totalDurationHours);
+                String totalDurationText;
+
+                if (0 < totalDurationHours && 0 == totalDurationMinutes && 0 == totalDurationSeconds) {
+                    totalDurationText = String.format("%d시간", totalDurationHours);
+                } else if (0 < totalDurationHours && 0 < totalDurationMinutes && 0 == totalDurationSeconds) {
+                    totalDurationText = String.format("%d시간 %d분", totalDurationHours, totalDurationMinutes);
+                } else if (0 < totalDurationHours && 0 == totalDurationMinutes && 0 < totalDurationSeconds) {
+                    totalDurationText = String.format("%d시간 %d초", totalDurationHours, totalDurationSeconds);
                 } else if (0 < totalDurationHours) {
-                    formattedTotalDuration = String.format("%d시간 %d분", totalDurationHours, totalDurationMinutes);
+                    totalDurationText = String.format("%d시간 %d분", totalDurationHours, totalDurationMinutes);
+                } else if (0 < totalDurationMinutes && 0 == totalDurationSeconds) {
+                    totalDurationText = String.format("%d분", totalDurationMinutes);
+                } else if (0 < totalDurationMinutes) {
+                    totalDurationText = String.format("%d분 %d초", totalDurationMinutes, totalDurationSeconds);
                 } else {
-                    formattedTotalDuration = String.format("%d분", totalDurationMinutes);
+                    totalDurationText = String.format("%d초", totalDurationSeconds);
                 }
 
-                long totalDurationSeconds = totalDuration.getSeconds(); // 총 경과한 초 수
                 double totalDurationPercentage = ((double) totalDurationSeconds / (24 * 60 * 60 * daysInMonth)) * 100; // 월(month) 비율을 퍼센트로 계산
                 double totalDurationRoundedPercentage = Math.floor(totalDurationPercentage * 10.0) / 10.0;
 
@@ -364,7 +386,7 @@ public class WiDReadMonthFragment extends Fragment {
                 }
 
                 totalDurationTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f));
-                totalDurationTextView.setText(formattedTotalDuration);
+                totalDurationTextView.setText(totalDurationText);
                 totalDurationTextView.append(" (" + totalDurationRoundedPercentageText + ")");
                 totalDurationTextView.setTypeface(null, Typeface.BOLD);
                 totalDurationTextView.setGravity(Gravity.CENTER);
@@ -377,11 +399,9 @@ public class WiDReadMonthFragment extends Fragment {
             }
         } else {
             MaterialTextView noDataTextView = new MaterialTextView(getContext());
-            noDataTextView.setTextSize(30);
             noDataTextView.setText("표시할 데이터가 없어요.");
-            noDataTextView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            noDataTextView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
             noDataTextView.setGravity(Gravity.CENTER);
-            noDataTextView.setPadding(0, 20, 0, 20);
             wiDHolderLayout.addView(noDataTextView);
         }
     }

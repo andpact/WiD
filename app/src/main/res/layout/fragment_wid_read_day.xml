@@ -1,7 +1,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingHorizontal="16dp"
+    >
 
 <!--    날짜 표시-->
     <LinearLayout
@@ -9,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp"
         android:gravity="center"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -67,21 +68,18 @@
             />
     </LinearLayout>
 
-<!--    파이 차트-->
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/pieChart"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_marginStart="26dp"
+        android:layout_width="240dp"
+        android:layout_height="300dp"
         app:layout_constraintTop_toBottomOf="@id/dateLayout"
         app:layout_constraintStart_toStartOf="parent"
         />
 
-<!--    서클 뷰(시간 표시)-->
     <andpact.project.wid.util.CircleView
         android:id="@+id/circleView"
-        android:layout_width="280dp"
-        android:layout_height="280dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="@id/pieChart"
         app:layout_constraintBottom_toBottomOf="@id/pieChart"
         app:layout_constraintStart_toStartOf="@id/pieChart"
@@ -90,17 +88,18 @@
     <LinearLayout
         android:id="@+id/totalDurationLayout"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/bg_light_gray"
+        android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="@id/circleView"
         app:layout_constraintStart_toEndOf="@id/circleView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/circleView"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/bg_white"
+            android:elevation="2dp"
             android:orientation="horizontal">
 
             <com.google.android.material.imageview.ShapeableImageView
@@ -111,7 +110,7 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0.3"
                 android:gravity="center"
                 android:text="@string/title"/>
 
@@ -126,9 +125,8 @@
 
         <LinearLayout
             android:id="@+id/totalDurationHolderLayout"
-            android:background="@drawable/bg_light_gray"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
         </LinearLayout>
@@ -138,17 +136,18 @@
     <LinearLayout
         android:id="@+id/wiDLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
+        android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/circleView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_light_gray"
+            android:background="@drawable/bg_white"
+            android:elevation="2dp"
             android:orientation="horizontal">
 
             <com.google.android.material.imageview.ShapeableImageView
@@ -161,7 +160,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.4"
                 android:gravity="center"
-                android:text="번호" />
+                android:text="순서" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="0dp"
@@ -187,7 +186,7 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.8"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="경과 (%)" />
 
@@ -203,7 +202,7 @@
         <LinearLayout
             android:id="@+id/wiDHolderLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
         </LinearLayout>
@@ -226,7 +225,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_light_gray"
+            android:background="@drawable/bg_white"
             android:elevation="2dp"
             android:padding="10dp"
             android:orientation="vertical">
@@ -441,22 +440,22 @@
                         android:textSize="30sp"
                         android:text="@string/detail" />
 
-                    <ImageButton
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/clickedWiDShowEditDetailButton"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_weight="0"
-                        android:backgroundTint="@color/transparent"
-                        android:src="@drawable/baseline_edit_24"/>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        android:textColor="@color/blue"
+                        android:text="수정" />
 
-                    <ImageButton
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/clickedWiDEditDetailButton"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_weight="0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:visibility="gone"
-                        android:backgroundTint="@color/transparent"
-                        android:src="@drawable/baseline_done_36"/>
+                        android:textSize="20sp"
+                        android:textColor="@color/blue"
+                        android:text="완료" />
 
                 </LinearLayout>
 
@@ -479,7 +478,8 @@
                     android:layout_marginTop="5dp"
                     android:visibility="gone"
                     app:counterEnabled="true"
-                    app:counterMaxLength="200"
+                    app:counterMaxLength="100"
+                    app:errorEnabled="true"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText

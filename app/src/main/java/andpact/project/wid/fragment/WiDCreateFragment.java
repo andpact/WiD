@@ -311,7 +311,7 @@ public class WiDCreateFragment extends Fragment {
                 long minutes = (elapsedSeconds % 3600) / 60;
                 long seconds = elapsedSeconds % 60;
 
-                double percentage = ((double) elapsedSeconds / (24 * 60 * 60)) * 100;
+//                double percentage = ((double) elapsedSeconds / (24 * 60 * 60)) * 100;
 
                 String formattedDuration;
 
@@ -332,11 +332,11 @@ public class WiDCreateFragment extends Fragment {
                     formattedDuration = String.format("%d초", seconds);
                 }
 
-                if (0.1 <= percentage) {
-                    formattedDuration = String.format("%s (%.1f%%)", formattedDuration, percentage);
-                } else {
-                    formattedDuration = String.format("%s (0%%)", formattedDuration);
-                }
+//                if (0.1 <= percentage) {
+//                    formattedDuration = String.format("%s (%.1f%%)", formattedDuration, percentage);
+//                } else {
+//                    formattedDuration = String.format("%s (0%%)", formattedDuration);
+//                }
 
                 // Update the duration TextView
                 durationTextView.setText(formattedDuration);
@@ -364,6 +364,7 @@ public class WiDCreateFragment extends Fragment {
         finishButton.setColorFilter(Color.LTGRAY);
 
         if (wiD != null) {
+//            wiD.setFinish(currentTime.plusHours(1).plusMinutes(10).plusSeconds(10));
             wiD.setFinish(currentTime);
 
             finishTimeTextView.setTextColor(Color.LTGRAY);

@@ -4,7 +4,9 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,7 +59,8 @@ public class WiDReadDayFragment extends Fragment {
     private ShapeableImageView titleColorCircle;
     private WiDDatabaseHelper wiDDatabaseHelper;
     private LocalDate currentDate;
-    private ImageButton decreaseDateButton, increaseDateButton, clickedWiDSaveGalleryButton, clickedWiDDeleteButton, clickedWiDCloseButton, clickedWiDShowEditDetailButton, clickedWiDEditDetailButton;
+    private ImageButton decreaseDateButton, increaseDateButton, clickedWiDSaveGalleryButton, clickedWiDDeleteButton, clickedWiDCloseButton;
+    private MaterialTextView clickedWiDShowEditDetailButton, clickedWiDEditDetailButton;
     private PieChart pieChart;
     private CircleView circleView;
     private LinearLayout clickedWiDLayout, clickedWiDDetailLayout, showClickedWiDetailLayout;
@@ -108,12 +111,12 @@ public class WiDReadDayFragment extends Fragment {
 
         // 가운데 텍스트 설정
         pieChart.setDrawCenterText(true);
-        pieChart.setCenterText("오후 | 오전");
+
 
         // 텍스트 스타일 설정 (옵션)
         pieChart.setCenterTextSize(15f);
-        pieChart.setCenterTextTypeface(Typeface.DEFAULT_BOLD);
-        pieChart.setCenterTextColor(ContextCompat.getColor(getContext(), R.color.black));
+//        pieChart.setCenterTextTypeface(Typeface.DEFAULT_BOLD);
+//        pieChart.setCenterTextColor(ContextCompat.getColor(getContext(), R.color.black));
 
         circleView = view.findViewById(R.id.circleView);
 
@@ -158,6 +161,30 @@ public class WiDReadDayFragment extends Fragment {
 
         clickedWiDTextInputLayout = view.findViewById(R.id.clickedWiDTextInputLayout);
         clickedWiDDetailInputEditText = view.findViewById(R.id.clickedWiDDetailInputEditText);
+        clickedWiDDetailInputEditText.setGravity(Gravity.NO_GRAVITY);
+        clickedWiDDetailInputEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // 이전 텍스트 변경 전에 호출됩니다.
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int currentLength = s.length();
+                if (100 < currentLength) {
+                    clickedWiDTextInputLayout.setError("100자 이하로 작성해주세요.");
+                    clickedWiDEditDetailButton.setEnabled(false);
+                    clickedWiDEditDetailButton.setAlpha(0.2f);
+                } else {
+                    clickedWiDTextInputLayout.setError("");
+                    clickedWiDEditDetailButton.setEnabled(true);
+                    clickedWiDEditDetailButton.setAlpha(1f);
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+                // 텍스트 변경이 완료된 후에 호출됩니다.
+            }
+        });
 
         clickedWiDShowEditDetailButton = view.findViewById(R.id.clickedWiDShowEditDetailButton);
         clickedWiDShowEditDetailButton.setOnClickListener(v -> {
@@ -238,6 +265,14 @@ public class WiDReadDayFragment extends Fragment {
             }
 
             clickedWiDDetailLayout.setVisibility(View.GONE);
+            clickedWiDDetailTextView.setVisibility(View.VISIBLE);
+            clickedWiDDetailTextView.setText("");
+            clickedWiDDetailTextView.setHint("세부 사항 입력..");
+            clickedWiDTextInputLayout.setVisibility(View.GONE);
+            clickedWiDDetailInputEditText.setText("");
+            clickedWiDDetailInputEditText.setHint("세부 사항 입력..");
+            clickedWiDShowEditDetailButton.setVisibility(View.VISIBLE);
+            clickedWiDEditDetailButton.setVisibility(View.GONE);
 
             showClickedWiDDetailLayoutImageView.setBackgroundResource(R.drawable.baseline_keyboard_arrow_down_24);
         });
@@ -300,23 +335,24 @@ public class WiDReadDayFragment extends Fragment {
             dataSet.setColor(ContextCompat.getColor(getContext(), R.color.light_gray));
             data = new PieData(dataSet);
             data.setDrawValues(false); // 엔트리 값 표시 X
+            pieChart.setCenterText("표시할 WiD 없음");
             pieChart.setData(data);
             pieChart.invalidate();
 
-            totalDurationLayout.setVisibility(View.INVISIBLE);
-
-            // "세부 사항으로 검색해 보세요." 텍스트 뷰 생성 및 설정
             MaterialTextView noDataTextView = new MaterialTextView(getContext());
+            noDataTextView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
             noDataTextView.setText("표시할 WiD가 없어요.");
             noDataTextView.setGravity(Gravity.CENTER);
-            noDataTextView.setTextSize(30);
-            noDataTextView.setPadding(0, 20, 0, 20);
-
-            // 리니어 레이아웃에 텍스트 뷰 추가
             wiDHolderLayout.addView(noDataTextView);
 
+            MaterialTextView noTotalDataTextView = new MaterialTextView(getContext());
+            noTotalDataTextView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+            noTotalDataTextView.setText("표시할 정보가 없어요.");
+            noTotalDataTextView.setGravity(Gravity.CENTER);
+            totalDurationHolderLayout.addView(noTotalDataTextView);
+
         } else {
-            totalDurationLayout.setVisibility(View.VISIBLE);
+            pieChart.setCenterText("오후 | 오전");
 
             entries = new ArrayList<>();
 
@@ -331,9 +367,14 @@ public class WiDReadDayFragment extends Fragment {
                 totalDurationForDayMap.put(wiD.getTitle(), durationForDay);
 
                 LinearLayout itemLayout = new LinearLayout(getContext());
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                layoutParams.setMargins(0, 16, 0, 0); // 위쪽 마진을 16으로 설정
+                itemLayout.setLayoutParams(layoutParams);
                 itemLayout.setOrientation(LinearLayout.HORIZONTAL);
                 itemLayout.setGravity(Gravity.CENTER_VERTICAL);
-                itemLayout.setBackgroundResource(R.drawable.bg_light_gray);
+                itemLayout.setBackgroundResource(R.drawable.bg_white);
+//                itemLayout.setPadding(0, 16, 0, 16);
+                itemLayout.setElevation(4);
                 itemLayout.setTag(wiD.getId());
 
                 ShapeableImageView imageView = new ShapeableImageView(getContext());
@@ -378,15 +419,25 @@ public class WiDReadDayFragment extends Fragment {
                 MaterialTextView durationTextView = new MaterialTextView(getContext());
                 long hours = wiD.getDuration().toHours();
                 long minutes = (wiD.getDuration().toMinutes() % 60);
+                long seconds = (wiD.getDuration().getSeconds() % 60);
                 String formattedDuration;
 
-                if (hours > 0 && minutes == 0) {
+                if (0 < hours && 0 == minutes && 0 == seconds) {
                     formattedDuration = String.format("%d시간", hours);
-                } else if (hours > 0) {
+                } else if (0 < hours && 0 < minutes && 0 == seconds) {
                     formattedDuration = String.format("%d시간 %d분", hours, minutes);
-                } else {
+                } else if (0 < hours && 0 == minutes && 0 < seconds) {
+                    formattedDuration = String.format("%d시간 %d초", hours, seconds);
+                } else if (0 < hours) {
+                    formattedDuration = String.format("%d시간 %d분", hours, minutes);
+                } else if (0 < minutes && 0 == seconds) {
                     formattedDuration = String.format("%d분", minutes);
+                } else if (0 < minutes) {
+                    formattedDuration = String.format("%d분 %d초", minutes, seconds);
+                } else {
+                    formattedDuration = String.format("%d초", seconds);
                 }
+
 
                 Duration elapsedDuration = wiD.getDuration();
                 long totalSeconds = elapsedDuration.getSeconds(); // 총 경과한 초 수
@@ -404,18 +455,22 @@ public class WiDReadDayFragment extends Fragment {
                 durationTextView.setText(formattedDuration);
                 durationTextView.append(" (" + roundedPercentageText + ")");
                 durationTextView.setTypeface(null, Typeface.BOLD);
-                durationTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.8f));
+                durationTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
                 durationTextView.setGravity(Gravity.CENTER);
                 itemLayout.addView(durationTextView);
 
-                ImageView detailImageView = new ImageView(getContext());
+                MaterialTextView detailTextView = new MaterialTextView(getContext());
+                detailTextView.setGravity(Gravity.CENTER);
+                detailTextView.setTypeface(null, Typeface.BOLD);
                 if (TextUtils.isEmpty(wiD.getDetail())) {
-                    detailImageView.setImageResource(R.drawable.baseline_more_horiz_24);
+                    detailTextView.setText("0");
+                    detailTextView.setTextColor(Color.GRAY);
                 } else {
-                    detailImageView.setImageResource(R.drawable.outline_description_24);
+                    detailTextView.setText(String.valueOf(wiD.getDetail().length()));
+                    detailTextView.setTextColor(Color.BLACK);
                 }
-                detailImageView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.4f));
-                itemLayout.addView(detailImageView);
+                detailTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.4f));
+                itemLayout.addView(detailTextView);
 
                 itemLayout.setOnClickListener(v -> {
 
@@ -481,14 +536,15 @@ public class WiDReadDayFragment extends Fragment {
                         clickedWiDDurationText = String.format("%d초", clickedWiDSeconds);
                     }
 
-                    Duration clickedWiDElapsedDuration = clickedWiD.getDuration();
-                    long clickedWiDTotalSeconds = clickedWiDElapsedDuration.getSeconds(); // 총 경과한 초 수
-
-                    double clickedWiDPercentage = ((double) clickedWiDTotalSeconds / (24 * 60 * 60)) * 100; // 일(day) 비율을 퍼센트로 계산
-                    double clickedWiDRoundedPercentage = Math.floor(clickedWiDPercentage * 10.0) / 10.0;
-
                     clickedWiDDurationTextView.setText(clickedWiDDurationText);
-                    clickedWiDDurationTextView.append(" (" + clickedWiDRoundedPercentage + ")");
+
+//                    Duration clickedWiDElapsedDuration = clickedWiD.getDuration();
+//                    long clickedWiDTotalSeconds = clickedWiDElapsedDuration.getSeconds(); // 총 경과한 초 수
+//
+//                    double clickedWiDPercentage = ((double) clickedWiDTotalSeconds / (24 * 60 * 60)) * 100; // 일(day) 비율을 퍼센트로 계산
+//                    double clickedWiDRoundedPercentage = Math.floor(clickedWiDPercentage * 10.0) / 10.0;
+//
+//                    clickedWiDDurationTextView.append(" (" + clickedWiDRoundedPercentage + "%)");
 
                     clickedWiDDetailTextView.setText(clickedWiD.getDetail());
                 });
@@ -544,9 +600,13 @@ public class WiDReadDayFragment extends Fragment {
 
             for (Title key : sortedTitles) {
                 LinearLayout totalDurationItemLayout = new LinearLayout(getContext());
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                layoutParams.setMargins(0, 16, 0, 0); // 위쪽 마진을 16으로 설정
+                totalDurationItemLayout.setLayoutParams(layoutParams);
                 totalDurationItemLayout.setOrientation(LinearLayout.HORIZONTAL);
-                totalDurationItemLayout.setBackgroundResource(R.drawable.bg_light_gray);
-                totalDurationItemLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                totalDurationItemLayout.setBackgroundResource(R.drawable.bg_white);
+//                totalDurationItemLayout.setPadding(0, 16, 0, 16);
+                totalDurationItemLayout.setElevation(4);
 
                 ShapeableImageView imageView = new ShapeableImageView(getContext());
                 imageView.setBackgroundResource(R.drawable.rectangle);
@@ -556,7 +616,7 @@ public class WiDReadDayFragment extends Fragment {
 
                 MaterialTextView titleTextView = new MaterialTextView(getContext());
                 titleTextView.setText(DataMaps.getTitleMap(getContext()).get(key.toString()));
-                titleTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+                titleTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.3f));
                 titleTextView.setGravity(Gravity.CENTER);
 //                titleTextView.setTextSize(20);
                 titleTextView.setTypeface(null, Typeface.BOLD);
@@ -571,14 +631,23 @@ public class WiDReadDayFragment extends Fragment {
 
                 long totalDurationHours = totalDuration.toHours();
                 long totalDurationMinutes = (totalDuration.toMinutes() % 60);
+                long totalDurationSeconds = (totalDuration.getSeconds() % 60);
                 String totalDurationText;
 
-                if (totalDurationHours > 0 && totalDurationMinutes == 0) {
+                if (0 < totalDurationHours && 0 == totalDurationMinutes && 0 == totalDurationSeconds) {
                     totalDurationText = String.format("%d시간", totalDurationHours);
-                } else if (totalDurationHours > 0) {
+                } else if (0 < totalDurationHours && 0 < totalDurationMinutes && 0 == totalDurationSeconds) {
                     totalDurationText = String.format("%d시간 %d분", totalDurationHours, totalDurationMinutes);
-                } else {
+                } else if (0 < totalDurationHours && 0 == totalDurationMinutes && 0 < totalDurationSeconds) {
+                    totalDurationText = String.format("%d시간 %d초", totalDurationHours, totalDurationSeconds);
+                } else if (0 < totalDurationHours) {
+                    totalDurationText = String.format("%d시간 %d분", totalDurationHours, totalDurationMinutes);
+                } else if (0 < totalDurationMinutes && 0 == totalDurationSeconds) {
                     totalDurationText = String.format("%d분", totalDurationMinutes);
+                } else if (0 < totalDurationMinutes) {
+                    totalDurationText = String.format("%d분 %d초", totalDurationMinutes, totalDurationSeconds);
+                } else {
+                    totalDurationText = String.format("%d초", totalDurationSeconds);
                 }
 
                 Duration elapsedDuration = totalDuration;
