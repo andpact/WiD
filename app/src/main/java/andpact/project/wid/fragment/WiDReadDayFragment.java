@@ -1,9 +1,11 @@
 package andpact.project.wid.fragment;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -214,6 +216,32 @@ public class WiDReadDayFragment extends Fragment {
         });
 
         clickedWiDSaveGalleryButton = view.findViewById(R.id.clickedWiDSaveGalleryButton);
+        clickedWiDSaveGalleryButton.setOnClickListener(v -> {
+
+            boolean isVisible = clickedWiDDetailLayout.getVisibility() == View.VISIBLE;
+            clickedWiDDetailLayout.setVisibility(View.GONE);
+            showClickedWiDDetailLayoutImageView.setVisibility(View.GONE);
+
+            // 레이아웃의 스크린샷 촬영
+            clickedWiDLayout.setDrawingCacheEnabled(true);
+            clickedWiDLayout.buildDrawingCache();
+            Bitmap clickedWiDBitmap = Bitmap.createBitmap(clickedWiDLayout.getDrawingCache());
+            clickedWiDLayout.setDrawingCacheEnabled(false);
+
+            String clickedWiDDate = clickedWiD.getDate().format(dateFormatter);
+
+            // 이미지를 갤러리에 저장
+            String savedImageURL = MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), clickedWiDBitmap, clickedWiDDate + "WiD", clickedWiDDate + "WiD");
+
+            if (savedImageURL != null) {
+                showSnackbar("WiD가 저장되었습니다.");
+            } else {
+                showSnackbar("저장에 실패했습니다.");
+            }
+
+            clickedWiDDetailLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+            showClickedWiDDetailLayoutImageView.setVisibility(View.VISIBLE);
+        });
 
         clickedWiDDeleteButton = view.findViewById(R.id.clickedWiDDeleteButton);
         clickedWiDDeleteButton.setOnClickListener(v -> {
@@ -686,8 +714,5 @@ public class WiDReadDayFragment extends Fragment {
         snackbarView.setLayoutParams(params);
 
         snackbar.show();
-    }
-    private void saveGallery() {
-        // showDetailLinearLayout 없애고 저장 ㄱㄱ
     }
 }
