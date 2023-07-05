@@ -229,6 +229,15 @@ public class WiDReadDayFragment extends Fragment {
 
                 updateWiDLayout();
 
+                decreaseDateButton.setEnabled(true);
+                increaseDateButton.setEnabled(true);
+
+                dateLayout.setAlpha(1.0f);
+                totalDurationLayout.setAlpha(1.0f);
+                pieChart.setAlpha(1.0f);
+                circleView.setAlpha(1.0f);
+                wiDLayout.setAlpha(1.0f);
+
                 showSnackbar("WiD가 삭제되었습니다.");
             });
             builder.setNegativeButton("취소", (dialog, which) -> {
@@ -437,7 +446,6 @@ public class WiDReadDayFragment extends Fragment {
                 } else {
                     formattedDuration = String.format("%d초", seconds);
                 }
-
 
                 Duration elapsedDuration = wiD.getDuration();
                 long totalSeconds = elapsedDuration.getSeconds(); // 총 경과한 초 수

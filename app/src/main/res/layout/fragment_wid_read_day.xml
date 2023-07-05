@@ -212,9 +212,8 @@
 <!--    Clicked WiD 표시-->
     <LinearLayout
         android:id="@+id/clickedWiDLayout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
