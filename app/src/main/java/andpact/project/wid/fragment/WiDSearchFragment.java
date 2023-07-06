@@ -386,10 +386,11 @@ public class WiDSearchFragment extends Fragment {
             detailText.setText("세부 사항");
 
             MaterialTextView detailTextView = new MaterialTextView(getContext());
-            detailTextView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT));
+            detailTextView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             detailTextView.setPadding(16, 0, 0, 0);
             detailTextView.setText(wiD.getDetail());
-            detailTextView.setMaxLines(3);
+            detailTextView.setMaxLines(2);
+            detailTextView.setEllipsize(TextUtils.TruncateAt.END);
 
             itemLayout2.addView(detailText);
             itemLayout2.addView(detailTextView);

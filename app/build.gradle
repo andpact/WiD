@@ -38,4 +38,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0' // 파이 차트용 라이브러리
+
+    implementation 'com.google.android.gms:play-services-ads:22.2.0'
 }

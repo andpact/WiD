@@ -690,11 +690,18 @@ public class WiDReadDayFragment extends Fragment {
                 long totalSeconds = elapsedDuration.getSeconds(); // 총 경과한 초 수
 
                 double percentage = ((double) totalSeconds / (24 * 60 * 60)) * 100; // 일(day) 비율을 퍼센트로 계산
-                double roundedPercentage = Math.round(percentage * 10.0) / 10.0;
+                double roundedPercentage = Math.floor(percentage * 10.0) / 10.0;
+
+                String roundedPercentageText;
+                if (roundedPercentage == 0.0) {
+                    roundedPercentageText = "0";
+                } else {
+                    roundedPercentageText = String.valueOf(roundedPercentage);
+                }
 
                 totalDurationTextView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f));
                 totalDurationTextView.setText(totalDurationText);
-                totalDurationTextView.append(" (" + roundedPercentage + ")");
+                totalDurationTextView.append(" (" + roundedPercentageText + ")");
 //                totalDurationTextView.setTextSize(18);
                 totalDurationTextView.setTypeface(null, Typeface.BOLD);
                 totalDurationTextView.setGravity(Gravity.CENTER);
